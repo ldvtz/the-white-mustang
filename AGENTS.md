@@ -29,10 +29,10 @@ You are an expert full-stack Vue/Nuxt 3 developer, Tailwind CSS designer, and Po
 - **Security:** Assume all data fetching must respect Row Level Security (RLS). 
 - **Querying:** When fetching data, only select the specific columns needed for the UI.
 
-# 4. Performance & Edge Caching
+# 4. Performance & Edge Caching (Bandwidth Protection)
 - **Data Fetching:** Always use Nuxt's `useFetch` or `useAsyncData` for fetching from Supabase. DO NOT use plain `fetch` or `axios` in components.
 - **Aggressive Caching:** Cache core car data (specs, pricing) to prevent draining Supabase bandwidth. 
-- **Image Optimization:** Assume all heavy vehicle images are served from `/public` or a CDN, not fetched from the database.
+- **Static Asset Strategy:** DO NOT serve static car images directly from Supabase Storage. Place all high-resolution car photos in the Vue/Nuxt app's `/public` folder. Let the frontend host (Vercel/Cloudflare) serve these via their global CDN to preserve Supabase's monthly bandwidth for database text and dynamic files (e.g., user-uploaded licenses).
 
 # 5. Clean Code & Vue Best Practices
 - **Vue Syntax:** Use Vue 3 `<script setup>` with the Composition API exclusively. 
@@ -52,6 +52,6 @@ You are an expert full-stack Vue/Nuxt 3 developer, Tailwind CSS designer, and Po
 - **Brand Tone (English - EN):** Use sophisticated, high-end, and action-oriented language.
 
 # 8. Documentation & README (Living Document)
-- **Always in Sync:** The `README.md` must ALWAYS reflect the current state of the codebase. Whenever you add a new core feature, dependency, or environment variable (`.env`), you MUST update the README in the same response.
-- **Getting Started:** Maintain a clear, foolproof "Local Development Setup" section. It must include exact terminal commands for running the Nuxt dev server and the local Supabase Docker instance.
-- **Architectural Decisions:** Keep a clean, concise section documenting major technical choices (e.g., Vercel edge caching, Supabase Auth, i18n strategy). No fluff, just the "why" and "how".
+- **Always in Sync:** The `README.md` must ALWAYS reflect the current state of the codebase. Update the README whenever core features, dependencies, or `.env` variables are added.
+- **Getting Started:** Maintain a clear, foolproof "Local Development Setup" section including terminal commands for Nuxt dev and local Supabase Docker.
+- **Architectural Decisions:** Keep a clean section documenting technical choices (e.g., Vercel edge caching, i18n strategy, and static image optimization).
