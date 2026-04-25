@@ -47,6 +47,11 @@ You are an expert full-stack Vue/Nuxt 3 developer, Tailwind CSS designer, and Po
 # 7. Internationalization (i18n) & Copywriting
 - **Framework:** Use the official `@nuxtjs/i18n` module.
 - **No Hardcoding:** NEVER hardcode user-facing text in `.vue` templates. Always use the `useI18n()` composable and `$t('your.key')`.
-- **Translation Files:** Assume translations are stored in `locales/de.json` (Default) and `locales/en.json`. When generating a new component, also generate the required JSON key-value pairs for both languages.
-- **Brand Tone (German - DE):** Use the formal but modern "Sie" form (e.g., "Mieten Sie Ihren Mustang" instead of "Miete deinen Mustang"). The tone must feel highly exclusive, reliable, and Swiss-premium.
-- **Brand Tone (English - EN):** Use sophisticated, high-end, and action-oriented language (e.g., "Reserve your experience" instead of "Rent the car").
+- **Translation Files:** Assume translations are stored in `locales/de.json` (Default) and `locales/en.json`.
+- **Brand Tone (German - DE):** Use the formal but modern "Sie" form. The tone must feel highly exclusive, reliable, and Swiss-premium.
+- **Brand Tone (English - EN):** Use sophisticated, high-end, and action-oriented language.
+
+# 8. Documentation & README (Living Document)
+- **Always in Sync:** The `README.md` must ALWAYS reflect the current state of the codebase. Whenever you add a new core feature, dependency, or environment variable (`.env`), you MUST update the README in the same response.
+- **Getting Started:** Maintain a clear, foolproof "Local Development Setup" section. It must include exact terminal commands for running the Nuxt dev server and the local Supabase Docker instance.
+- **Architectural Decisions:** Keep a clean, concise section documenting major technical choices (e.g., Vercel edge caching, Supabase Auth, i18n strategy). No fluff, just the "why" and "how".
