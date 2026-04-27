@@ -1,0 +1,78 @@
+{
+  "admin": {
+    "common": {
+      "loading": "Loading…"
+    },
+    "nav": {
+      "dashboard": "Bookings",
+      "calendar": "Calendar",
+      "handover": "Handovers",
+      "customers": "Customers",
+      "signOut": "Sign out",
+      "domain": "thewhitemustang.ch"
+    },
+    "login": {
+      "seoTitle": "Admin Login | The White Mustang",
+      "seoDescription": "Protected administration access for The White Mustang.",
+      "brand": "The White Mustang",
+      "motif": "/// Admin",
+      "statement": "American Emotion. Swiss Perfection.",
+      "supporting": "Protected access for bookings, calendar control, and operational workflows.",
+      "title": "Admin Login",
+      "description": "Sign in with your authorized Supabase admin account.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "submitting": "Verifying…",
+      "errorInvalid": "The credentials could not be verified.",
+      "errorUnauthorized": "This account is not enabled for admin access.",
+      "errorGeneric": "Sign-in is not available right now. Please try again."
+    },
+    "dashboard": {
+      "title": "Booking Dashboard",
+      "filter": {
+        "all": "All",
+        "actionRequired": "Action Required"
+      },
+      "table": {
+        "customer": "Customer",
+        "dates": "Period",
+        "status": "Status",
+        "payment": "Payment",
+        "deposit": "Deposit",
+        "total": "Total",
+        "actions": "Actions",
+        "depositPaid": "Paid",
+        "depositPending": "Pending"
+      },
+      "status": {
+        "pending": "Pending",
+        "awaiting_payment": "Awaiting Payment",
+        "confirmed": "Confirmed",
+        "active": "Active",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "actions": {
+        "confirmPayment": "Confirm Payment",
+        "paymentReceived": "Payment Received",
+        "depositRequired": "Deposit Required",
+        "confirming": "Confirming…"
+      },
+      "empty": "No bookings found.",
+      "error": "Failed to load bookings."
+    },
+    "calendar": {
+      "title": "Calendar",
+      "blockDate": "Block Date",
+      "unblockDate": "Unblock Date",
+      "blockReason": "Reason (optional)",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "legend": {
+        "booked": "Booked",
+        "blocked": "Blocked"
+      }
+    }
+  }
+}

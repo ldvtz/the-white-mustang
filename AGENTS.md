@@ -27,7 +27,7 @@ You are an expert full-stack Vue/Nuxt 3 developer, Tailwind CSS designer, and Po
 - **Client:** Always use the official `@supabase/supabase-js` client via the Nuxt Supabase module.
 - **Types:** Always use generated TypeScript types from the database. Do not use `any`.
 - **Security:** Assume all data fetching must respect Row Level Security (RLS). 
-- **Querying:** When fetching data, only select the specific columns needed for the UI.
+- **Querying:** When fetching data, only select the specific columns needed for the UI. Refer to **context7** for table schemas and relationship definitions.
 
 # 4. Performance & Edge Caching (Bandwidth Protection)
 - **Data Fetching:** Always use Nuxt's `useFetch` or `useAsyncData` for fetching from Supabase. DO NOT use plain `fetch` or `axios` in components.
@@ -43,6 +43,7 @@ You are an expert full-stack Vue/Nuxt 3 developer, Tailwind CSS designer, and Po
 # 6. AI Workflow & Scope Management (CRITICAL)
 - **Atomic Generation:** Break complex requests into atomic steps: 1) UI/Mockup, 2) Reactivity/State, 3) Supabase Integration. Execute one step, then stop and wait for human review.
 - **Targeted Edits:** When modifying code, only output relevant chunks. Do not silently delete unrelated logic.
+- **Definition Check:** Before writing any data-fetching logic or API routes, consult **context7** to ensure alignment with existing contracts.
 
 # 7. Internationalization (i18n) & Copywriting
 - **Framework:** Use the official `@nuxtjs/i18n` module.
@@ -55,3 +56,8 @@ You are an expert full-stack Vue/Nuxt 3 developer, Tailwind CSS designer, and Po
 - **Always in Sync:** The `README.md` must ALWAYS reflect the current state of the codebase. Update the README whenever core features, dependencies, or `.env` variables are added.
 - **Getting Started:** Maintain a clear, foolproof "Local Development Setup" section including terminal commands for Nuxt dev and local Supabase Docker.
 - **Architectural Decisions:** Keep a clean section documenting technical choices (e.g., Vercel edge caching, i18n strategy, and static image optimization).
+
+# 9. API Definitions & context7 Strategy
+- **Source of Truth:** Use **context7** as the definitive guide for all API structures, endpoint naming conventions, and payload requirements.
+- **Zero Hallucination:** Do not invent API endpoints or response structures. If a required endpoint is not defined in context7, request the definition before proceeding with implementation.
+- **Contract Adherence:** Ensure that all Nuxt Server Routes (`/server/api`) and frontend composables strictly follow the data shapes outlined in the context7 definitions to maintain frontend-backend parity.

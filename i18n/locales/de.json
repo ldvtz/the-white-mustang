@@ -1,0 +1,78 @@
+{
+  "admin": {
+    "common": {
+      "loading": "Laden…"
+    },
+    "nav": {
+      "dashboard": "Buchungen",
+      "calendar": "Kalender",
+      "handover": "Übergaben",
+      "customers": "Kunden",
+      "signOut": "Abmelden",
+      "domain": "thewhitemustang.ch"
+    },
+    "login": {
+      "seoTitle": "Admin Login | The White Mustang",
+      "seoDescription": "Geschützter Administrationszugang für The White Mustang.",
+      "brand": "The White Mustang",
+      "motif": "/// Admin",
+      "statement": "American Emotion. Swiss Perfection.",
+      "supporting": "Geschützter Zugang für Buchungen, Kalender und operative Abläufe.",
+      "title": "Admin Login",
+      "description": "Melden Sie sich mit Ihrem autorisierten Supabase-Admin-Konto an.",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "submit": "Einloggen",
+      "submitting": "Prüfung…",
+      "errorInvalid": "Die Zugangsdaten konnten nicht bestätigt werden.",
+      "errorUnauthorized": "Dieses Konto ist nicht für den Admin-Bereich freigeschaltet.",
+      "errorGeneric": "Der Login ist im Moment nicht möglich. Bitte versuchen Sie es erneut."
+    },
+    "dashboard": {
+      "title": "Buchungsübersicht",
+      "filter": {
+        "all": "Alle",
+        "actionRequired": "Handlungsbedarf"
+      },
+      "table": {
+        "customer": "Kunde",
+        "dates": "Zeitraum",
+        "status": "Status",
+        "payment": "Zahlung",
+        "deposit": "Depot",
+        "total": "Betrag",
+        "actions": "Aktionen",
+        "depositPaid": "Bezahlt",
+        "depositPending": "Ausstehend"
+      },
+      "status": {
+        "pending": "Ausstehend",
+        "awaiting_payment": "Zahlung ausstehend",
+        "confirmed": "Bestätigt",
+        "active": "Aktiv",
+        "completed": "Abgeschlossen",
+        "cancelled": "Storniert"
+      },
+      "actions": {
+        "confirmPayment": "Zahlung bestätigen",
+        "paymentReceived": "Zahlung erhalten",
+        "depositRequired": "Depot erforderlich",
+        "confirming": "Bestätige…"
+      },
+      "empty": "Keine Buchungen vorhanden.",
+      "error": "Fehler beim Laden der Buchungen."
+    },
+    "calendar": {
+      "title": "Kalender",
+      "blockDate": "Datum sperren",
+      "unblockDate": "Sperrung aufheben",
+      "blockReason": "Grund (optional)",
+      "confirm": "Bestätigen",
+      "cancel": "Abbrechen",
+      "legend": {
+        "booked": "Gebucht",
+        "blocked": "Gesperrt"
+      }
+    }
+  }
+}

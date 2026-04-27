@@ -39,7 +39,10 @@ Copy the `API URL` and `Anon key` into your `.env` file:
 ```env
 SUPABASE_URL=http://127.0.0.1:54321
 SUPABASE_KEY=<anon-key-from-above>
+NUXT_SUPABASE_SECRET_KEY=<service-role-key-from-above>
 ```
+
+The `NUXT_SUPABASE_SECRET_KEY` service role key is used only inside protected server routes. Never expose it to the browser.
 
 To stop Supabase:
 
@@ -67,6 +70,26 @@ npm run dev
 
 The app is available at `http://localhost:3000`.
 
+## Admin Authentication
+
+All pages under `/admin` are protected by Supabase Auth. The login page lives at `/admin/login`, and all `/api/admin/*` server routes verify the active Supabase session before using the service role client.
+
+Admin access is granted through Supabase Auth `app_metadata`. A user is treated as an admin when one of these markers exists:
+
+```json
+{ "role": "admin" }
+```
+
+```json
+{ "admin": true }
+```
+
+```json
+{ "roles": ["admin"] }
+```
+
+Set this metadata from Supabase Studio, a trusted admin script, or another service-role-only flow. Do not use `user_metadata` for admin privileges because users can update it themselves.
+
 ## Production Build
 
 ```bash
@@ -81,6 +104,7 @@ npm run preview
 | Framework | Nuxt 3 | SSR, file-based routing, built-in i18n support |
 | Styling | Tailwind CSS | Utility-first, no runtime overhead |
 | Database / Auth | Supabase | Postgres with RLS, real-time, and managed auth |
+| Admin access | Supabase Auth `app_metadata` + Nuxt route middleware | Pages and server endpoints both verify admin sessions |
 | i18n | `@nuxtjs/i18n` | DE (default) + EN with `$t()` composable |
 | Data fetching | `useFetch` / `useAsyncData` | Server-side caching, avoids client-side Supabase calls |
 | Images | `/public` or CDN | Heavy vehicle images are not stored in the database |
