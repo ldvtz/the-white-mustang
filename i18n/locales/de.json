@@ -66,7 +66,27 @@
         "name": "Name",
         "email": "E-Mail",
         "phone": "Telefon",
-        "age": "Alter"
+        "age": "Alter",
+        "comment": "Nachricht",
+        "commentHint": "Optional: Teilen Sie uns besondere Wünsche oder Fragen zur Buchung mit."
+      },
+      "payment": {
+        "label": "Zahlungsmethode",
+        "description": "Die Zahlung wird manuell bestätigt. Sie erhalten die passenden Angaben nach dem Absenden.",
+        "methods": {
+          "twint": "TWINT",
+          "bank_transfer": "Banküberweisung",
+          "cash": "Barzahlung"
+        },
+        "nextSteps": {
+          "twint": "Bitte senden Sie die Zahlung per TWINT. Wir bestätigen die Buchung nach Zahlungseingang.",
+          "bank_transfer": "Bitte überweisen Sie den Betrag per Banküberweisung. Wir bestätigen die Buchung nach Zahlungseingang.",
+          "cash": "Ihre Buchung ist vorgemerkt. Die Barzahlung erfolgt gemäss Vereinbarung bei der Übergabe."
+        },
+        "recipient": "Empfänger: {value}",
+        "accountName": "Kontoinhaber: {value}",
+        "iban": "IBAN: {value}",
+        "note": "Zahlungsnotiz: {value}"
       },
       "privacy": "Ich bin einverstanden, dass The White Mustang meine Angaben zur Bearbeitung der Buchungsanfrage verwendet.",
       "summary": {
@@ -78,18 +98,54 @@
       "submit": "Anfrage senden",
       "submitting": "Senden…",
       "success": "Ihre Anfrage ist eingegangen. Referenz: {id}",
+      "manageLink": "Buchung verwalten",
       "errors": {
         "nameRequired": "Name ist erforderlich.",
         "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
         "phoneInvalid": "Bitte geben Sie eine gültige Telefonnummer ein.",
         "useCaseRequired": "Bitte wählen Sie den Anlass.",
+        "paymentMethodRequired": "Bitte wählen Sie eine Zahlungsmethode.",
         "datesRequired": "Bitte wählen Sie Start- und Rückgabedatum.",
         "invalidDate": "Bitte wählen Sie gültige Kalenderdaten.",
         "pastDate": "Das Startdatum darf nicht in der Vergangenheit liegen.",
-        "dateOrder": "Das Rückgabedatum muss nach dem Startdatum liegen.",
+        "dateOrder": "Das Rückgabedatum darf nicht vor dem Startdatum liegen.",
         "unavailable": "Dieser Zeitraum ist nicht verfügbar.",
         "privacyRequired": "Bitte bestätigen Sie die Datenschutzhinweise.",
         "submitFailed": "Die Anfrage konnte gerade nicht gesendet werden. Bitte versuchen Sie es erneut."
+      }
+    },
+    "manage": {
+      "seoTitle": "Buchung verwalten | The White Mustang",
+      "seoDescription": "Verwalten Sie Ihre Buchung für The White Mustang.",
+      "motif": "/// Buchung",
+      "heading": "Buchung verwalten",
+      "loading": "Buchung wird geladen…",
+      "reference": "Referenz",
+      "status": "Status",
+      "period": "Zeitraum",
+      "total": "Betrag",
+      "paymentHeading": "Zahlung",
+      "commentsHeading": "Nachrichten",
+      "noComments": "Noch keine Nachrichten vorhanden.",
+      "commentPlaceholder": "Ihre Nachricht",
+      "sendComment": "Nachricht senden",
+      "saving": "Speichern…",
+      "cancelHeading": "Stornierung",
+      "cancelAllowed": "Sie können diese Buchung bis {days} Tage vor dem Startdatum online stornieren.",
+      "cancelBlocked": "Diese Buchung kann online nicht mehr storniert werden. Bitte kontaktieren Sie uns direkt.",
+      "cancelPlaceholder": "Grund der Stornierung (optional)",
+      "cancelSubmit": "Buchung stornieren",
+      "cancelling": "Storniere…",
+      "refundManual": "Eine allfällige Rückzahlung wird manuell geprüft und abgewickelt.",
+      "author": {
+        "customer": "Kunde",
+        "admin": "The White Mustang",
+        "system": "System"
+      },
+      "errors": {
+        "loadFailed": "Diese Buchung konnte nicht geladen werden. Der Link ist möglicherweise abgelaufen.",
+        "commentFailed": "Die Nachricht konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+        "cancelFailed": "Die Buchung konnte nicht storniert werden. Bitte kontaktieren Sie uns direkt."
       }
     },
     "footer": {
@@ -142,7 +198,9 @@
         "total": "Betrag",
         "actions": "Aktionen",
         "depositPaid": "Bezahlt",
-        "depositPending": "Ausstehend"
+        "depositPending": "Ausstehend",
+        "customerComments": "{count} Kundennachricht | {count} Kundennachrichten",
+        "refundRequired": "Rückzahlung prüfen"
       },
       "status": {
         "pending": "Ausstehend",

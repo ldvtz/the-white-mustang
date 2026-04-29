@@ -2,6 +2,7 @@ import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database, BookingStatus } from '@@/types/supabase'
 import { calculateBookingPrice } from '@@/shared/booking'
 import { assertDatesAvailable, parseBookingBody, type PublicBookingBody } from '../utils/publicBooking'
+import type { PaymentInstructions } from '../utils/paymentInstructions'
 
 type PublicBookingResponse = {
   id: string
@@ -9,6 +10,9 @@ type PublicBookingResponse = {
   endDate: string
   totalPrice: number
   status: BookingStatus
+  paymentMethod: string
+  paymentInstructions: PaymentInstructions
+  managementUrl: string
 }
 
 export default defineEventHandler(async (event): Promise<PublicBookingResponse> => {
@@ -43,16 +47,55 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
       customer_id: customer.id,
       start_date: parsed.startDate,
       end_date: parsed.endDate,
-      payment_method: 'deferred',
+      payment_method: parsed.paymentMethod,
       total_price: price.total,
-      status: 'pending',
-      deposit_paid: false,
     })
-    .select('id, start_date, end_date, total_price, status')
+    .select('id, start_date, end_date, total_price, status, payment_method')
     .single()
 
   if (bookingError || !booking) {
     throw createError({ statusCode: 500, message: bookingError?.message ?? 'Booking could not be saved' })
+  }
+
+  if (parsed.comment) {
+    const { error: commentError } = await supabase
+      .from('booking_comments')
+      .insert({
+        booking_id: booking.id,
+        author_type: 'customer',
+        message: parsed.comment,
+      })
+
+    if (commentError) throw createError({ statusCode: 500, message: commentError.message })
+  }
+
+  const managementToken = createManagementToken()
+  const { error: tokenError } = await supabase
+    .from('booking_management_tokens')
+    .insert({
+      booking_id: booking.id,
+      token_hash: hashManagementToken(managementToken),
+      expires_at: managementTokenExpiry(),
+    })
+
+  if (tokenError) throw createError({ statusCode: 500, message: tokenError.message })
+
+  const managementUrl = getManagementUrl(event, managementToken)
+  const paymentInstructions = getPaymentInstructions(event, parsed.paymentMethod)
+
+  try {
+    await sendBookingRequestReceived(
+      parsed.email,
+      parsed.name,
+      booking.start_date,
+      booking.end_date,
+      booking.total_price,
+      parsed.paymentMethod,
+      managementUrl,
+      typeof body.locale === 'string' ? body.locale : 'de',
+    )
+  } catch (error) {
+    console.error('Failed to send booking management email', { bookingId: booking.id, error })
   }
 
   return {
@@ -61,5 +104,8 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
     endDate: booking.end_date,
     totalPrice: booking.total_price,
     status: booking.status,
+    paymentMethod: booking.payment_method,
+    paymentInstructions,
+    managementUrl,
   }
 })

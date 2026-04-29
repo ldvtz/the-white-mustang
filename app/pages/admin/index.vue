@@ -46,11 +46,19 @@ const formatCHF = (n: number) =>
 function isTwintPending(b: BookingWithCustomer) {
   return b.payment_method === 'twint' && b.status === 'pending'
 }
-function isIbanAwaiting(b: BookingWithCustomer) {
-  return b.payment_method === 'iban' && b.status === 'awaiting_payment'
+function isBankTransferAwaiting(b: BookingWithCustomer) {
+  return b.payment_method === 'bank_transfer' && b.status === 'awaiting_payment'
 }
 function isCashDepositRequired(b: BookingWithCustomer) {
   return b.payment_method === 'cash' && !b.deposit_paid
+}
+
+function paymentLabel(method: string) {
+  return t(`storefront.booking.payment.methods.${method}`)
+}
+
+function customerCommentCount(b: BookingWithCustomer) {
+  return (b.booking_comments ?? []).filter((comment) => comment.author_type === 'customer').length
 }
 </script>
 
@@ -138,6 +146,12 @@ function isCashDepositRequired(b: BookingWithCustomer) {
             <td class="px-4 py-3">
               <span class="font-medium">{{ booking.customers.name }}</span>
               <span class="block text-xs text-steel-grey">{{ booking.customers.email }}</span>
+              <span v-if="customerCommentCount(booking) > 0" class="mt-1 block text-xs font-semibold text-taillight-ruby">
+                {{ t('admin.dashboard.table.customerComments', { count: customerCommentCount(booking) }) }}
+              </span>
+              <span v-if="booking.refund_handling_required" class="mt-1 block text-xs font-semibold text-amber-700">
+                {{ t('admin.dashboard.table.refundRequired') }}
+              </span>
             </td>
             <td class="px-4 py-3 text-xs text-steel-grey whitespace-nowrap">
               {{ formatDate(booking.start_date) }} – {{ formatDate(booking.end_date) }}
@@ -150,7 +164,7 @@ function isCashDepositRequired(b: BookingWithCustomer) {
                 {{ t(`admin.dashboard.status.${booking.status}`) }}
               </span>
             </td>
-            <td class="px-4 py-3 text-xs uppercase tracking-wide">{{ booking.payment_method }}</td>
+            <td class="px-4 py-3 text-xs uppercase tracking-wide">{{ paymentLabel(booking.payment_method) }}</td>
             <td class="px-4 py-3 text-xs font-medium">
               <span :class="booking.deposit_paid ? 'text-green-700' : 'text-amber-700'">
                 {{ booking.deposit_paid ? t('admin.dashboard.table.depositPaid') : t('admin.dashboard.table.depositPending') }}
@@ -176,7 +190,7 @@ function isCashDepositRequired(b: BookingWithCustomer) {
 
               <!-- IBAN: payment received -->
               <button
-                v-else-if="isIbanAwaiting(booking)"
+                v-else-if="isBankTransferAwaiting(booking)"
                 :disabled="inflightIds.has(booking.id)"
                 class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-taillight-ruby text-alpine-white text-xs font-medium rounded transition-opacity disabled:opacity-50 min-h-[36px]"
                 @click="markPaymentReceived(booking.id)"

@@ -26,7 +26,7 @@ CREATE TABLE bookings (
   total_price    numeric(10,2)  NOT NULL CHECK (total_price >= 0),
   deposit_paid   boolean        NOT NULL DEFAULT false,
   created_at     timestamptz    NOT NULL DEFAULT now(),
-  CHECK (end_date > start_date)
+  CONSTRAINT bookings_date_order_check CHECK (end_date >= start_date)
 );
 
 CREATE TABLE handover_logs (

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { addDaysIso, todayIso } from '@@/shared/booking'
+import { todayIso } from '@@/shared/booking'
 import type { BookingFormState } from '~/composables/useBookingRequest'
 
 const props = defineProps<{
@@ -11,13 +11,11 @@ const props = defineProps<{
 const { t } = useI18n()
 
 const today = todayIso()
-const endDateMin = computed(() =>
-  props.form.startDate ? addDaysIso(props.form.startDate, 1) : today,
-)
+const endDateMin = computed(() => props.form.startDate || today)
 
 function onStartDateChange(date: string) {
   props.form.startDate = date
-  if (date && props.form.endDate && props.form.endDate <= date) {
+  if (date && props.form.endDate && props.form.endDate < date) {
     props.form.endDate = ''
   }
 }

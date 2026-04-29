@@ -66,7 +66,27 @@
         "name": "Name",
         "email": "Email",
         "phone": "Phone",
-        "age": "Age"
+        "age": "Age",
+        "comment": "Message",
+        "commentHint": "Optional: share any special wishes or questions about your booking."
+      },
+      "payment": {
+        "label": "Payment Method",
+        "description": "Payment is confirmed manually. You will receive the matching instructions after submission.",
+        "methods": {
+          "twint": "TWINT",
+          "bank_transfer": "Bank Transfer",
+          "cash": "Cash"
+        },
+        "nextSteps": {
+          "twint": "Please send the payment by TWINT. We will confirm your booking once payment is received.",
+          "bank_transfer": "Please transfer the amount by bank transfer. We will confirm your booking once payment is received.",
+          "cash": "Your booking is reserved. Cash payment is handled as agreed at handover."
+        },
+        "recipient": "Recipient: {value}",
+        "accountName": "Account name: {value}",
+        "iban": "IBAN: {value}",
+        "note": "Payment note: {value}"
       },
       "privacy": "I agree that The White Mustang may use my details to process this booking request.",
       "summary": {
@@ -78,18 +98,54 @@
       "submit": "Send Request",
       "submitting": "Sending…",
       "success": "Your request has been received. Reference: {id}",
+      "manageLink": "Manage booking",
       "errors": {
         "nameRequired": "Name is required.",
         "emailInvalid": "Please enter a valid email address.",
         "phoneInvalid": "Please enter a valid phone number.",
         "useCaseRequired": "Please choose the occasion.",
+        "paymentMethodRequired": "Please choose a payment method.",
         "datesRequired": "Please choose a start and return date.",
         "invalidDate": "Please choose valid calendar dates.",
         "pastDate": "The start date cannot be in the past.",
-        "dateOrder": "The return date must be after the start date.",
+        "dateOrder": "The return date cannot be before the start date.",
         "unavailable": "This period is not available.",
         "privacyRequired": "Please confirm the privacy notice.",
         "submitFailed": "The request could not be sent right now. Please try again."
+      }
+    },
+    "manage": {
+      "seoTitle": "Manage Booking | The White Mustang",
+      "seoDescription": "Manage your booking for The White Mustang.",
+      "motif": "/// Booking",
+      "heading": "Manage Booking",
+      "loading": "Loading booking…",
+      "reference": "Reference",
+      "status": "Status",
+      "period": "Period",
+      "total": "Total",
+      "paymentHeading": "Payment",
+      "commentsHeading": "Messages",
+      "noComments": "No messages yet.",
+      "commentPlaceholder": "Your message",
+      "sendComment": "Send Message",
+      "saving": "Saving…",
+      "cancelHeading": "Cancellation",
+      "cancelAllowed": "You can cancel this booking online until {days} days before the start date.",
+      "cancelBlocked": "This booking can no longer be cancelled online. Please contact us directly.",
+      "cancelPlaceholder": "Cancellation reason (optional)",
+      "cancelSubmit": "Cancel Booking",
+      "cancelling": "Cancelling…",
+      "refundManual": "Any applicable refund is reviewed and handled manually.",
+      "author": {
+        "customer": "Customer",
+        "admin": "The White Mustang",
+        "system": "System"
+      },
+      "errors": {
+        "loadFailed": "This booking could not be loaded. The link may have expired.",
+        "commentFailed": "The message could not be saved. Please try again.",
+        "cancelFailed": "The booking could not be cancelled. Please contact us directly."
       }
     },
     "footer": {
@@ -142,7 +198,9 @@
         "total": "Total",
         "actions": "Actions",
         "depositPaid": "Paid",
-        "depositPending": "Pending"
+        "depositPending": "Pending",
+        "customerComments": "{count} customer message | {count} customer messages",
+        "refundRequired": "Review refund"
       },
       "status": {
         "pending": "Pending",

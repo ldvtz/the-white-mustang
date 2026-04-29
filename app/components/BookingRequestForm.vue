@@ -58,6 +58,8 @@ onMounted(() => {
       <BookingUseCaseFields :form="form" />
       <BookingDateFields :form="form" :errors="visibleErrors" :unavailable-dates="unavailableDates" />
       <BookingContactFields :form="form" :errors="visibleErrors" />
+      <BookingPaymentFields :form="form" :errors="visibleErrors" />
+      <BookingCommentField :form="form" />
       <BookingPrivacyField :form="form" :errors="visibleErrors" />
     </section>
 

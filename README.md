@@ -40,6 +40,13 @@ Copy the `API URL` and `Anon key` into your `.env` file:
 SUPABASE_URL=http://127.0.0.1:54321
 SUPABASE_KEY=<anon-key-from-above>
 NUXT_SUPABASE_SECRET_KEY=<service-role-key-from-above>
+NUXT_BOOKING_CANCELLATION_CUTOFF_DAYS=3
+NUXT_TWINT_PAYMENT_RECIPIENT="The White Mustang"
+NUXT_TWINT_PAYMENT_NOTE="Booking reference"
+NUXT_TWINT_QR_IMAGE_URL=
+NUXT_BANK_TRANSFER_ACCOUNT_NAME="The White Mustang"
+NUXT_BANK_TRANSFER_IBAN="CH00 0000 0000 0000 0000 0"
+NUXT_BANK_TRANSFER_NOTE="Booking reference"
 ```
 
 The `NUXT_SUPABASE_SECRET_KEY` service role key is used only inside protected server routes. Never expose it to the browser.
@@ -92,16 +99,25 @@ Set this metadata from Supabase Studio, a trusted admin script, or another servi
 
 ## Public Booking Requests
 
-The storefront includes a no-payment booking request flow in the pricing calendar section. Customers select a use case, start date, return date, and contact details; the app calculates a non-binding CHF estimate and stores the request in Supabase.
+The storefront includes a manual-payment booking request flow in the pricing calendar section. Customers select a use case, start date, return date, contact details, payment method, and optional comment; the app calculates a CHF estimate and stores the request in Supabase. Booking ranges are inclusive, so same-day bookings are valid.
 
-Payment execution is intentionally not implemented yet. New public requests are inserted with `payment_method = deferred`, `status = pending`, and `deposit_paid = false` so the admin dashboard can handle them manually until the payment slice is added.
+Supported payment methods are `twint`, `bank_transfer`, and `cash`. Payment execution is intentionally manual:
+
+- `twint` bookings start as `pending` until the admin confirms payment.
+- `bank_transfer` bookings start as `awaiting_payment` until the admin marks payment received.
+- `cash` bookings start as `confirmed` with the deposit marked unpaid.
+
+Each booking receives a secure customer management link. The raw token is only returned/sent to the customer; the database stores a hash. Customers can add comments and cancel `pending`, `awaiting_payment`, or `confirmed` bookings until `NUXT_BOOKING_CANCELLATION_CUTOFF_DAYS` days before the start date. Confirmed or paid cancellations are flagged for manual refund handling.
 
 Public booking endpoints:
 
 | Endpoint | Purpose |
 |---|---|
 | `GET /api/availability` | Returns unavailable calendar dates derived from active bookings and blocked dates |
-| `POST /api/bookings` | Validates the request, upserts the customer by email, recalculates the price server-side, rejects unavailable ranges, and creates a pending booking |
+| `POST /api/bookings` | Validates the request, upserts the customer by email, recalculates the price server-side, rejects unavailable ranges, creates the booking, stores the initial comment, and returns payment instructions plus a management link |
+| `GET /api/bookings/manage/:token` | Returns minimal booking, payment, comment, and cancellation details for a valid management token |
+| `POST /api/bookings/manage/:token/comments` | Adds a customer-visible comment |
+| `POST /api/bookings/manage/:token/cancel` | Cancels an eligible booking before the configured cutoff |
 
 ## Production Build
 
@@ -121,3 +137,5 @@ npm run preview
 | i18n | `@nuxtjs/i18n` | DE (default) + EN with `$t()` composable |
 | Data fetching | `useFetch` / `useAsyncData` | Server-side caching; public booking routes expose only validated, minimal data |
 | Images | `/public` or CDN | Heavy vehicle images are not stored in the database |
+| Payments | Manual TWINT / bank transfer / cash | Keeps launch scope simple while preserving admin confirmation and refund handling |
+| Customer booking access | Hashed magic-link token | No customer account required; direct lookup by personal data is avoided |

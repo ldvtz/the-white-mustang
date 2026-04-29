@@ -3,6 +3,16 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  runtimeConfig: {
+    bookingCancellationCutoffDays: 3,
+    twintPaymentRecipient: '',
+    twintPaymentNote: '',
+    twintQrImageUrl: '',
+    bankTransferAccountName: '',
+    bankTransferIban: '',
+    bankTransferNote: '',
+  },
+
   modules: [
     '@nuxtjs/supabase',
     '@nuxtjs/tailwindcss',

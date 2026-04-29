@@ -37,9 +37,33 @@ const formatCHF = (value: number) =>
     <p v-if="submitErrorKey" data-testid="booking-submit-error" class="mt-5 rounded-md border border-taillight-ruby/20 bg-taillight-ruby/5 px-4 py-3 text-sm text-taillight-ruby">
       {{ t(submitErrorKey) }}
     </p>
-    <p v-if="confirmation" data-testid="booking-confirmation" class="mt-5 rounded-md border border-green-700/20 bg-green-50 px-4 py-3 text-sm text-green-800">
-      {{ t('storefront.booking.success', { id: confirmation.id }) }}
-    </p>
+    <div v-if="confirmation" data-testid="booking-confirmation" class="mt-5 rounded-md border border-green-700/20 bg-green-50 px-4 py-3 text-sm text-green-900">
+      <p>{{ t('storefront.booking.success', { id: confirmation.id }) }}</p>
+      <div data-testid="booking-payment-instructions" class="mt-3 space-y-1 text-green-900">
+        <p class="font-semibold">
+          {{ t(`storefront.booking.payment.nextSteps.${confirmation.paymentMethod}`) }}
+        </p>
+        <p v-if="confirmation.paymentInstructions.recipient">
+          {{ t('storefront.booking.payment.recipient', { value: confirmation.paymentInstructions.recipient }) }}
+        </p>
+        <p v-if="confirmation.paymentInstructions.accountName">
+          {{ t('storefront.booking.payment.accountName', { value: confirmation.paymentInstructions.accountName }) }}
+        </p>
+        <p v-if="confirmation.paymentInstructions.iban">
+          {{ t('storefront.booking.payment.iban', { value: confirmation.paymentInstructions.iban }) }}
+        </p>
+        <p v-if="confirmation.paymentInstructions.note">
+          {{ t('storefront.booking.payment.note', { value: confirmation.paymentInstructions.note }) }}
+        </p>
+        <a
+          data-testid="booking-management-link"
+          :href="confirmation.managementUrl"
+          class="inline-flex min-h-[44px] items-center font-bold text-green-950 underline underline-offset-4"
+        >
+          {{ t('storefront.booking.manageLink') }}
+        </a>
+      </div>
+    </div>
 
     <button
       data-testid="booking-submit"

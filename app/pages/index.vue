@@ -20,7 +20,7 @@ const { data: availability, error: availabilityError } = await useFetch<PublicAv
 const unavailableDates = computed(() => availability.value?.unavailableDates ?? [])
 
 function selectBookingDate(date: string) {
-  if (!bookingSelection.startDate || bookingSelection.endDate || date <= bookingSelection.startDate) {
+  if (!bookingSelection.startDate || bookingSelection.endDate || date < bookingSelection.startDate) {
     bookingSelection.startDate = date
     bookingSelection.endDate = ''
     return

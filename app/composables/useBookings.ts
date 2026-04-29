@@ -14,9 +14,10 @@ export function useBookings() {
     { default: () => [], server: true },
   )
 
-  // IBAN bookings awaiting admin confirmation are the "action required" cases
   const isActionRequired = (b: BookingWithCustomer): boolean =>
     b.status === 'awaiting_payment'
+    || b.refund_handling_required
+    || (b.booking_comments ?? []).some((comment) => comment.author_type === 'customer')
 
   const filteredBookings = computed<BookingWithCustomer[]>(() => {
     const all = allBookings.value ?? []

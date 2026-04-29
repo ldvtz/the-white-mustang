@@ -1,5 +1,6 @@
 export type BookingUseCase = 'joyride' | 'wedding'
 export type PriceTier = 'standard' | 'weekend' | 'peak' | 'wedding'
+export type PaymentMethod = 'twint' | 'bank_transfer' | 'cash'
 
 export type BookingPrice = {
   total: number
@@ -130,7 +131,7 @@ export function validateBookingDates(
   if (!startDate || !endDate) return { ok: false, errorKey: 'storefront.booking.errors.datesRequired' }
   if (!isIsoDate(startDate) || !isIsoDate(endDate)) return { ok: false, errorKey: 'storefront.booking.errors.invalidDate' }
   if (compareIsoDates(startDate, todayIso()) < 0) return { ok: false, errorKey: 'storefront.booking.errors.pastDate' }
-  if (compareIsoDates(endDate, startDate) <= 0) return { ok: false, errorKey: 'storefront.booking.errors.dateOrder' }
+  if (compareIsoDates(endDate, startDate) < 0) return { ok: false, errorKey: 'storefront.booking.errors.dateOrder' }
 
   const requestedDates = listIsoDateRange(startDate, endDate)
   if (requestedDates.some((date) => unavailableDates.has(date))) {
@@ -142,4 +143,18 @@ export function validateBookingDates(
 
 export function isValidBookingUseCase(value: unknown): value is BookingUseCase {
   return value === 'joyride' || value === 'wedding'
+}
+
+export function isValidPaymentMethod(value: unknown): value is PaymentMethod {
+  return value === 'twint' || value === 'bank_transfer' || value === 'cash'
+}
+
+export function canCancelBooking(
+  status: string,
+  startDate: string,
+  cutoffDays: number,
+  today: string = todayIso(),
+): boolean {
+  if (status !== 'pending' && status !== 'awaiting_payment' && status !== 'confirmed') return false
+  return compareIsoDates(today, addDaysIso(startDate, -cutoffDays)) <= 0
 }

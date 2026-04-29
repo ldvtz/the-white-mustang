@@ -1,6 +1,7 @@
 import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
 import {
+  isValidPaymentMethod,
   isValidBookingUseCase,
   listIsoDateRange,
   validateBookingDates,
@@ -15,14 +16,18 @@ export type PublicBookingBody = {
   phone?: unknown
   nationality?: unknown
   age?: unknown
+  paymentMethod?: unknown
+  comment?: unknown
   locale?: unknown
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const MAX_TEXT_LENGTH = 160
+const MAX_COMMENT_LENGTH = 1200
 
 export function parseBookingBody(body: PublicBookingBody) {
   const useCase = body.useCase
+  const paymentMethod = body.paymentMethod
   const startDate = requireText(body.startDate, 'Missing start date')
   const endDate = requireText(body.endDate, 'Missing end date')
   const name = requireText(body.name, 'Missing name')
@@ -30,15 +35,19 @@ export function parseBookingBody(body: PublicBookingBody) {
   const phone = requireText(body.phone, 'Missing phone')
   const nationality = optionalText(body.nationality)
   const age = optionalAge(body.age)
+  const comment = optionalLongText(body.comment)
 
   if (!isValidBookingUseCase(useCase)) {
     throw createError({ statusCode: 400, message: 'Invalid booking use case' })
+  }
+  if (!isValidPaymentMethod(paymentMethod)) {
+    throw createError({ statusCode: 400, message: 'Invalid payment method' })
   }
 
   if (!EMAIL_RE.test(email)) throw createError({ statusCode: 400, message: 'Invalid email' })
   if (phone.length < 7) throw createError({ statusCode: 400, message: 'Invalid phone' })
 
-  return { useCase, startDate, endDate, name, email, phone, nationality, age }
+  return { useCase, paymentMethod, startDate, endDate, name, email, phone, nationality, age, comment }
 }
 
 export async function assertDatesAvailable(
@@ -66,6 +75,14 @@ function optionalText(value: unknown): string | null {
   if (typeof value !== 'string') throw createError({ statusCode: 400, message: 'Invalid text value' })
   const trimmed = value.trim()
   if (trimmed.length > MAX_TEXT_LENGTH) throw createError({ statusCode: 400, message: 'Text value is too long' })
+  return trimmed || null
+}
+
+function optionalLongText(value: unknown): string | null {
+  if (value === undefined || value === null || value === '') return null
+  if (typeof value !== 'string') throw createError({ statusCode: 400, message: 'Invalid text value' })
+  const trimmed = value.trim()
+  if (trimmed.length > MAX_COMMENT_LENGTH) throw createError({ statusCode: 400, message: 'Text value is too long' })
   return trimmed || null
 }
 

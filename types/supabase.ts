@@ -57,34 +57,49 @@ export type Database = {
       }
       bookings: {
         Row: {
+          cancellation_note: string | null
+          cancelled_at: string | null
+          cancelled_by: string | null
           created_at: string
           customer_id: string
           deposit_paid: boolean
           end_date: string
           id: string
           payment_method: string
+          payment_received_at: string | null
+          refund_handling_required: boolean
           start_date: string
           status: Database["public"]["Enums"]["booking_status"]
           total_price: number
         }
         Insert: {
+          cancellation_note?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
           created_at?: string
           customer_id: string
           deposit_paid?: boolean
           end_date: string
           id?: string
           payment_method: string
+          payment_received_at?: string | null
+          refund_handling_required?: boolean
           start_date: string
           status?: Database["public"]["Enums"]["booking_status"]
           total_price: number
         }
         Update: {
+          cancellation_note?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
           created_at?: string
           customer_id?: string
           deposit_paid?: boolean
           end_date?: string
           id?: string
           payment_method?: string
+          payment_received_at?: string | null
+          refund_handling_required?: boolean
           start_date?: string
           status?: Database["public"]["Enums"]["booking_status"]
           total_price?: number
@@ -95,6 +110,76 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_comments: {
+        Row: {
+          author_type: string
+          booking_id: string
+          created_at: string
+          id: string
+          message: string
+          visible_to_customer: boolean
+        }
+        Insert: {
+          author_type: string
+          booking_id: string
+          created_at?: string
+          id?: string
+          message: string
+          visible_to_customer?: boolean
+        }
+        Update: {
+          author_type?: string
+          booking_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          visible_to_customer?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_comments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_management_tokens: {
+        Row: {
+          booking_id: string
+          created_at: string
+          expires_at: string
+          id: string
+          revoked_at: string | null
+          token_hash: string
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string
+          expires_at: string
+          id?: string
+          revoked_at?: string | null
+          token_hash: string
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          revoked_at?: string | null
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_management_tokens_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
         ]
@@ -367,6 +452,9 @@ export const Constants = {
 
 export type BookingStatus = Enums<"booking_status">
 export type BlockedDate = Tables<"blocked_dates">
+export type BookingComment = Tables<"booking_comments">
+export type PaymentMethod = "twint" | "bank_transfer" | "cash"
 export type BookingWithCustomer = Tables<"bookings"> & {
   customers: Pick<Tables<"customers">, "name" | "email">
+  booking_comments?: Pick<Tables<"booking_comments">, "id" | "author_type" | "message" | "visible_to_customer" | "created_at">[]
 }
