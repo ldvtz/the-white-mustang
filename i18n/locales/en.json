@@ -1,4 +1,62 @@
 {
+  "storefront": {
+    "seoTitle": "The White Mustang — American Emotion. Swiss Perfection.",
+    "seoDescription": "Rent the white Ford Mustang GT 5.0 V8 Convertible for your wedding or an unforgettable weekend in the Swiss Alps.",
+    "nav": {
+      "book": "Book Now"
+    },
+    "hero": {
+      "tagline": "/// American Emotion. Swiss Perfection.",
+      "headline": "Drive in Style.",
+      "subheadline": "The white Ford Mustang GT 5.0 V8 Convertible — for unforgettable weddings and Swiss Alpine weekends.",
+      "ctaPrimary": "Book Now",
+      "ctaSecondary": "Discover More"
+    },
+    "specs": {
+      "subtitle": "Naturally Aspirated · DOHC · Ti-VCT",
+      "stats": {
+        "power": "Power",
+        "torque": "Torque",
+        "redline": "Redline",
+        "displacement": "Displacement"
+      },
+      "features": {
+        "noTurbo": "V8 naturally aspirated — no turbo, no supercharger",
+        "injection": "Combined port and direct fuel injection",
+        "sound": "Deep, aggressive V8 note all the way to 7,500 rpm",
+        "linear": "Linear power delivery with zero turbo lag"
+      }
+    },
+    "gallery": {
+      "heading": "The Mustang",
+      "alt": "The White Mustang GT 5.0 V8 Convertible"
+    },
+    "pricing": {
+      "heading": "Pricing & Availability",
+      "subheading": "Transparent pricing, no hidden costs.",
+      "legend": {
+        "standard": "Standard",
+        "standardPrice": "CHF 490 / day",
+        "standardDesc": "Mon–Thu, off-peak",
+        "weekend": "Weekend",
+        "weekendPrice": "CHF 590 / day",
+        "weekendDesc": "Fri–Sun",
+        "peak": "Peak Season",
+        "peakPrice": "CHF 690 / day",
+        "peakDesc": "July & August",
+        "wedding": "Wedding",
+        "weddingPrice": "CHF 890",
+        "weddingDesc": "Half-day, any time"
+      },
+      "unavailable": "Unavailable",
+      "calendarNote": "Click a date to send an inquiry. Prices may vary."
+    },
+    "footer": {
+      "tagline": "American Emotion. Swiss Perfection.",
+      "motif": "///",
+      "legal": "© 2025 The White Mustang · thewhitemustang.ch · All rights reserved"
+    }
+  },
   "admin": {
     "common": {
       "loading": "Loading…"

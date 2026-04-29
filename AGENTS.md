@@ -61,3 +61,13 @@ You are an expert full-stack Vue/Nuxt 3 developer, Tailwind CSS designer, and Po
 - **Source of Truth:** Use **context7** as the definitive guide for all API structures, endpoint naming conventions, and payload requirements.
 - **Zero Hallucination:** Do not invent API endpoints or response structures. If a required endpoint is not defined in context7, request the definition before proceeding with implementation.
 - **Contract Adherence:** Ensure that all Nuxt Server Routes (`/server/api`) and frontend composables strictly follow the data shapes outlined in the context7 definitions to maintain frontend-backend parity.
+
+# 10. Testing (Playwright E2E)
+- **Scope:** Playwright tests cover the **public storefront only**. Admin backend flows are not tested with Playwright.
+- **Location:** All tests live in `tests/storefront/`. No test files outside this directory.
+- **Runner:** `npm run test:e2e` (runs `playwright test`). The Playwright `webServer` config auto-starts the Nuxt dev server if one is not already running.
+- **Test IDs:** All key storefront elements must have `data-testid="..."` attributes. Selectors must use `data-testid` — never rely on CSS classes or translatable text for targeting.
+- **No mocking:** Storefront tests run against the actual Nuxt dev server. The pricing calendar generates fictional data client-side, so no Supabase mocking is required.
+- **New features:** When adding or modifying a storefront section, update or add the corresponding Playwright spec in `tests/storefront/`. Do not ship a storefront change without a passing test.
+- **Browsers:** Tests run on Desktop Chromium and Mobile Safari (iPhone 13) via Playwright `projects` config in `playwright.config.ts`.
+- **Language tests:** i18n tests assert on `data-testid` + known translation strings. German is the default locale (no URL prefix); English is at `/en`.

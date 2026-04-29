@@ -1,4 +1,62 @@
 {
+  "storefront": {
+    "seoTitle": "The White Mustang — American Emotion. Swiss Perfection.",
+    "seoDescription": "Mieten Sie den weissen Ford Mustang GT 5.0 V8 Cabriolet für Ihre Hochzeit oder ein unvergessliches Wochenende in den Schweizer Alpen.",
+    "nav": {
+      "book": "Jetzt buchen"
+    },
+    "hero": {
+      "tagline": "/// American Emotion. Swiss Perfection.",
+      "headline": "Fahren Sie mit Stil.",
+      "subheadline": "Der weisse Ford Mustang GT 5.0 V8 Cabriolet — für unvergessliche Hochzeiten und Wochenenden in den Schweizer Alpen.",
+      "ctaPrimary": "Jetzt buchen",
+      "ctaSecondary": "Erfahren Sie mehr"
+    },
+    "specs": {
+      "subtitle": "Natürlich Aspiriert · DOHC · Ti-VCT",
+      "stats": {
+        "power": "Leistung",
+        "torque": "Drehmoment",
+        "redline": "Drehzahl",
+        "displacement": "Hubraum"
+      },
+      "features": {
+        "noTurbo": "V8-Saugmotor — kein Turbo, kein Kompressor",
+        "injection": "Kombinierte Saugrohr- und Direkteinspritzung",
+        "sound": "Tiefer, aggressiver V8-Klang bis 7.500 /min",
+        "linear": "Lineare Leistungsentfaltung ohne Turboloch"
+      }
+    },
+    "gallery": {
+      "heading": "Der Mustang",
+      "alt": "The White Mustang GT 5.0 V8 Cabriolet"
+    },
+    "pricing": {
+      "heading": "Preise & Verfügbarkeit",
+      "subheading": "Transparente Preise, keine versteckten Kosten.",
+      "legend": {
+        "standard": "Standard",
+        "standardPrice": "CHF 490 / Tag",
+        "standardDesc": "Mo–Do, Nebensaison",
+        "weekend": "Wochenende",
+        "weekendPrice": "CHF 590 / Tag",
+        "weekendDesc": "Fr–So",
+        "peak": "Hochsaison",
+        "peakPrice": "CHF 690 / Tag",
+        "peakDesc": "Juli & August",
+        "wedding": "Hochzeit",
+        "weddingPrice": "CHF 890",
+        "weddingDesc": "Halbtag, jederzeit"
+      },
+      "unavailable": "Nicht verfügbar",
+      "calendarNote": "Klicken Sie auf ein Datum, um eine Anfrage zu stellen. Preise können variieren."
+    },
+    "footer": {
+      "tagline": "American Emotion. Swiss Perfection.",
+      "motif": "///",
+      "legal": "© 2025 The White Mustang · thewhitemustang.ch · Alle Rechte vorbehalten"
+    }
+  },
   "admin": {
     "common": {
       "loading": "Laden…"

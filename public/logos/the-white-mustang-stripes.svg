@@ -1,0 +1,8 @@
+<svg width="200" height="150" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+  <title>Three Slanted Bars Icon</title>
+  <g fill="#7A121F" transform="translate(50, 40)">
+    <path d="M0 0 H20 L0 70 H-20 Z" />
+    <path d="M30 0 H50 L30 70 H10 Z" />
+    <path d="M60 0 H80 L60 70 H40 Z" />
+  </g>
+</svg>

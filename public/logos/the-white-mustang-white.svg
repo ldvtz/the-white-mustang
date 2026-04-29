@@ -1,0 +1,17 @@
+<svg width="800" height="120" viewBox="0 0 800 120" xmlns="http://www.w3.org/2000/svg">
+  <text
+    x="20"
+    y="75"
+    fill="#FFFFFF"
+    font-family="Segoe UI, Frutiger, Montserrat, Arial, sans-serif"
+    font-size="46"
+    font-weight="300"
+    letter-spacing="2"
+  >THE WHITE MUSTANG</text>
+
+  <g fill="#C8102E" transform="translate(545, 38) scale(0.65)">
+    <path d="M20 0 L35 0 L15 60 L0 60 Z" />
+    <path d="M45 0 L60 0 L40 60 L25 60 Z" />
+    <path d="M70 0 L85 0 L65 60 L50 60 Z" />
+  </g>
+</svg>
