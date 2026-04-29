@@ -51,6 +51,47 @@
       "unavailable": "Nicht verfügbar",
       "calendarNote": "Klicken Sie auf ein Datum, um eine Anfrage zu stellen. Preise können variieren."
     },
+    "booking": {
+      "formLabel": "Buchungsanfrage",
+      "motif": "/// Anfrage",
+      "heading": "Buchung anfragen",
+      "availabilityError": "Die Live-Verfügbarkeit konnte gerade nicht geladen werden. Sie können Ihre Anfrage trotzdem vorbereiten.",
+      "useCases": {
+        "joyride": "Wochenende & Ausfahrt",
+        "wedding": "Hochzeit"
+      },
+      "fields": {
+        "startDate": "Startdatum",
+        "endDate": "Rückgabedatum",
+        "name": "Name",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "age": "Alter"
+      },
+      "privacy": "Ich bin einverstanden, dass The White Mustang meine Angaben zur Bearbeitung der Buchungsanfrage verwendet.",
+      "summary": {
+        "label": "Preisindikation",
+        "pending": "Datum wählen",
+        "selectDates": "Wählen Sie Start- und Rückgabedatum für eine unverbindliche Preisindikation.",
+        "days": "{count} Tag | {count} Tage"
+      },
+      "submit": "Anfrage senden",
+      "submitting": "Senden…",
+      "success": "Ihre Anfrage ist eingegangen. Referenz: {id}",
+      "errors": {
+        "nameRequired": "Name ist erforderlich.",
+        "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "phoneInvalid": "Bitte geben Sie eine gültige Telefonnummer ein.",
+        "useCaseRequired": "Bitte wählen Sie den Anlass.",
+        "datesRequired": "Bitte wählen Sie Start- und Rückgabedatum.",
+        "invalidDate": "Bitte wählen Sie gültige Kalenderdaten.",
+        "pastDate": "Das Startdatum darf nicht in der Vergangenheit liegen.",
+        "dateOrder": "Das Rückgabedatum muss nach dem Startdatum liegen.",
+        "unavailable": "Dieser Zeitraum ist nicht verfügbar.",
+        "privacyRequired": "Bitte bestätigen Sie die Datenschutzhinweise.",
+        "submitFailed": "Die Anfrage konnte gerade nicht gesendet werden. Bitte versuchen Sie es erneut."
+      }
+    },
     "footer": {
       "tagline": "American Emotion. Swiss Perfection.",
       "motif": "///",

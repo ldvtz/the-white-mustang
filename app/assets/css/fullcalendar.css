@@ -1,0 +1,83 @@
+.fc .fc-toolbar-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #1C1C1E;
+}
+
+.fc .fc-button {
+  background: transparent !important;
+  border: 1px solid #E5E5EA !important;
+  color: #1C1C1E !important;
+  box-shadow: none !important;
+  font-family: 'Montserrat', sans-serif;
+  padding: 0.4rem 0.8rem;
+}
+
+.fc .fc-button:hover {
+  background: #F7F7F7 !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8E8E93;
+  text-decoration: none;
+}
+
+.fc .fc-daygrid-day-number {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  color: #1C1C1E;
+  text-decoration: none;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background: #FFF5F5 !important;
+}
+
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  color: #C8102E;
+  font-weight: 700;
+}
+
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border-color: #F0F0F2;
+}
+
+.fc-theme-standard .fc-scrollgrid {
+  border-color: #F0F0F2;
+}
+
+/* Booked / unavailable days — diagonal stripe pattern */
+.fc .fc-daygrid-day.fc-day-booked {
+  background: repeating-linear-gradient(
+    -45deg,
+    #EBEBED,
+    #EBEBED 3px,
+    #F5F5F7 3px,
+    #F5F5F7 9px
+  ) !important;
+}
+
+.fc .fc-daygrid-day.fc-day-booked .fc-daygrid-day-number {
+  color: #AEAEB2 !important;
+  text-decoration: line-through;
+}
+
+/* Selected days — ruby tint with vivid number */
+.fc .fc-daygrid-day.fc-day-selected {
+  outline: 2px solid rgba(200, 16, 46, 0.35);
+  outline-offset: -2px;
+}
+
+.fc .fc-daygrid-day.fc-day-selected .fc-daygrid-day-number {
+  color: #C8102E;
+  font-weight: 700;
+}

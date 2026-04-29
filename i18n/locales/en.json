@@ -51,6 +51,47 @@
       "unavailable": "Unavailable",
       "calendarNote": "Click a date to send an inquiry. Prices may vary."
     },
+    "booking": {
+      "formLabel": "Booking request",
+      "motif": "/// Request",
+      "heading": "Request a Booking",
+      "availabilityError": "Live availability could not be loaded right now. You can still prepare your request.",
+      "useCases": {
+        "joyride": "Weekend & Alpine Drive",
+        "wedding": "Wedding"
+      },
+      "fields": {
+        "startDate": "Start Date",
+        "endDate": "Return Date",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "age": "Age"
+      },
+      "privacy": "I agree that The White Mustang may use my details to process this booking request.",
+      "summary": {
+        "label": "Price Indication",
+        "pending": "Select dates",
+        "selectDates": "Choose a start and return date for a non-binding price indication.",
+        "days": "{count} day | {count} days"
+      },
+      "submit": "Send Request",
+      "submitting": "Sending…",
+      "success": "Your request has been received. Reference: {id}",
+      "errors": {
+        "nameRequired": "Name is required.",
+        "emailInvalid": "Please enter a valid email address.",
+        "phoneInvalid": "Please enter a valid phone number.",
+        "useCaseRequired": "Please choose the occasion.",
+        "datesRequired": "Please choose a start and return date.",
+        "invalidDate": "Please choose valid calendar dates.",
+        "pastDate": "The start date cannot be in the past.",
+        "dateOrder": "The return date must be after the start date.",
+        "unavailable": "This period is not available.",
+        "privacyRequired": "Please confirm the privacy notice.",
+        "submitFailed": "The request could not be sent right now. Please try again."
+      }
+    },
     "footer": {
       "tagline": "American Emotion. Swiss Perfection.",
       "motif": "///",

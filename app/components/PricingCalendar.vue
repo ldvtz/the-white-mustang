@@ -1,11 +1,42 @@
 <script setup lang="ts">
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import type { DateClickArg } from '@fullcalendar/interaction'
+import type { CalendarOptions } from '@fullcalendar/core'
+import { listIsoDateRange } from '@@/shared/booking'
+import '~/assets/css/fullcalendar.css'
 
 const { t, locale } = useI18n()
 
+const props = defineProps<{
+  selectedStartDate?: string
+  selectedEndDate?: string
+  unavailableDates?: string[]
+}>()
+
+const emit = defineEmits<{
+  selectDate: [date: string]
+}>()
+
 // Fictional unavailable days (fixed offsets from today so tests are stable)
 const BLOCKED_OFFSETS = [3, 11, 18, 25, 34, 45, 52, 60, 72, 80]
+
+const unavailableDateSet = computed(() => new Set(props.unavailableDates ?? []))
+
+const blockedSet = computed(() => new Set(
+  BLOCKED_OFFSETS.map(offset => {
+    const d = new Date()
+    d.setDate(d.getDate() + offset)
+    return toDateString(d)
+  })
+))
+
+const selectedDateSet = computed(() => {
+  const { selectedStartDate, selectedEndDate } = props
+  if (!selectedStartDate) return new Set<string>()
+  return new Set(listIsoDateRange(selectedStartDate, selectedEndDate || selectedStartDate))
+})
 
 function buildEvents() {
   const events: Array<{ start: string; display: string; backgroundColor: string; borderColor: string; title: string }> = []
@@ -13,28 +44,20 @@ function buildEvents() {
   const end = new Date(today)
   end.setMonth(end.getMonth() + 12)
 
-  // Blocked days
-  const blockedSet = new Set(
-    BLOCKED_OFFSETS.map(offset => {
-      const d = new Date(today)
-      d.setDate(d.getDate() + offset)
-      return d.toISOString().slice(0, 10)
-    })
-  )
-
   const cursor = new Date(today)
   cursor.setDate(1)
 
   while (cursor <= end) {
-    const iso = cursor.toISOString().slice(0, 10)
+    const iso = toDateString(cursor)
     const dow = cursor.getDay() // 0=Sun,1=Mon,...,6=Sat
     const month = cursor.getMonth() + 1 // 1-based
 
-    if (blockedSet.has(iso)) {
+    if (blockedSet.value.has(iso) || unavailableDateSet.value.has(iso)) {
+      // Booked: transparent — visual treatment handled by fc-day-booked CSS class
       events.push({
         start: iso,
         display: 'background',
-        backgroundColor: '#E5E5EA',
+        backgroundColor: 'transparent',
         borderColor: 'transparent',
         title: '',
       })
@@ -64,8 +87,23 @@ function buildEvents() {
   return events
 }
 
-const calendarOptions = computed(() => ({
-  plugins: [dayGridPlugin],
+const selectedEvents = computed(() => {
+  const { selectedStartDate, selectedEndDate } = props
+  if (!selectedStartDate) return []
+
+  const endDate = selectedEndDate || selectedStartDate
+
+  return listIsoDateRange(selectedStartDate, endDate).map((date) => ({
+    start: date,
+    display: 'background',
+    backgroundColor: 'rgba(200, 16, 46, 0.15)',
+    borderColor: 'transparent',
+    title: '',
+  }))
+})
+
+const calendarOptions = computed<CalendarOptions>(() => ({
+  plugins: [dayGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
   locale: locale.value === 'de' ? 'de' : 'en',
   headerToolbar: {
@@ -75,12 +113,37 @@ const calendarOptions = computed(() => ({
   },
   firstDay: 1,
   height: 'auto',
-  events: buildEvents(),
+  events: [...buildEvents(), ...selectedEvents.value],
   eventDisplay: 'background',
-  dayCellClassNames: 'cursor-default',
+  dayCellClassNames: (arg) => {
+    const iso = toDateString(arg.date)
+    const classes: string[] = []
+    if (blockedSet.value.has(iso) || unavailableDateSet.value.has(iso)) {
+      classes.push('fc-day-booked', 'cursor-not-allowed')
+    } else {
+      classes.push('cursor-pointer')
+      if (selectedDateSet.value.has(iso)) classes.push('fc-day-selected')
+    }
+    return classes
+  },
+  dayCellDidMount: (arg) => {
+    arg.el.setAttribute('data-testid', `pricing-calendar-day-${toDateString(arg.date)}`)
+  },
+  dateClick: handleDateClick,
   selectable: false,
   editable: false,
 }))
+
+function handleDateClick(info: DateClickArg) {
+  if (unavailableDateSet.value.has(info.dateStr)) return
+  emit('selectDate', info.dateStr)
+}
+
+function toDateString(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${month}-${day}`
+}
 </script>
 
 <template>
@@ -93,92 +156,6 @@ const calendarOptions = computed(() => ({
         </div>
       </template>
     </ClientOnly>
-
-    <!-- Pricing Legend -->
-    <div data-testid="pricing-legend" class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-      <!-- Standard -->
-      <div data-testid="legend-standard" class="bg-alpine-white border border-gray-100 rounded-md p-4 shadow-sm">
-        <div class="w-4 h-4 rounded-sm bg-white border border-gray-200 mb-3" />
-        <p class="text-xs font-bold uppercase tracking-wider text-deep-charcoal">{{ t('storefront.pricing.legend.standard') }}</p>
-        <p class="text-lg font-bold text-deep-charcoal mt-1">{{ t('storefront.pricing.legend.standardPrice') }}</p>
-        <p class="text-xs text-steel-grey mt-0.5">{{ t('storefront.pricing.legend.standardDesc') }}</p>
-      </div>
-
-      <!-- Weekend -->
-      <div data-testid="legend-weekend" class="bg-alpine-white border border-gray-100 rounded-md p-4 shadow-sm">
-        <div class="w-4 h-4 rounded-sm mb-3" style="background:#FEF9EE; border: 1px solid #F5E6B8;" />
-        <p class="text-xs font-bold uppercase tracking-wider text-deep-charcoal">{{ t('storefront.pricing.legend.weekend') }}</p>
-        <p class="text-lg font-bold text-deep-charcoal mt-1">{{ t('storefront.pricing.legend.weekendPrice') }}</p>
-        <p class="text-xs text-steel-grey mt-0.5">{{ t('storefront.pricing.legend.weekendDesc') }}</p>
-      </div>
-
-      <!-- Peak -->
-      <div data-testid="legend-peak" class="bg-alpine-white border border-gray-100 rounded-md p-4 shadow-sm">
-        <div class="w-4 h-4 rounded-sm mb-3" style="background:#FFF3E0; border: 1px solid #FFD49E;" />
-        <p class="text-xs font-bold uppercase tracking-wider text-deep-charcoal">{{ t('storefront.pricing.legend.peak') }}</p>
-        <p class="text-lg font-bold text-deep-charcoal mt-1">{{ t('storefront.pricing.legend.peakPrice') }}</p>
-        <p class="text-xs text-steel-grey mt-0.5">{{ t('storefront.pricing.legend.peakDesc') }}</p>
-      </div>
-
-      <!-- Wedding -->
-      <div data-testid="legend-wedding" class="bg-taillight-ruby rounded-md p-4 shadow-sm">
-        <div class="w-4 h-4 rounded-sm bg-white/20 mb-3" />
-        <p class="text-xs font-bold uppercase tracking-wider text-white">{{ t('storefront.pricing.legend.wedding') }}</p>
-        <p class="text-lg font-bold text-white mt-1">{{ t('storefront.pricing.legend.weddingPrice') }}</p>
-        <p class="text-xs text-white/70 mt-0.5">{{ t('storefront.pricing.legend.weddingDesc') }}</p>
-      </div>
-    </div>
-
-    <p class="mt-4 text-xs text-steel-grey text-center">{{ t('storefront.pricing.calendarNote') }}</p>
+    <PricingLegend />
   </div>
 </template>
-
-<style>
-.fc .fc-toolbar-title {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #1C1C1E;
-}
-.fc .fc-button {
-  background: transparent !important;
-  border: 1px solid #E5E5EA !important;
-  color: #1C1C1E !important;
-  box-shadow: none !important;
-  font-family: 'Montserrat', sans-serif;
-  padding: 0.4rem 0.8rem;
-}
-.fc .fc-button:hover {
-  background: #F7F7F7 !important;
-}
-.fc .fc-col-header-cell-cushion {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #8E8E93;
-  text-decoration: none;
-}
-.fc .fc-daygrid-day-number {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.8rem;
-  color: #1C1C1E;
-  text-decoration: none;
-}
-.fc .fc-daygrid-day.fc-day-today {
-  background: #FFF5F5 !important;
-}
-.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
-  color: #C8102E;
-  font-weight: 700;
-}
-.fc-theme-standard td, .fc-theme-standard th {
-  border-color: #F0F0F2;
-}
-.fc-theme-standard .fc-scrollgrid {
-  border-color: #F0F0F2;
-}
-</style>

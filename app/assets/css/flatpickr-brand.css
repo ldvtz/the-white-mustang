@@ -1,0 +1,159 @@
+/* ── Calendar container ────────────────────────────────────────────────────── */
+.flatpickr-calendar {
+  font-family: 'Montserrat', sans-serif;
+  background: #FFFFFF;
+  border: 1px solid #E5E5EA;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+  padding: 4px 8px 10px;
+  width: 280px;
+}
+
+.flatpickr-calendar.arrowTop::before,
+.flatpickr-calendar.arrowTop::after,
+.flatpickr-calendar.arrowBottom::before,
+.flatpickr-calendar.arrowBottom::after {
+  display: none;
+}
+
+/* ── Month header ──────────────────────────────────────────────────────────── */
+.flatpickr-months {
+  padding: 8px 0 4px;
+  align-items: center;
+}
+
+.flatpickr-month {
+  height: 32px;
+}
+
+.flatpickr-current-month {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #1C1C1E;
+  padding-top: 4px;
+}
+
+.flatpickr-current-month .cur-month {
+  font-weight: 700;
+  color: #1C1C1E;
+}
+
+.flatpickr-current-month input.cur-year {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1C1C1E;
+}
+
+.flatpickr-current-month .numInputWrapper:hover,
+.flatpickr-current-month .numInputWrapper span {
+  background: transparent;
+}
+
+/* ── Nav arrows ────────────────────────────────────────────────────────────── */
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  padding: 6px 10px;
+}
+
+.flatpickr-prev-month svg,
+.flatpickr-next-month svg {
+  fill: #8E8E93;
+}
+
+.flatpickr-prev-month:hover svg,
+.flatpickr-next-month:hover svg {
+  fill: #1C1C1E;
+}
+
+/* ── Day-of-week header ────────────────────────────────────────────────────── */
+.flatpickr-weekdays {
+  margin-bottom: 2px;
+}
+
+span.flatpickr-weekday {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8E8E93;
+  background: transparent;
+}
+
+/* ── Day cells ─────────────────────────────────────────────────────────────── */
+.flatpickr-day {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  color: #1C1C1E;
+  border: none;
+  border-radius: 6px;
+  height: 34px;
+  line-height: 34px;
+  max-width: 34px;
+}
+
+.flatpickr-day:hover,
+.flatpickr-day:focus {
+  background: #F7F7F7;
+  border-color: transparent;
+  color: #1C1C1E;
+}
+
+/* Out-of-month days */
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+  color: #C7C7CC;
+}
+
+.flatpickr-day.prevMonthDay:hover,
+.flatpickr-day.nextMonthDay:hover {
+  background: #F7F7F7;
+}
+
+/* ── Today ─────────────────────────────────────────────────────────────────── */
+.flatpickr-day.today {
+  border: 1.5px solid #C8102E;
+  color: #C8102E;
+  font-weight: 700;
+}
+
+.flatpickr-day.today:hover {
+  background: #FFF5F5;
+  color: #C8102E;
+  border-color: #C8102E;
+}
+
+/* ── Selected day — brand ruby ─────────────────────────────────────────────── */
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected:focus,
+.flatpickr-day.startRange,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange,
+.flatpickr-day.endRange:hover {
+  background: #C8102E !important;
+  border-color: #C8102E !important;
+  color: #FFFFFF !important;
+  font-weight: 700;
+}
+
+/* ── Disabled (booked) days — diagonal stripe + muted strikethrough ────────── */
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+  background: repeating-linear-gradient(
+    -45deg,
+    #EBEBED,
+    #EBEBED 2px,
+    #F5F5F7 2px,
+    #F5F5F7 7px
+  ) !important;
+  color: #AEAEB2 !important;
+  text-decoration: line-through;
+  cursor: not-allowed;
+  opacity: 1;
+  border-color: transparent !important;
+}

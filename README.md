@@ -90,6 +90,19 @@ Admin access is granted through Supabase Auth `app_metadata`. A user is treated 
 
 Set this metadata from Supabase Studio, a trusted admin script, or another service-role-only flow. Do not use `user_metadata` for admin privileges because users can update it themselves.
 
+## Public Booking Requests
+
+The storefront includes a no-payment booking request flow in the pricing calendar section. Customers select a use case, start date, return date, and contact details; the app calculates a non-binding CHF estimate and stores the request in Supabase.
+
+Payment execution is intentionally not implemented yet. New public requests are inserted with `payment_method = deferred`, `status = pending`, and `deposit_paid = false` so the admin dashboard can handle them manually until the payment slice is added.
+
+Public booking endpoints:
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/availability` | Returns unavailable calendar dates derived from active bookings and blocked dates |
+| `POST /api/bookings` | Validates the request, upserts the customer by email, recalculates the price server-side, rejects unavailable ranges, and creates a pending booking |
+
 ## Production Build
 
 ```bash
@@ -106,5 +119,5 @@ npm run preview
 | Database / Auth | Supabase | Postgres with RLS, real-time, and managed auth |
 | Admin access | Supabase Auth `app_metadata` + Nuxt route middleware | Pages and server endpoints both verify admin sessions |
 | i18n | `@nuxtjs/i18n` | DE (default) + EN with `$t()` composable |
-| Data fetching | `useFetch` / `useAsyncData` | Server-side caching, avoids client-side Supabase calls |
+| Data fetching | `useFetch` / `useAsyncData` | Server-side caching; public booking routes expose only validated, minimal data |
 | Images | `/public` or CDN | Heavy vehicle images are not stored in the database |

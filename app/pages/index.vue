@@ -3,6 +3,32 @@ definePageMeta({ layout: 'default' })
 
 const { t } = useI18n()
 
+type PublicAvailabilityResponse = {
+  unavailableDates: string[]
+}
+
+const bookingSelection = reactive({
+  startDate: '',
+  endDate: '',
+})
+
+const { data: availability, error: availabilityError } = await useFetch<PublicAvailabilityResponse>(
+  '/api/availability',
+  { default: () => ({ unavailableDates: [] }) },
+)
+
+const unavailableDates = computed(() => availability.value?.unavailableDates ?? [])
+
+function selectBookingDate(date: string) {
+  if (!bookingSelection.startDate || bookingSelection.endDate || date <= bookingSelection.startDate) {
+    bookingSelection.startDate = date
+    bookingSelection.endDate = ''
+    return
+  }
+
+  bookingSelection.endDate = date
+}
+
 useSeoMeta({
   title: () => t('storefront.seoTitle'),
   description: () => t('storefront.seoDescription'),
@@ -80,7 +106,24 @@ useSeoMeta({
           {{ t('storefront.pricing.heading') }}
         </h2>
         <p class="text-steel-grey mb-12">{{ t('storefront.pricing.subheading') }}</p>
-        <PricingCalendar />
+        <PricingCalendar
+          :selected-start-date="bookingSelection.startDate"
+          :selected-end-date="bookingSelection.endDate"
+          :unavailable-dates="unavailableDates"
+          @select-date="selectBookingDate"
+        />
+        <p
+          v-if="availabilityError"
+          data-testid="booking-availability-error"
+          class="mt-4 text-sm text-steel-grey"
+        >
+          {{ t('storefront.booking.availabilityError') }}
+        </p>
+        <BookingRequestForm
+          :selected-start-date="bookingSelection.startDate"
+          :selected-end-date="bookingSelection.endDate"
+          :unavailable-dates="unavailableDates"
+        />
       </div>
     </section>
 

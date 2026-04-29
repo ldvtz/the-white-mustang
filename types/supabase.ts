@@ -365,3 +365,8 @@ export const Constants = {
   },
 } as const
 
+export type BookingStatus = Enums<"booking_status">
+export type BlockedDate = Tables<"blocked_dates">
+export type BookingWithCustomer = Tables<"bookings"> & {
+  customers: Pick<Tables<"customers">, "name" | "email">
+}
