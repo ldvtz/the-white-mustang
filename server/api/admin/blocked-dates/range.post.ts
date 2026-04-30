@@ -1,7 +1,6 @@
 import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
 
-const MAX_REASON_LENGTH = 180
 const MAX_RANGE_DAYS = 366
 
 export default defineEventHandler(async (event) => {
@@ -26,16 +25,17 @@ export default defineEventHandler(async (event) => {
 
   const supabase = serverSupabaseServiceRole<Database>(event)
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('blocked_dates')
     .upsert(
       dates.map((date) => ({ date, reason })),
       { onConflict: 'date', ignoreDuplicates: true },
     )
+    .select('date')
 
   if (error) throw createError({ statusCode: 500, message: error.message })
 
-  return { blocked: dates.length }
+  return { requested: dates.length, blocked: (data ?? []).length }
 })
 
 function generateDates(start: string, end: string): string[] {
@@ -47,35 +47,4 @@ function generateDates(start: string, end: string): string[] {
     current.setUTCDate(current.getUTCDate() + 1)
   }
   return dates
-}
-
-function parseDateInput(value: unknown, today: string): string {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    throw createError({ statusCode: 400, message: 'Date must use YYYY-MM-DD format' })
-  }
-  const parsed = new Date(`${value}T00:00:00.000Z`)
-  if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== value) {
-    throw createError({ statusCode: 400, message: 'Invalid calendar date' })
-  }
-  if (value < today) {
-    throw createError({ statusCode: 400, message: 'Cannot block dates in the past' })
-  }
-  return value
-}
-
-function parseReasonInput(value: unknown): string | null {
-  if (value === undefined || value === null || value === '') return null
-  if (typeof value !== 'string') {
-    throw createError({ statusCode: 400, message: 'Reason must be text' })
-  }
-  const reason = value.trim()
-  if (!reason) return null
-  if (reason.length > MAX_REASON_LENGTH) {
-    throw createError({ statusCode: 400, message: `Reason must be ${MAX_REASON_LENGTH} characters or fewer` })
-  }
-  return reason
-}
-
-function todayInZurich(): string {
-  return new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Zurich' })
 }

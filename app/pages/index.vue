@@ -12,7 +12,7 @@ const bookingSelection = reactive({
   endDate: '',
 })
 
-const { data: availability, error: availabilityError } = await useFetch<PublicAvailabilityResponse>(
+const { data: availability, error: availabilityError, refresh: refreshAvailability } = await useFetch<PublicAvailabilityResponse>(
   '/api/availability',
   { default: () => ({ unavailableDates: [] }) },
 )
@@ -112,13 +112,19 @@ useSeoMeta({
           :unavailable-dates="unavailableDates"
           @select-date="selectBookingDate"
         />
-        <p
+        <div
           v-if="availabilityError"
           data-testid="booking-availability-error"
-          class="mt-4 text-sm text-steel-grey"
+          class="mt-4 flex items-center gap-3 text-sm text-steel-grey"
         >
-          {{ t('storefront.booking.availabilityError') }}
-        </p>
+          <span>{{ t('storefront.booking.availabilityError') }}</span>
+          <button
+            class="underline underline-offset-2 hover:text-deep-charcoal transition-colors"
+            @click="refreshAvailability()"
+          >
+            {{ t('storefront.booking.availabilityRetry') }}
+          </button>
+        </div>
         <BookingRequestForm
           :selected-start-date="bookingSelection.startDate"
           :selected-end-date="bookingSelection.endDate"

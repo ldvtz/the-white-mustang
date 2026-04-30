@@ -56,6 +56,7 @@
       "motif": "/// Request",
       "heading": "Request a Booking",
       "availabilityError": "Live availability could not be loaded right now. You can still prepare your request.",
+      "availabilityRetry": "Try again",
       "useCases": {
         "joyride": "Weekend & Alpine Drive",
         "wedding": "Wedding"
@@ -110,7 +111,8 @@
         "dateOrder": "The return date cannot be before the start date.",
         "unavailable": "This period is not available.",
         "privacyRequired": "Please confirm the privacy notice.",
-        "submitFailed": "The request could not be sent right now. Please try again."
+        "submitFailed": "The request could not be sent right now. Please try again.",
+        "ageInvalid": "Please enter a valid age between 18 and 120."
       }
     },
     "manage": {
@@ -141,6 +143,16 @@
       "tagline": "American Emotion. Swiss Perfection.",
       "motif": "///",
       "legal": "© 2025 The White Mustang · thewhitemustang.ch · All rights reserved"
+    }
+  },
+  "common": {
+    "status": {
+      "pending": "Pending",
+      "awaiting_payment": "Awaiting Payment",
+      "confirmed": "Confirmed",
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
     }
   },
   "admin": {
@@ -217,7 +229,8 @@
         "adminNotePlaceholder": "Note for the team…",
         "confirmButton": "Confirm",
         "cancelButton": "Cancel",
-        "confirming": "Confirming…"
+        "confirming": "Confirming…",
+        "error": "Action failed. Please try again."
       },
       "detailModal": {
         "title": "Booking Details",
@@ -258,6 +271,8 @@
       "confirm": "Confirm",
       "cancel": "Cancel",
       "dragHint": "Click a date or drag across multiple days to block a period.",
+      "errorBlock": "Could not block the date. Please try again.",
+      "errorUnblock": "Could not unblock the date. Please try again.",
       "legend": {
         "booked": "Booked",
         "blocked": "Blocked"

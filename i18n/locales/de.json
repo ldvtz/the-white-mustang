@@ -56,6 +56,7 @@
       "motif": "/// Anfrage",
       "heading": "Buchung anfragen",
       "availabilityError": "Die Live-Verfügbarkeit konnte gerade nicht geladen werden. Sie können Ihre Anfrage trotzdem vorbereiten.",
+      "availabilityRetry": "Erneut versuchen",
       "useCases": {
         "joyride": "Wochenende & Ausfahrt",
         "wedding": "Hochzeit"
@@ -110,7 +111,8 @@
         "dateOrder": "Das Rückgabedatum darf nicht vor dem Startdatum liegen.",
         "unavailable": "Dieser Zeitraum ist nicht verfügbar.",
         "privacyRequired": "Bitte bestätigen Sie die Datenschutzhinweise.",
-        "submitFailed": "Die Anfrage konnte gerade nicht gesendet werden. Bitte versuchen Sie es erneut."
+        "submitFailed": "Die Anfrage konnte gerade nicht gesendet werden. Bitte versuchen Sie es erneut.",
+        "ageInvalid": "Bitte geben Sie ein gültiges Alter zwischen 18 und 120 ein."
       }
     },
     "manage": {
@@ -141,6 +143,16 @@
       "tagline": "American Emotion. Swiss Perfection.",
       "motif": "///",
       "legal": "© 2025 The White Mustang · thewhitemustang.ch · Alle Rechte vorbehalten"
+    }
+  },
+  "common": {
+    "status": {
+      "pending": "Ausstehend",
+      "awaiting_payment": "Zahlung ausstehend",
+      "confirmed": "Bestätigt",
+      "active": "Aktiv",
+      "completed": "Abgeschlossen",
+      "cancelled": "Storniert"
     }
   },
   "admin": {
@@ -217,7 +229,8 @@
         "adminNotePlaceholder": "Notiz für das Team…",
         "confirmButton": "Bestätigen",
         "cancelButton": "Abbrechen",
-        "confirming": "Bestätige…"
+        "confirming": "Bestätige…",
+        "error": "Aktion fehlgeschlagen. Bitte versuchen Sie es erneut."
       },
       "detailModal": {
         "title": "Buchungsdetails",
@@ -258,6 +271,8 @@
       "confirm": "Bestätigen",
       "cancel": "Abbrechen",
       "dragHint": "Datum klicken oder über mehrere Tage ziehen, um einen Zeitraum zu sperren.",
+      "errorBlock": "Datum konnte nicht gesperrt werden. Bitte versuchen Sie es erneut.",
+      "errorUnblock": "Sperrung konnte nicht aufgehoben werden. Bitte versuchen Sie es erneut.",
       "legend": {
         "booked": "Gebucht",
         "blocked": "Gesperrt"

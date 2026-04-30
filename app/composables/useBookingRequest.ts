@@ -42,10 +42,8 @@ export type BookingSubmissionResponse = {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
-  const { locale } = useI18n()
-
-  const form = reactive<BookingFormState>({
+function initialForm(): BookingFormState {
+  return {
     useCase: 'joyride',
     startDate: '',
     endDate: '',
@@ -56,7 +54,13 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
     age: '',
     paymentMethod: '',
     privacyAccepted: false,
-  })
+  }
+}
+
+export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
+  const { locale } = useI18n()
+
+  const form = reactive<BookingFormState>(initialForm())
 
   const hasSubmitted = ref(false)
   const isSubmitting = ref(false)
@@ -78,6 +82,12 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
     if (!isValidPaymentMethod(form.paymentMethod)) errors.paymentMethod = 'storefront.booking.errors.paymentMethodRequired'
     if (!dateValidation.ok) errors.dates = dateValidation.errorKey
     if (!form.privacyAccepted) errors.privacyAccepted = 'storefront.booking.errors.privacyRequired'
+    if (form.age) {
+      const ageNum = Number(form.age)
+      if (!Number.isInteger(ageNum) || ageNum < 18 || ageNum > 120) {
+        errors.age = 'storefront.booking.errors.ageInvalid'
+      }
+    }
 
     return errors
   })
@@ -121,6 +131,8 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
           locale: locale.value,
         },
       })
+      Object.assign(form, initialForm())
+      hasSubmitted.value = false
     } catch {
       submitErrorKey.value = 'storefront.booking.errors.submitFailed'
     } finally {

@@ -19,6 +19,7 @@ const pendingRange = ref<{ start: string; end: string } | null>(null)
 const pendingReason = ref('')
 const pendingUnblockId = ref<string | null>(null)
 const isSubmitting = ref(false)
+const dialogError = ref<string | null>(null)
 
 const isRangeBlock = computed(
   () => !!pendingRange.value && pendingRange.value.start !== pendingRange.value.end,
@@ -62,10 +63,13 @@ function handleEventClick(info: EventClickArg) {
 async function confirmBlock() {
   if (!pendingRange.value || isSubmitting.value) return
   isSubmitting.value = true
+  dialogError.value = null
   try {
     const { start, end } = pendingRange.value
     await blockRange(start, end, pendingReason.value || undefined)
     pendingRange.value = null
+  } catch {
+    dialogError.value = t('admin.calendar.errorBlock')
   } finally {
     isSubmitting.value = false
   }
@@ -74,9 +78,12 @@ async function confirmBlock() {
 async function confirmUnblock() {
   if (!pendingUnblockId.value || isSubmitting.value) return
   isSubmitting.value = true
+  dialogError.value = null
   try {
     await unblockDate(pendingUnblockId.value)
     pendingUnblockId.value = null
+  } catch {
+    dialogError.value = t('admin.calendar.errorUnblock')
   } finally {
     isSubmitting.value = false
   }
@@ -85,6 +92,7 @@ async function confirmUnblock() {
 function cancelDialog() {
   pendingRange.value = null
   pendingUnblockId.value = null
+  dialogError.value = null
 }
 
 function subtractDay(dateStr: string): string {
@@ -158,6 +166,7 @@ function subtractDay(dateStr: string): string {
           class="w-full border border-steel-grey/30 rounded px-3 py-2 text-sm text-deep-charcoal focus:outline-none focus:border-deep-charcoal mb-4"
           @keyup.enter="confirmBlock"
         />
+        <p v-if="dialogError" class="mb-3 text-xs text-taillight-ruby">{{ dialogError }}</p>
         <div class="flex justify-end gap-2">
           <button
             class="px-4 py-2 text-sm text-steel-grey hover:text-deep-charcoal transition-colors min-h-[44px]"
@@ -186,6 +195,7 @@ function subtractDay(dateStr: string): string {
         <h2 class="text-base font-bold uppercase tracking-wide text-deep-charcoal mb-3">
           {{ t('admin.calendar.unblockDate') }}
         </h2>
+        <p v-if="dialogError" class="mb-3 text-xs text-taillight-ruby">{{ dialogError }}</p>
         <div class="flex justify-end gap-2">
           <button
             class="px-4 py-2 text-sm text-steel-grey hover:text-deep-charcoal transition-colors min-h-[44px]"

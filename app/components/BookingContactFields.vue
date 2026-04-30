@@ -58,6 +58,7 @@ const { t } = useI18n()
           max="120"
           class="mt-2 min-h-[44px] w-full rounded-md border border-steel-grey/30 bg-alpine-white px-3 text-sm text-deep-charcoal focus:border-deep-charcoal focus:outline-none"
         />
+        <span v-if="errors.age" data-testid="booking-age-error" class="mt-1 block text-xs text-taillight-ruby">{{ t(errors.age) }}</span>
       </label>
     </div>
   </div>

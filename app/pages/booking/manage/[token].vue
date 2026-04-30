@@ -101,7 +101,7 @@ async function cancelBooking() {
             </div>
             <div>
               <p class="text-xs font-bold uppercase tracking-wider text-steel-grey">{{ t('storefront.manage.status') }}</p>
-              <p class="mt-1 font-semibold">{{ t(`admin.dashboard.status.${data.booking.status}`) }}</p>
+              <p class="mt-1 font-semibold">{{ t(`common.status.${data.booking.status}`) }}</p>
             </div>
             <div>
               <p class="text-xs font-bold uppercase tracking-wider text-steel-grey">{{ t('storefront.manage.period') }}</p>

@@ -74,12 +74,15 @@ function closeDetailModal() {
 type ActionType = 'twint' | 'bank' | 'cash_deposit'
 type PendingPayment = { booking: BookingWithCustomer; actionType: ActionType }
 const pendingPayment = ref<PendingPayment | null>(null)
+const paymentModalError = ref<string | null>(null)
 
 function openPaymentModal(booking: BookingWithCustomer, actionType: ActionType) {
   pendingPayment.value = { booking, actionType }
+  paymentModalError.value = null
 }
 function closePaymentModal() {
   pendingPayment.value = null
+  paymentModalError.value = null
 }
 
 async function handlePaymentConfirm(comment: string) {
@@ -93,9 +96,13 @@ async function handlePaymentConfirm(comment: string) {
     cash_deposit: () => confirmDeposit(id),
   }
 
-  await ACTION_HANDLER[actionType]()
-  if (comment) await postAdminComment(id, comment, false, false)
-  closePaymentModal()
+  try {
+    await ACTION_HANDLER[actionType]()
+    if (comment) await postAdminComment(id, comment, false, false)
+    closePaymentModal()
+  } catch {
+    paymentModalError.value = t('admin.dashboard.paymentModal.error')
+  }
 }
 </script>
 
@@ -195,7 +202,7 @@ async function handlePaymentConfirm(comment: string) {
                 class="inline-block px-2 py-1 rounded text-xs font-medium"
                 :class="statusClasses[booking.status]"
               >
-                {{ t(`admin.dashboard.status.${booking.status}`) }}
+                {{ t(`common.status.${booking.status}`) }}
               </span>
             </td>
             <td class="px-4 py-3 text-xs uppercase tracking-wide">{{ paymentLabel(booking.payment_method) }}</td>
@@ -259,6 +266,7 @@ async function handlePaymentConfirm(comment: string) {
       :booking="pendingPayment.booking"
       :action-type="pendingPayment.actionType"
       :inflight-ids="inflightIds"
+      :error="paymentModalError"
       @confirm="handlePaymentConfirm"
       @cancel="closePaymentModal"
     />

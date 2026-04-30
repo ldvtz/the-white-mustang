@@ -1,22 +1,27 @@
 <script setup lang="ts">
 import { todayIso } from '@@/shared/booking'
-import type { BookingFormState } from '~/composables/useBookingRequest'
 
 const props = defineProps<{
-  form: BookingFormState
+  startDate: string
+  endDate: string
   errors: Record<string, string>
   unavailableDates?: string[]
+}>()
+
+const emit = defineEmits<{
+  'update:startDate': [date: string]
+  'update:endDate': [date: string]
 }>()
 
 const { t } = useI18n()
 
 const today = todayIso()
-const endDateMin = computed(() => props.form.startDate || today)
+const endDateMin = computed(() => props.startDate || today)
 
 function onStartDateChange(date: string) {
-  props.form.startDate = date
-  if (date && props.form.endDate && props.form.endDate < date) {
-    props.form.endDate = ''
+  emit('update:startDate', date)
+  if (date && props.endDate && props.endDate < date) {
+    emit('update:endDate', '')
   }
 }
 </script>
@@ -27,7 +32,7 @@ function onStartDateChange(date: string) {
       <label class="block">
         <span class="text-xs font-bold uppercase tracking-wider text-steel-grey">{{ t('storefront.booking.fields.startDate') }}</span>
         <AppDatePicker
-          :model-value="form.startDate"
+          :model-value="startDate"
           :min-date="today"
           :disabled-dates="unavailableDates"
           testid="booking-start-date"
@@ -37,10 +42,11 @@ function onStartDateChange(date: string) {
       <label class="block">
         <span class="text-xs font-bold uppercase tracking-wider text-steel-grey">{{ t('storefront.booking.fields.endDate') }}</span>
         <AppDatePicker
-          v-model="form.endDate"
+          :model-value="endDate"
           :min-date="endDateMin"
           :disabled-dates="unavailableDates"
           testid="booking-end-date"
+          @update:model-value="emit('update:endDate', $event)"
         />
       </label>
     </div>

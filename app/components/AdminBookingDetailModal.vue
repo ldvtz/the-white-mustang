@@ -107,7 +107,7 @@ async function submitComment() {
         <div>
           <p class="text-steel-grey text-xs uppercase tracking-wide">{{ $t('admin.dashboard.detailModal.status') }}</p>
           <span class="inline-block mt-0.5 px-2 py-0.5 rounded text-xs font-semibold" :class="statusClasses[booking.status] ?? 'bg-stone-100 text-stone-600'">
-            {{ $t(`admin.dashboard.status.${booking.status}`) }}
+            {{ $t(`common.status.${booking.status}`) }}
           </span>
         </div>
         <div>

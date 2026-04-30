@@ -13,11 +13,11 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'], locale: 'de-DE' },
+      use: { ...devices['Desktop Chrome'], locale: 'de-CH' },
     },
     {
       name: 'mobile-safari',
-      use: { ...devices['iPhone 13'], locale: 'de-DE' },
+      use: { ...devices['iPhone 13'], locale: 'de-CH' },
     },
   ],
   webServer: {

@@ -5,6 +5,7 @@ const props = defineProps<{
   booking: BookingWithCustomer
   actionType: 'twint' | 'bank' | 'cash_deposit'
   inflightIds: Set<string>
+  error: string | null
 }>()
 
 const emit = defineEmits<{
@@ -71,6 +72,7 @@ function handleConfirm() {
         />
       </div>
 
+      <p v-if="error" class="mb-3 text-xs text-taillight-ruby">{{ error }}</p>
       <div class="flex items-center justify-end gap-3">
         <button
           type="button"

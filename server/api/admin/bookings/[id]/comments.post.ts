@@ -17,6 +17,14 @@ export default defineEventHandler(async (event) => {
 
   const supabase = serverSupabaseServiceRole<Database>(event)
 
+  const { count, error: bookingError } = await supabase
+    .from('bookings')
+    .select('id', { count: 'exact', head: true })
+    .eq('id', id)
+
+  if (bookingError) throw createError({ statusCode: 500, message: bookingError.message })
+  if (!count) throw createError({ statusCode: 404, message: 'Booking not found' })
+
   const { data, error } = await supabase
     .from('booking_comments')
     .insert({

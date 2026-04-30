@@ -43,7 +43,7 @@ export async function getManagedBooking(event: H3Event, token: string) {
     .single()
 
   if (tokenError || !tokenRow) {
-    throw createError({ statusCode: 404, message: 'Booking access link is invalid or expired' })
+    throw createError({ statusCode: 401, message: 'Booking access link is invalid or expired' })
   }
 
   const { data: booking, error: bookingError } = await supabase
