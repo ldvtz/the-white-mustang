@@ -12,8 +12,6 @@ const ALLOWED_TRANSITIONS: Record<BookingStatus, readonly BookingStatus[]> = {
   cancelled: [],
 }
 
-const BOOKING_WITH_CUSTOMER_SELECT = 'id, customer_id, start_date, end_date, status, payment_method, total_price, deposit_paid, payment_received_at, cancelled_at, cancelled_by, cancellation_note, refund_handling_required, created_at, customers(name, email), booking_comments(id, author_type, message, visible_to_customer, created_at)'
-
 export default defineEventHandler(async (event) => {
   await requireAdminUser(event)
 

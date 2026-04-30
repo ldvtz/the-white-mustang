@@ -67,8 +67,7 @@
         "email": "E-Mail",
         "phone": "Telefon",
         "age": "Alter",
-        "comment": "Nachricht",
-        "commentHint": "Optional: Teilen Sie uns besondere Wünsche oder Fragen zur Buchung mit."
+        "commentEmailHint": "Für Fragen oder besondere Wünsche kontaktieren Sie uns bitte unter"
       },
       "payment": {
         "label": "Zahlungsmethode",
@@ -125,11 +124,7 @@
       "period": "Zeitraum",
       "total": "Betrag",
       "paymentHeading": "Zahlung",
-      "commentsHeading": "Nachrichten",
-      "noComments": "Noch keine Nachrichten vorhanden.",
-      "commentPlaceholder": "Ihre Nachricht",
-      "sendComment": "Nachricht senden",
-      "saving": "Speichern…",
+      "contactEmailHint": "Bei Fragen zu Ihrer Buchung kontaktieren Sie uns bitte unter",
       "cancelHeading": "Stornierung",
       "cancelAllowed": "Sie können diese Buchung bis {days} Tage vor dem Startdatum online stornieren.",
       "cancelBlocked": "Diese Buchung kann online nicht mehr storniert werden. Bitte kontaktieren Sie uns direkt.",
@@ -137,14 +132,8 @@
       "cancelSubmit": "Buchung stornieren",
       "cancelling": "Storniere…",
       "refundManual": "Eine allfällige Rückzahlung wird manuell geprüft und abgewickelt.",
-      "author": {
-        "customer": "Kunde",
-        "admin": "The White Mustang",
-        "system": "System"
-      },
       "errors": {
         "loadFailed": "Diese Buchung konnte nicht geladen werden. Der Link ist möglicherweise abgelaufen.",
-        "commentFailed": "Die Nachricht konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
         "cancelFailed": "Die Buchung konnte nicht storniert werden. Bitte kontaktieren Sie uns direkt."
       }
     },
@@ -199,7 +188,6 @@
         "actions": "Aktionen",
         "depositPaid": "Bezahlt",
         "depositPending": "Ausstehend",
-        "customerComments": "{count} Kundennachricht | {count} Kundennachrichten",
         "refundRequired": "Rückzahlung prüfen"
       },
       "status": {
@@ -214,7 +202,49 @@
         "confirmPayment": "Zahlung bestätigen",
         "paymentReceived": "Zahlung erhalten",
         "depositRequired": "Depot erforderlich",
+        "confirming": "Bestätige…",
+        "viewDetails": "Details anzeigen",
+        "confirmDeposit": "Depot bestätigen"
+      },
+      "paymentModal": {
+        "titleTwint": "TWINT-Zahlung bestätigen",
+        "titleBank": "Banküberweisung bestätigen",
+        "titleCashDeposit": "Barzahlung-Depot bestätigen",
+        "actionTwint": "Zahlung als bestätigt markieren und Buchung bestätigen.",
+        "actionBank": "Zahlung als erhalten markieren, Buchung bestätigen und Bestätigungs-E-Mail senden.",
+        "actionCashDeposit": "Depot als bezahlt markieren und Buchung bestätigen.",
+        "adminNoteLabel": "Interne Notiz (optional)",
+        "adminNotePlaceholder": "Notiz für das Team…",
+        "confirmButton": "Bestätigen",
+        "cancelButton": "Abbrechen",
         "confirming": "Bestätige…"
+      },
+      "detailModal": {
+        "title": "Buchungsdetails",
+        "close": "Schliessen",
+        "bookingId": "Buchungs-ID",
+        "status": "Status",
+        "period": "Zeitraum",
+        "total": "Betrag",
+        "paymentMethod": "Zahlungsmethode",
+        "depositStatus": "Depot-Status",
+        "paymentReceivedAt": "Zahlung eingegangen",
+        "createdAt": "Erstellt am",
+        "customerSection": "Kundendaten",
+        "phone": "Telefon",
+        "nationality": "Nationalität",
+        "age": "Alter",
+        "notProvided": "—",
+        "commentsSection": "Nachrichten & Notizen",
+        "noComments": "Keine Nachrichten vorhanden.",
+        "addNoteLabel": "Interne Notiz hinzufügen",
+        "notePlaceholder": "Notiz für das Team…",
+        "addNoteButton": "Notiz speichern",
+        "savingNote": "Speichern…",
+        "noteError": "Die Notiz konnte nicht gespeichert werden.",
+        "authorAdmin": "The White Mustang (intern)",
+        "authorCustomer": "Kunde",
+        "authorSystem": "System"
       },
       "empty": "Keine Buchungen vorhanden.",
       "error": "Fehler beim Laden der Buchungen."
@@ -222,10 +252,12 @@
     "calendar": {
       "title": "Kalender",
       "blockDate": "Datum sperren",
+      "blockRange": "Zeitraum sperren",
       "unblockDate": "Sperrung aufheben",
       "blockReason": "Grund (optional)",
       "confirm": "Bestätigen",
       "cancel": "Abbrechen",
+      "dragHint": "Datum klicken oder über mehrere Tage ziehen, um einen Zeitraum zu sperren.",
       "legend": {
         "booked": "Gebucht",
         "blocked": "Gesperrt"

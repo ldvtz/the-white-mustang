@@ -455,6 +455,6 @@ export type BlockedDate = Tables<"blocked_dates">
 export type BookingComment = Tables<"booking_comments">
 export type PaymentMethod = "twint" | "bank_transfer" | "cash"
 export type BookingWithCustomer = Tables<"bookings"> & {
-  customers: Pick<Tables<"customers">, "name" | "email">
+  customers: Pick<Tables<"customers">, "name" | "email" | "phone" | "nationality" | "age">
   booking_comments?: Pick<Tables<"booking_comments">, "id" | "author_type" | "message" | "visible_to_customer" | "created_at">[]
 }

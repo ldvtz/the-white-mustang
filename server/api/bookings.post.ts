@@ -57,18 +57,6 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
     throw createError({ statusCode: 500, message: bookingError?.message ?? 'Booking could not be saved' })
   }
 
-  if (parsed.comment) {
-    const { error: commentError } = await supabase
-      .from('booking_comments')
-      .insert({
-        booking_id: booking.id,
-        author_type: 'customer',
-        message: parsed.comment,
-      })
-
-    if (commentError) throw createError({ statusCode: 500, message: commentError.message })
-  }
-
   const managementToken = createManagementToken()
   const { error: tokenError } = await supabase
     .from('booking_management_tokens')

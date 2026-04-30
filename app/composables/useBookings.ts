@@ -29,14 +29,11 @@ export function useBookings() {
     (allBookings.value ?? []).filter(isActionRequired).length,
   )
 
-  async function updateStatus(id: string, newStatus: BookingStatus): Promise<void> {
+  async function withInflightId(id: string, fn: () => Promise<void>, shouldRefresh = true): Promise<void> {
     inflightIds.value = new Set([...inflightIds.value, id])
     try {
-      await $fetch(`/api/admin/bookings/${id}/status`, {
-        method: 'PATCH',
-        body: { status: newStatus },
-      })
-      await refresh()
+      await fn()
+      if (shouldRefresh) await refresh()
     } finally {
       const next = new Set(inflightIds.value)
       next.delete(id)
@@ -44,16 +41,26 @@ export function useBookings() {
     }
   }
 
-  async function markPaymentReceived(id: string): Promise<void> {
-    inflightIds.value = new Set([...inflightIds.value, id])
-    try {
-      await $fetch(`/api/admin/bookings/${id}/payment-received`, { method: 'POST' })
-      await refresh()
-    } finally {
-      const next = new Set(inflightIds.value)
-      next.delete(id)
-      inflightIds.value = next
-    }
+  function updateStatus(id: string, newStatus: BookingStatus): Promise<void> {
+    return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/status`, {
+      method: 'PATCH',
+      body: { status: newStatus },
+    }))
+  }
+
+  function markPaymentReceived(id: string): Promise<void> {
+    return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/payment-received`, { method: 'POST' }))
+  }
+
+  function postAdminComment(id: string, message: string, visibleToCustomer = false, shouldRefresh = true): Promise<void> {
+    return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/comments`, {
+      method: 'POST',
+      body: { message, visible_to_customer: visibleToCustomer },
+    }), shouldRefresh)
+  }
+
+  function confirmDeposit(id: string): Promise<void> {
+    return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/confirm-deposit`, { method: 'POST' }))
   }
 
   return {
@@ -67,5 +74,7 @@ export function useBookings() {
     refresh,
     updateStatus,
     markPaymentReceived,
+    postAdminComment,
+    confirmDeposit,
   }
 }

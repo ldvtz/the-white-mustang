@@ -67,8 +67,7 @@
         "email": "Email",
         "phone": "Phone",
         "age": "Age",
-        "comment": "Message",
-        "commentHint": "Optional: share any special wishes or questions about your booking."
+        "commentEmailHint": "For questions or special wishes, please contact us at"
       },
       "payment": {
         "label": "Payment Method",
@@ -125,11 +124,7 @@
       "period": "Period",
       "total": "Total",
       "paymentHeading": "Payment",
-      "commentsHeading": "Messages",
-      "noComments": "No messages yet.",
-      "commentPlaceholder": "Your message",
-      "sendComment": "Send Message",
-      "saving": "Saving…",
+      "contactEmailHint": "For questions about your booking, please contact us at",
       "cancelHeading": "Cancellation",
       "cancelAllowed": "You can cancel this booking online until {days} days before the start date.",
       "cancelBlocked": "This booking can no longer be cancelled online. Please contact us directly.",
@@ -137,14 +132,8 @@
       "cancelSubmit": "Cancel Booking",
       "cancelling": "Cancelling…",
       "refundManual": "Any applicable refund is reviewed and handled manually.",
-      "author": {
-        "customer": "Customer",
-        "admin": "The White Mustang",
-        "system": "System"
-      },
       "errors": {
         "loadFailed": "This booking could not be loaded. The link may have expired.",
-        "commentFailed": "The message could not be saved. Please try again.",
         "cancelFailed": "The booking could not be cancelled. Please contact us directly."
       }
     },
@@ -199,7 +188,6 @@
         "actions": "Actions",
         "depositPaid": "Paid",
         "depositPending": "Pending",
-        "customerComments": "{count} customer message | {count} customer messages",
         "refundRequired": "Review refund"
       },
       "status": {
@@ -214,7 +202,49 @@
         "confirmPayment": "Confirm Payment",
         "paymentReceived": "Payment Received",
         "depositRequired": "Deposit Required",
+        "confirming": "Confirming…",
+        "viewDetails": "View Details",
+        "confirmDeposit": "Confirm Deposit"
+      },
+      "paymentModal": {
+        "titleTwint": "Confirm TWINT Payment",
+        "titleBank": "Confirm Bank Transfer",
+        "titleCashDeposit": "Confirm Cash Deposit",
+        "actionTwint": "Mark payment as received and confirm the booking.",
+        "actionBank": "Mark payment as received, confirm booking, and send confirmation email.",
+        "actionCashDeposit": "Mark deposit as paid and confirm the booking.",
+        "adminNoteLabel": "Internal note (optional)",
+        "adminNotePlaceholder": "Note for the team…",
+        "confirmButton": "Confirm",
+        "cancelButton": "Cancel",
         "confirming": "Confirming…"
+      },
+      "detailModal": {
+        "title": "Booking Details",
+        "close": "Close",
+        "bookingId": "Booking ID",
+        "status": "Status",
+        "period": "Period",
+        "total": "Total",
+        "paymentMethod": "Payment Method",
+        "depositStatus": "Deposit Status",
+        "paymentReceivedAt": "Payment Received",
+        "createdAt": "Created At",
+        "customerSection": "Customer",
+        "phone": "Phone",
+        "nationality": "Nationality",
+        "age": "Age",
+        "notProvided": "—",
+        "commentsSection": "Messages & Notes",
+        "noComments": "No messages yet.",
+        "addNoteLabel": "Add internal note",
+        "notePlaceholder": "Note for the team…",
+        "addNoteButton": "Save note",
+        "savingNote": "Saving…",
+        "noteError": "The note could not be saved.",
+        "authorAdmin": "The White Mustang (internal)",
+        "authorCustomer": "Customer",
+        "authorSystem": "System"
       },
       "empty": "No bookings found.",
       "error": "Failed to load bookings."
@@ -222,10 +252,12 @@
     "calendar": {
       "title": "Calendar",
       "blockDate": "Block Date",
+      "blockRange": "Block Period",
       "unblockDate": "Unblock Date",
       "blockReason": "Reason (optional)",
       "confirm": "Confirm",
       "cancel": "Cancel",
+      "dragHint": "Click a date or drag across multiple days to block a period.",
       "legend": {
         "booked": "Booked",
         "blocked": "Blocked"

@@ -19,7 +19,6 @@ export type BookingFormState = {
   nationality: string
   age: string
   paymentMethod: PaymentMethod | ''
-  comment: string
   privacyAccepted: boolean
 }
 
@@ -56,7 +55,6 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
     nationality: '',
     age: '',
     paymentMethod: '',
-    comment: '',
     privacyAccepted: false,
   })
 
@@ -120,7 +118,6 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
           nationality: form.nationality.trim() || undefined,
           age: form.age ? Number(form.age) : undefined,
           paymentMethod: form.paymentMethod,
-          comment: form.comment.trim() || undefined,
           locale: locale.value,
         },
       })

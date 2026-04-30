@@ -2,8 +2,7 @@
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import type { DateClickArg } from '@fullcalendar/interaction'
-import type { EventClickArg, CalendarOptions } from '@fullcalendar/core'
+import type { DateSelectArg, EventClickArg, CalendarOptions } from '@fullcalendar/core'
 
 definePageMeta({ layout: 'admin' })
 
@@ -14,13 +13,16 @@ useSeoMeta({
   robots: 'noindex, nofollow',
 })
 
-const { events, blockedDateSet, blockDate, unblockDate } = useCalendar()
+const { events, blockRange, unblockDate } = useCalendar()
 
-// Inline block dialog state
-const pendingDate = ref<string | null>(null)
+const pendingRange = ref<{ start: string; end: string } | null>(null)
 const pendingReason = ref('')
 const pendingUnblockId = ref<string | null>(null)
 const isSubmitting = ref(false)
+
+const isRangeBlock = computed(
+  () => !!pendingRange.value && pendingRange.value.start !== pendingRange.value.end,
+)
 
 const calendarOptions = computed<CalendarOptions>(() => ({
   plugins: [dayGridPlugin, interactionPlugin],
@@ -33,14 +35,18 @@ const calendarOptions = computed<CalendarOptions>(() => ({
   },
   height: 'auto',
   events: events.value,
-  dateClick: handleDateClick,
+  selectable: true,
+  selectMirror: true,
+  unselectAuto: false,
+  select: handleSelect,
   eventClick: handleEventClick,
 }))
 
-function handleDateClick(info: DateClickArg) {
-  const date = info.dateStr
-  if (blockedDateSet.value.has(date)) return
-  pendingDate.value = date
+function handleSelect(info: DateSelectArg) {
+  pendingRange.value = {
+    start: info.startStr,
+    end: subtractDay(info.endStr),
+  }
   pendingReason.value = ''
   pendingUnblockId.value = null
 }
@@ -49,16 +55,17 @@ function handleEventClick(info: EventClickArg) {
   const props = info.event.extendedProps
   if (props.type === 'blocked') {
     pendingUnblockId.value = props.blockedId as string
-    pendingDate.value = null
+    pendingRange.value = null
   }
 }
 
 async function confirmBlock() {
-  if (!pendingDate.value || isSubmitting.value) return
+  if (!pendingRange.value || isSubmitting.value) return
   isSubmitting.value = true
   try {
-    await blockDate(pendingDate.value, pendingReason.value || undefined)
-    pendingDate.value = null
+    const { start, end } = pendingRange.value
+    await blockRange(start, end, pendingReason.value || undefined)
+    pendingRange.value = null
   } finally {
     isSubmitting.value = false
   }
@@ -76,8 +83,14 @@ async function confirmUnblock() {
 }
 
 function cancelDialog() {
-  pendingDate.value = null
+  pendingRange.value = null
   pendingUnblockId.value = null
+}
+
+function subtractDay(dateStr: string): string {
+  const d = new Date(dateStr + 'T00:00:00Z')
+  d.setUTCDate(d.getUTCDate() - 1)
+  return d.toISOString().slice(0, 10)
 }
 </script>
 
@@ -103,29 +116,39 @@ function cancelDialog() {
       </template>
     </ClientOnly>
 
-    <!-- Legend -->
-    <div class="flex items-center gap-6 mt-4 text-xs text-steel-grey">
-      <span class="flex items-center gap-1.5">
-        <span class="inline-block w-3 h-3 rounded-sm bg-[#C8102E]" />
-        {{ t('admin.calendar.legend.booked') }}
-      </span>
-      <span class="flex items-center gap-1.5">
-        <span class="inline-block w-3 h-3 rounded-sm bg-[#8E8E93]" />
-        {{ t('admin.calendar.legend.blocked') }}
-      </span>
+    <!-- Legend + hint -->
+    <div class="mt-4">
+      <div class="flex items-center gap-6 text-xs text-steel-grey">
+        <span class="flex items-center gap-1.5">
+          <span class="inline-block w-3 h-3 rounded-sm bg-[#C8102E]" />
+          {{ t('admin.calendar.legend.booked') }}
+        </span>
+        <span class="flex items-center gap-1.5">
+          <span class="inline-block w-3 h-3 rounded-sm bg-[#8E8E93]" />
+          {{ t('admin.calendar.legend.blocked') }}
+        </span>
+      </div>
+      <p class="mt-2 text-xs text-steel-grey">{{ t('admin.calendar.dragHint') }}</p>
     </div>
 
-    <!-- Block date dialog -->
+    <!-- Block date / range dialog -->
     <div
-      v-if="pendingDate"
+      v-if="pendingRange"
       class="fixed inset-0 z-50 flex items-center justify-center bg-deep-charcoal/40"
       @click.self="cancelDialog"
     >
       <div class="bg-alpine-white rounded-md shadow-xl p-6 w-full max-w-sm mx-4">
         <h2 class="text-base font-bold uppercase tracking-wide text-deep-charcoal mb-1">
-          {{ t('admin.calendar.blockDate') }}
+          {{ isRangeBlock ? t('admin.calendar.blockRange') : t('admin.calendar.blockDate') }}
         </h2>
-        <p class="text-sm text-steel-grey mb-4">{{ pendingDate }}</p>
+        <p class="text-sm text-steel-grey mb-4">
+          <template v-if="isRangeBlock">
+            {{ pendingRange.start }} – {{ pendingRange.end }}
+          </template>
+          <template v-else>
+            {{ pendingRange.start }}
+          </template>
+        </p>
         <label class="block text-xs text-steel-grey mb-1">
           {{ t('admin.calendar.blockReason') }}
         </label>

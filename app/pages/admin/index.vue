@@ -19,8 +19,11 @@ const {
   inflightIds,
   status,
   error,
+  refresh,
   updateStatus,
   markPaymentReceived,
+  postAdminComment,
+  confirmDeposit,
 } = useBookings()
 
 const filters: { key: FilterMode; labelKey: string; count?: ComputedRef<number> }[] = [
@@ -57,8 +60,42 @@ function paymentLabel(method: string) {
   return t(`storefront.booking.payment.methods.${method}`)
 }
 
-function customerCommentCount(b: BookingWithCustomer) {
-  return (b.booking_comments ?? []).filter((comment) => comment.author_type === 'customer').length
+// ── Detail modal ─────────────────────────────────────────────────────────────
+const detailBooking = ref<BookingWithCustomer | null>(null)
+
+function openDetailModal(booking: BookingWithCustomer) {
+  detailBooking.value = booking
+}
+function closeDetailModal() {
+  detailBooking.value = null
+}
+
+// ── Payment confirm modal ────────────────────────────────────────────────────
+type ActionType = 'twint' | 'bank' | 'cash_deposit'
+type PendingPayment = { booking: BookingWithCustomer; actionType: ActionType }
+const pendingPayment = ref<PendingPayment | null>(null)
+
+function openPaymentModal(booking: BookingWithCustomer, actionType: ActionType) {
+  pendingPayment.value = { booking, actionType }
+}
+function closePaymentModal() {
+  pendingPayment.value = null
+}
+
+async function handlePaymentConfirm(comment: string) {
+  if (!pendingPayment.value) return
+  const { booking, actionType } = pendingPayment.value
+  const id = booking.id
+
+  const ACTION_HANDLER: Record<ActionType, () => Promise<void>> = {
+    twint: () => updateStatus(id, 'confirmed'),
+    bank: () => markPaymentReceived(id),
+    cash_deposit: () => confirmDeposit(id),
+  }
+
+  await ACTION_HANDLER[actionType]()
+  if (comment) await postAdminComment(id, comment, false, false)
+  closePaymentModal()
 }
 </script>
 
@@ -146,9 +183,6 @@ function customerCommentCount(b: BookingWithCustomer) {
             <td class="px-4 py-3">
               <span class="font-medium">{{ booking.customers.name }}</span>
               <span class="block text-xs text-steel-grey">{{ booking.customers.email }}</span>
-              <span v-if="customerCommentCount(booking) > 0" class="mt-1 block text-xs font-semibold text-taillight-ruby">
-                {{ t('admin.dashboard.table.customerComments', { count: customerCommentCount(booking) }) }}
-              </span>
               <span v-if="booking.refund_handling_required" class="mt-1 block text-xs font-semibold text-amber-700">
                 {{ t('admin.dashboard.table.refundRequired') }}
               </span>
@@ -174,45 +208,68 @@ function customerCommentCount(b: BookingWithCustomer) {
               {{ formatCHF(booking.total_price) }}
             </td>
             <td class="px-4 py-3 text-right">
-              <!-- TWINT: manual confirm -->
-              <button
-                v-if="isTwintPending(booking)"
-                :disabled="inflightIds.has(booking.id)"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-deep-charcoal text-alpine-white text-xs font-medium rounded transition-opacity disabled:opacity-50 min-h-[36px]"
-                @click="updateStatus(booking.id, 'confirmed')"
-              >
-                <span
-                  v-if="inflightIds.has(booking.id)"
-                  class="inline-block w-3 h-3 border-2 border-alpine-white border-t-transparent rounded-full animate-spin"
-                />
-                {{ inflightIds.has(booking.id) ? t('admin.dashboard.actions.confirming') : t('admin.dashboard.actions.confirmPayment') }}
-              </button>
+              <div class="flex items-center justify-end gap-2">
+                <!-- TWINT: manual confirm -->
+                <button
+                  v-if="isTwintPending(booking)"
+                  :disabled="inflightIds.has(booking.id)"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-deep-charcoal text-alpine-white text-xs font-medium rounded transition-opacity disabled:opacity-50 min-h-[36px]"
+                  @click="openPaymentModal(booking, 'twint')"
+                >
+                  {{ t('admin.dashboard.actions.confirmPayment') }}
+                </button>
 
-              <!-- IBAN: payment received -->
-              <button
-                v-else-if="isBankTransferAwaiting(booking)"
-                :disabled="inflightIds.has(booking.id)"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-taillight-ruby text-alpine-white text-xs font-medium rounded transition-opacity disabled:opacity-50 min-h-[36px]"
-                @click="markPaymentReceived(booking.id)"
-              >
-                <span
-                  v-if="inflightIds.has(booking.id)"
-                  class="inline-block w-3 h-3 border-2 border-alpine-white border-t-transparent rounded-full animate-spin"
-                />
-                {{ inflightIds.has(booking.id) ? t('admin.dashboard.actions.confirming') : t('admin.dashboard.actions.paymentReceived') }}
-              </button>
+                <!-- Bank transfer: payment received -->
+                <button
+                  v-else-if="isBankTransferAwaiting(booking)"
+                  :disabled="inflightIds.has(booking.id)"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-taillight-ruby text-alpine-white text-xs font-medium rounded transition-opacity disabled:opacity-50 min-h-[36px]"
+                  @click="openPaymentModal(booking, 'bank')"
+                >
+                  {{ t('admin.dashboard.actions.paymentReceived') }}
+                </button>
 
-              <!-- Cash: deposit required badge -->
-              <span
-                v-else-if="isCashDepositRequired(booking)"
-                class="inline-block px-2 py-1 bg-amber-100 text-amber-800 text-xs font-medium rounded"
-              >
-                {{ t('admin.dashboard.actions.depositRequired') }}
-              </span>
+                <!-- Cash: confirm deposit -->
+                <button
+                  v-else-if="isCashDepositRequired(booking)"
+                  :disabled="inflightIds.has(booking.id)"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-800 text-xs font-medium rounded hover:bg-amber-200 transition-colors disabled:opacity-50 min-h-[36px]"
+                  @click="openPaymentModal(booking, 'cash_deposit')"
+                >
+                  {{ t('admin.dashboard.actions.confirmDeposit') }}
+                </button>
+
+                <!-- View details -->
+                <button
+                  class="text-steel-grey hover:text-deep-charcoal text-xs underline underline-offset-2 transition-colors min-h-[36px]"
+                  @click="openDetailModal(booking)"
+                >
+                  {{ t('admin.dashboard.actions.viewDetails') }}
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+
+    <!-- Payment confirmation modal -->
+    <AdminPaymentConfirmModal
+      v-if="pendingPayment"
+      :booking="pendingPayment.booking"
+      :action-type="pendingPayment.actionType"
+      :inflight-ids="inflightIds"
+      @confirm="handlePaymentConfirm"
+      @cancel="closePaymentModal"
+    />
+
+    <!-- Booking detail modal -->
+    <AdminBookingDetailModal
+      v-if="detailBooking"
+      :booking="detailBooking"
+      :inflight-ids="inflightIds"
+      @close="closeDetailModal"
+      @comment-posted="refresh()"
+    />
   </div>
 </template>

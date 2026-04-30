@@ -17,13 +17,11 @@ export type PublicBookingBody = {
   nationality?: unknown
   age?: unknown
   paymentMethod?: unknown
-  comment?: unknown
   locale?: unknown
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const MAX_TEXT_LENGTH = 160
-const MAX_COMMENT_LENGTH = 1200
 
 export function parseBookingBody(body: PublicBookingBody) {
   const useCase = body.useCase
@@ -35,7 +33,6 @@ export function parseBookingBody(body: PublicBookingBody) {
   const phone = requireText(body.phone, 'Missing phone')
   const nationality = optionalText(body.nationality)
   const age = optionalAge(body.age)
-  const comment = optionalLongText(body.comment)
 
   if (!isValidBookingUseCase(useCase)) {
     throw createError({ statusCode: 400, message: 'Invalid booking use case' })
@@ -47,7 +44,7 @@ export function parseBookingBody(body: PublicBookingBody) {
   if (!EMAIL_RE.test(email)) throw createError({ statusCode: 400, message: 'Invalid email' })
   if (phone.length < 7) throw createError({ statusCode: 400, message: 'Invalid phone' })
 
-  return { useCase, paymentMethod, startDate, endDate, name, email, phone, nationality, age, comment }
+  return { useCase, paymentMethod, startDate, endDate, name, email, phone, nationality, age }
 }
 
 export async function assertDatesAvailable(
@@ -75,14 +72,6 @@ function optionalText(value: unknown): string | null {
   if (typeof value !== 'string') throw createError({ statusCode: 400, message: 'Invalid text value' })
   const trimmed = value.trim()
   if (trimmed.length > MAX_TEXT_LENGTH) throw createError({ statusCode: 400, message: 'Text value is too long' })
-  return trimmed || null
-}
-
-function optionalLongText(value: unknown): string | null {
-  if (value === undefined || value === null || value === '') return null
-  if (typeof value !== 'string') throw createError({ statusCode: 400, message: 'Invalid text value' })
-  const trimmed = value.trim()
-  if (trimmed.length > MAX_COMMENT_LENGTH) throw createError({ statusCode: 400, message: 'Text value is too long' })
   return trimmed || null
 }
 

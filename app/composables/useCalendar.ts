@@ -57,6 +57,14 @@ export function useCalendar() {
     await refreshBlocked()
   }
 
+  async function blockRange(startDate: string, endDate: string, reason?: string): Promise<void> {
+    await $fetch('/api/admin/blocked-dates/range', {
+      method: 'POST',
+      body: { startDate, endDate, reason },
+    })
+    await refreshBlocked()
+  }
+
   async function refresh(): Promise<void> {
     await Promise.all([refreshBookings(), refreshBlocked()])
   }
@@ -65,6 +73,7 @@ export function useCalendar() {
     events,
     blockedDateSet,
     blockDate,
+    blockRange,
     unblockDate,
     refresh,
   }
