@@ -3,6 +3,7 @@ import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { DateSelectArg, EventClickArg, CalendarOptions } from '@fullcalendar/core'
+import type { BookingWithCustomer, BookingStatus } from '@@/types/booking'
 
 definePageMeta({ layout: 'admin' })
 
@@ -20,6 +21,42 @@ const pendingReason = ref('')
 const pendingUnblockId = ref<string | null>(null)
 const isSubmitting = ref(false)
 const dialogError = ref<string | null>(null)
+
+const activeBooking = ref<BookingWithCustomer | null>(null)
+const popoverPos = ref({ x: 0, y: 0 })
+
+const statusClasses: Record<BookingStatus, string> = {
+  pending: 'bg-amber-100 text-amber-800',
+  awaiting_payment: 'bg-purple-100 text-purple-800',
+  confirmed: 'bg-blue-100 text-blue-800',
+  active: 'bg-green-100 text-green-800',
+  completed: 'bg-stone-100 text-stone-600',
+  declined: 'bg-zinc-100 text-zinc-700',
+  cancelled: 'bg-red-100 text-red-800',
+}
+
+const dateFormatter = computed(() =>
+  new Intl.DateTimeFormat(locale.value === 'de' ? 'de-CH' : 'en-GB', { dateStyle: 'medium' }),
+)
+const currencyFormatter = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' })
+
+function formatDate(d: string) {
+  return dateFormatter.value.format(new Date(d))
+}
+
+function closePopover() {
+  activeBooking.value = null
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', onKeydown)
+})
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKeydown)
+})
+function onKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape') closePopover()
+}
 
 const isRangeBlock = computed(
   () => !!pendingRange.value && pendingRange.value.start !== pendingRange.value.end,
@@ -57,6 +94,20 @@ function handleEventClick(info: EventClickArg) {
   if (props.type === 'blocked') {
     pendingUnblockId.value = props.blockedId as string
     pendingRange.value = null
+    activeBooking.value = null
+  } else if (props.type === 'booking') {
+    activeBooking.value = props.booking as BookingWithCustomer
+    pendingRange.value = null
+    pendingUnblockId.value = null
+
+    const POPOVER_W = 288
+    const POPOVER_H = 200
+    const GAP = 12
+    let x = info.jsEvent.clientX + GAP
+    let y = info.jsEvent.clientY + GAP
+    if (x + POPOVER_W + GAP > window.innerWidth) x = info.jsEvent.clientX - POPOVER_W - GAP
+    if (y + POPOVER_H + GAP > window.innerHeight) y = info.jsEvent.clientY - POPOVER_H - GAP
+    popoverPos.value = { x, y }
   }
 }
 
@@ -184,6 +235,56 @@ function subtractDay(dateStr: string): string {
         </div>
       </div>
     </div>
+
+    <!-- Booking popover -->
+    <template v-if="activeBooking">
+      <div class="fixed inset-0 z-40" @click="closePopover" />
+      <div
+        class="fixed z-50 w-72 rounded-md border border-steel-grey/20 bg-alpine-white shadow-xl"
+        :style="{ top: popoverPos.y + 'px', left: popoverPos.x + 'px' }"
+      >
+        <div class="flex items-start justify-between gap-2 border-b border-steel-grey/10 px-4 py-3">
+          <div>
+            <p class="font-semibold text-sm text-deep-charcoal leading-tight">{{ activeBooking.customers.name }}</p>
+            <p class="text-xs text-steel-grey mt-0.5">{{ activeBooking.customers.email }}</p>
+          </div>
+          <button
+            type="button"
+            class="text-steel-grey hover:text-deep-charcoal transition-colors mt-0.5 leading-none shrink-0"
+            @click="closePopover"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="px-4 py-3 grid gap-2 text-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-steel-grey text-xs uppercase tracking-wide">{{ t('admin.dashboard.detailModal.period') }}</span>
+            <span class="text-deep-charcoal font-medium text-xs">
+              {{ formatDate(activeBooking.start_date) }} – {{ formatDate(activeBooking.end_date) }}
+            </span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-steel-grey text-xs uppercase tracking-wide">{{ t('admin.dashboard.detailModal.status') }}</span>
+            <span class="inline-block rounded px-2 py-0.5 text-xs font-semibold" :class="statusClasses[activeBooking.status]">
+              {{ t(`admin.dashboard.status.${activeBooking.status}`) }}
+            </span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-steel-grey text-xs uppercase tracking-wide">{{ t('admin.dashboard.detailModal.total') }}</span>
+            <span class="text-deep-charcoal font-semibold text-xs tabular-nums">{{ currencyFormatter.format(activeBooking.total_price) }}</span>
+          </div>
+        </div>
+        <div class="border-t border-steel-grey/10 px-4 py-3">
+          <NuxtLink
+            :to="`/admin/bookings/${activeBooking.id}`"
+            class="block w-full text-center rounded bg-deep-charcoal px-3 py-2 text-xs font-semibold uppercase tracking-wide text-alpine-white transition-opacity hover:opacity-80"
+            @click="closePopover"
+          >
+            {{ t('admin.dashboard.actions.viewDetails') }}
+          </NuxtLink>
+        </div>
+      </div>
+    </template>
 
     <!-- Unblock date dialog -->
     <div
