@@ -26,7 +26,8 @@ export default defineEventHandler(async (event) => {
 
   if (fetchError || !booking) throw createError({ statusCode: 404, message: 'Booking not found' })
 
-  if (booking.status !== 'pending' && booking.status !== 'awaiting_payment') {
+  const payableStatuses = ['pending', 'awaiting_payment', 'confirmed'] as const
+  if (!(payableStatuses as readonly string[]).includes(booking.status)) {
     throw createError({
       statusCode: 409,
       message: `Cannot confirm payment for booking with status ${booking.status}`,

@@ -29,18 +29,9 @@ const filters: { key: FilterMode; labelKey: string; count?: ComputedRef<number> 
   { key: 'actionRequired', labelKey: 'admin.dashboard.filter.actionRequired', count: actionRequiredCount },
 ]
 
-const detailBooking = ref<BookingWithCustomer | null>(null)
 const decisionBooking = ref<BookingWithCustomer | null>(null)
 const decisionAction = ref<'confirm' | 'decline'>('confirm')
 const decisionError = ref<string | null>(null)
-
-function openDetailModal(booking: BookingWithCustomer) {
-  detailBooking.value = booking
-}
-
-function closeDetailModal() {
-  detailBooking.value = null
-}
 
 function openDecisionModal(booking: BookingWithCustomer, action: 'confirm' | 'decline') {
   decisionBooking.value = booking
@@ -117,7 +108,6 @@ async function submitReservationDecision(note: string) {
       v-else
       :bookings="bookings"
       :inflight-ids="inflightIds"
-      @view-details="openDetailModal"
       @confirm-reservation="openDecisionModal($event, 'confirm')"
       @decline-reservation="openDecisionModal($event, 'decline')"
     />
@@ -130,14 +120,6 @@ async function submitReservationDecision(note: string) {
       :error="decisionError"
       @submit="submitReservationDecision"
       @cancel="closeDecisionModal"
-    />
-
-    <AdminBookingDetailModal
-      v-if="detailBooking"
-      :booking="detailBooking"
-      :inflight-ids="inflightIds"
-      @close="closeDetailModal"
-      @comment-posted="refresh()"
     />
   </div>
 </template>

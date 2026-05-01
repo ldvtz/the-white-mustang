@@ -62,7 +62,7 @@
         "wedding": "Hochzeit"
       },
       "fields": {
-        "startDate": "Startdatum",
+        "startDate": "Abholdatum",
         "endDate": "Rückgabedatum",
         "name": "Name",
         "email": "E-Mail",
@@ -82,7 +82,7 @@
       "summary": {
         "label": "Preisindikation",
         "pending": "Datum wählen",
-        "selectDates": "Wählen Sie Start- und Rückgabedatum für eine unverbindliche Preisindikation.",
+        "selectDates": "Wählen Sie Abhol- und Rückgabedatum für eine unverbindliche Preisindikation.",
         "days": "{count} Tag | {count} Tage"
       },
       "submit": "Anfrage senden",
@@ -94,10 +94,10 @@
         "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
         "phoneInvalid": "Bitte geben Sie eine gültige Telefonnummer ein.",
         "useCaseRequired": "Bitte wählen Sie den Anlass.",
-        "datesRequired": "Bitte wählen Sie Start- und Rückgabedatum.",
+        "datesRequired": "Bitte wählen Sie Abhol- und Rückgabedatum.",
         "invalidDate": "Bitte wählen Sie gültige Kalenderdaten.",
-        "pastDate": "Das Startdatum darf nicht in der Vergangenheit liegen.",
-        "dateOrder": "Das Rückgabedatum darf nicht vor dem Startdatum liegen.",
+        "pastDate": "Das Abholdatum darf nicht in der Vergangenheit liegen.",
+        "dateOrder": "Das Rückgabedatum darf nicht vor dem Abholdatum liegen.",
         "unavailable": "Dieser Zeitraum ist nicht verfügbar.",
         "privacyRequired": "Bitte bestätigen Sie die Datenschutzhinweise.",
         "submitFailed": "Die Anfrage konnte gerade nicht gesendet werden. Bitte versuchen Sie es erneut.",
@@ -119,7 +119,7 @@
       "paymentPending": "Die Zahlungsdetails werden Ihnen per E-Mail mitgeteilt, sobald Ihre Reservierung bestätigt wurde.",
       "contactEmailHint": "Bei Fragen zu Ihrer Reservierung kontaktieren Sie uns bitte unter",
       "cancelHeading": "Stornierung",
-      "cancelAllowed": "Sie können diese Reservierung bis {days} Tage vor dem Startdatum online stornieren.",
+      "cancelAllowed": "Sie können diese Reservierung bis {days} Tage vor dem Abholdatum online stornieren.",
       "cancelBlocked": "Diese Reservierung kann online nicht mehr storniert werden. Bitte kontaktieren Sie uns direkt.",
       "cancelPlaceholder": "Grund der Stornierung (optional)",
       "cancelSubmit": "Reservierung stornieren",
@@ -215,6 +215,7 @@
         "confirming": "Bestätige…",
         "viewDetails": "Details anzeigen"
       },
+      "backToOverview": "Übersicht",
       "decisionModal": {
         "cancelButton": "Abbrechen",
         "error": "Aktion fehlgeschlagen. Bitte versuchen Sie es erneut.",
@@ -261,6 +262,15 @@
         "authorAdmin": "The White Mustang (intern)",
         "authorCustomer": "Kunde",
         "authorSystem": "System"
+      },
+      "payment": {
+        "sectionTitle": "Zahlung",
+        "methodLabel": "Zahlungsmethode",
+        "methodPlaceholder": "Bitte wählen…",
+        "noteLabel": "Interne Notiz (optional)",
+        "confirmButton": "Zahlung bestätigen",
+        "confirmingButton": "Wird bestätigt…",
+        "error": "Zahlung konnte nicht bestätigt werden. Bitte versuchen Sie es erneut."
       },
       "empty": "Keine Buchungen vorhanden.",
       "error": "Fehler beim Laden der Buchungen."

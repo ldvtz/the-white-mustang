@@ -62,7 +62,7 @@
         "wedding": "Wedding"
       },
       "fields": {
-        "startDate": "Start Date",
+        "startDate": "Pick-up Date",
         "endDate": "Return Date",
         "name": "Name",
         "email": "Email",
@@ -215,6 +215,7 @@
         "confirming": "Confirming…",
         "viewDetails": "View Details"
       },
+      "backToOverview": "Overview",
       "decisionModal": {
         "cancelButton": "Cancel",
         "error": "Action failed. Please try again.",
@@ -261,6 +262,15 @@
         "authorAdmin": "The White Mustang (internal)",
         "authorCustomer": "Customer",
         "authorSystem": "System"
+      },
+      "payment": {
+        "sectionTitle": "Payment",
+        "methodLabel": "Payment Method",
+        "methodPlaceholder": "Please select…",
+        "noteLabel": "Internal Note (optional)",
+        "confirmButton": "Confirm Payment",
+        "confirmingButton": "Confirming…",
+        "error": "Could not confirm payment. Please try again."
       },
       "empty": "No bookings found.",
       "error": "Failed to load bookings."

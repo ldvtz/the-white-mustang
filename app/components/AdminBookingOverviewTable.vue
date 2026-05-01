@@ -7,7 +7,6 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  viewDetails: [booking: BookingWithCustomer]
   confirmReservation: [booking: BookingWithCustomer]
   declineReservation: [booking: BookingWithCustomer]
 }>()
@@ -81,7 +80,8 @@ function formatDatetime(value: string) {
           <tr
             v-for="booking in bookings"
             :key="booking.id"
-            class="border-b border-steel-grey/10 transition-colors last:border-0 hover:bg-pearl-white"
+            class="border-b border-steel-grey/10 transition-colors last:border-0 hover:bg-pearl-white cursor-pointer"
+            @click="navigateTo(`/admin/bookings/${booking.id}`)"
           >
             <td class="px-4 py-4 align-top">
               <span class="block font-medium">{{ booking.customers.name }}</span>
@@ -134,7 +134,7 @@ function formatDatetime(value: string) {
               </div>
             </td>
             <td class="px-4 py-4 text-right align-top">
-              <div class="flex items-center justify-end gap-2">
+              <div class="flex items-center justify-end gap-2" @click.stop>
                 <template v-if="canDecideReservation(booking)">
                   <button
                     type="button"
@@ -153,13 +153,6 @@ function formatDatetime(value: string) {
                     {{ t('admin.dashboard.actions.declineReservation') }}
                   </button>
                 </template>
-                <button
-                  type="button"
-                  class="min-h-[36px] text-xs text-steel-grey underline underline-offset-2 transition-colors hover:text-deep-charcoal"
-                  @click="emit('viewDetails', booking)"
-                >
-                  {{ t('admin.dashboard.actions.viewDetails') }}
-                </button>
               </div>
             </td>
           </tr>
