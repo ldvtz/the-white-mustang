@@ -17,6 +17,10 @@ export default defineNuxtConfig({
     smtpPort: 54325,
     resendApiKey: '',
     emailDeliveryTimeoutMs: 5000,
+    supabase: {
+      serviceKey: '',
+      secretKey: '',
+    },
   },
 
   modules: [
