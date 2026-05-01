@@ -30,6 +30,7 @@ export function parseBookingBody(body: PublicBookingBody) {
   const phone = requireText(body.phone, 'Missing phone')
   const nationality = optionalText(body.nationality)
   const age = optionalAge(body.age)
+  const locale = parseLocale(body.locale)
 
   if (!isValidBookingUseCase(useCase)) {
     throw createError({ statusCode: 400, message: 'Invalid booking use case' })
@@ -38,7 +39,7 @@ export function parseBookingBody(body: PublicBookingBody) {
   if (!EMAIL_RE.test(email)) throw createError({ statusCode: 400, message: 'Invalid email' })
   if (phone.length < 7) throw createError({ statusCode: 400, message: 'Invalid phone' })
 
-  return { useCase, startDate, endDate, name, email, phone, nationality, age }
+  return { useCase, startDate, endDate, name, email, phone, nationality, age, locale }
 }
 
 export async function assertDatesAvailable(
@@ -77,6 +78,10 @@ function optionalAge(value: unknown): number | null {
   return value
 }
 
+function parseLocale(value: unknown): 'de' | 'en' {
+  return value === 'en' ? 'en' : 'de'
+}
+
 async function fetchUnavailableDates(
   supabase: ReturnType<typeof serverSupabaseServiceRole<Database>>,
   startDate: string,
@@ -85,8 +90,7 @@ async function fetchUnavailableDates(
   const [{ data: bookings, error: bookingsError }, { data: blockedDates, error: blockedError }] = await Promise.all([
     supabase
       .from('bookings')
-      .select('start_date, end_date')
-      .neq('status', 'cancelled')
+      .select('start_date, end_date, status')
       .lte('start_date', endDate)
       .gte('end_date', startDate),
     supabase
@@ -100,7 +104,7 @@ async function fetchUnavailableDates(
   if (blockedError) throw createError({ statusCode: 500, message: blockedError.message })
 
   const unavailableDates = new Set<string>()
-  for (const booking of bookings ?? []) {
+  for (const booking of (bookings ?? []).filter((booking) => booking.status !== 'cancelled' && booking.status !== 'declined')) {
     for (const date of listIsoDateRange(booking.start_date, booking.end_date)) {
       unavailableDates.add(date)
     }

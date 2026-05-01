@@ -142,6 +142,7 @@
       "confirmed": "Bestätigt",
       "active": "Aktiv",
       "completed": "Abgeschlossen",
+      "declined": "Abgelehnt",
       "cancelled": "Storniert"
     }
   },
@@ -183,38 +184,54 @@
       "table": {
         "customer": "Kunde",
         "dates": "Zeitraum",
+        "reservation": "Reservierung",
         "status": "Status",
         "payment": "Zahlung",
         "deposit": "Depot",
         "total": "Betrag",
+        "signals": "Hinweise",
         "actions": "Aktionen",
         "depositPaid": "Bezahlt",
         "depositPending": "Ausstehend",
-        "refundRequired": "Rückzahlung prüfen"
+        "refundRequired": "Rückzahlung prüfen",
+        "customerMessage": "Kundennachricht",
+        "noSignals": "Keine",
+        "requestedAt": "Angefragt am {date}"
       },
       "status": {
-        "pending": "Ausstehend",
+        "pending": "Reservierungsanfrage",
         "awaiting_payment": "Zahlung ausstehend",
         "confirmed": "Bestätigt",
         "active": "Aktiv",
         "completed": "Abgeschlossen",
+        "declined": "Abgelehnt",
         "cancelled": "Storniert"
       },
       "actions": {
-        "confirmPayment": "Zahlung bestätigen",
+        "confirmReservation": "Bestätigen",
+        "declineReservation": "Ablehnen",
         "confirming": "Bestätige…",
         "viewDetails": "Details anzeigen"
       },
-      "paymentModal": {
-        "title": "Zahlung bestätigen",
-        "description": "Wählen Sie die Zahlungsmethode und fügen Sie optional eine interne Notiz hinzu.",
-        "paymentMethodLabel": "Zahlungsmethode",
-        "adminNoteLabel": "Interne Notiz (optional)",
-        "adminNotePlaceholder": "Notiz für das Team…",
-        "confirmButton": "Bestätigen",
+      "decisionModal": {
         "cancelButton": "Abbrechen",
-        "confirming": "Bestätige…",
-        "error": "Aktion fehlgeschlagen. Bitte versuchen Sie es erneut."
+        "error": "Aktion fehlgeschlagen. Bitte versuchen Sie es erneut.",
+        "confirm": {
+          "title": "Reservierung bestätigen",
+          "description": "Die Reservierung wird bestätigt und der Kunde wird per E-Mail informiert. Zahlung und Übergabe bleiben separate Schritte.",
+          "noteLabel": "Interne Notiz — nicht an Kunden gesendet (optional)",
+          "notePlaceholder": "Notiz für das Team…",
+          "submitButton": "Bestätigen",
+          "submitting": "Bestätige…"
+        },
+        "decline": {
+          "title": "Reservierung ablehnen",
+          "description": "Die Anfrage wird als abgelehnt markiert und der Kunde wird per E-Mail informiert.",
+          "noteLabel": "Grund für den Kunden (optional)",
+          "notePlaceholder": "Kurzer Grund oder Alternative…",
+          "submitButton": "Ablehnen",
+          "submitting": "Lehne ab…"
+        }
       },
       "detailModal": {
         "title": "Buchungsdetails",

@@ -47,9 +47,16 @@ NUXT_TWINT_QR_IMAGE_URL=
 NUXT_BANK_TRANSFER_ACCOUNT_NAME="The White Mustang"
 NUXT_BANK_TRANSFER_IBAN="CH00 0000 0000 0000 0000 0"
 NUXT_BANK_TRANSFER_NOTE="Booking reference"
+NUXT_MAIL_TRANSPORT=smtp
+NUXT_MAIL_FROM=info@thewhitemustang.ch
+NUXT_SMTP_HOST=127.0.0.1
+NUXT_SMTP_PORT=54325
+NUXT_EMAIL_DELIVERY_TIMEOUT_MS=5000
 ```
 
 The `NUXT_SUPABASE_SECRET_KEY` service role key is used only inside protected server routes. Never expose it to the browser.
+
+Local reservation emails are captured by Supabase Mailpit at `http://localhost:54324`; they are not delivered to real inboxes. Restart `npm run dev` after changing `.env`.
 
 To stop Supabase:
 
@@ -103,27 +110,38 @@ Admin access is granted through Supabase Auth `app_metadata`. A user is treated 
 
 Set this metadata from Supabase Studio, a trusted admin script, or another service-role-only flow. Do not use `user_metadata` for admin privileges because users can update it themselves.
 
-## Public Booking Requests
+## Public Reservation Requests
 
-The storefront includes a manual-payment booking request flow in the pricing calendar section. Customers select a use case, start date, return date, contact details, payment method, and optional comment; the app calculates a CHF estimate and stores the request in Supabase. Booking ranges are inclusive, so same-day bookings are valid.
+The storefront includes a reservation request flow in the pricing calendar section. Customers select a use case, start date, return date, and contact details; the app calculates a CHF estimate and stores the request in Supabase. Booking ranges are inclusive, so same-day bookings are valid.
 
-Supported payment methods are `twint`, `bank_transfer`, and `cash`. Payment execution is intentionally manual:
+New public requests start as `pending` reservation requests without a payment method. Admins confirm or decline each request in the `/admin` booking overview:
 
-- `twint` bookings start as `pending` until the admin confirms payment.
-- `bank_transfer` bookings start as `awaiting_payment` until the admin marks payment received.
-- `cash` bookings start as `confirmed` with the deposit marked unpaid.
+- Confirming a reservation sets the booking to `confirmed` and sends a customer confirmation email.
+- Declining a reservation sets the booking to `declined` and sends a customer decline email.
+- Customer cancellations use `cancelled`, so rejected admin requests and customer cancellations remain distinct.
 
-Each booking receives a secure customer management link. The raw token is only returned/sent to the customer; the database stores a hash. Customers can add comments and cancel `pending`, `awaiting_payment`, or `confirmed` bookings until `NUXT_BOOKING_CANCELLATION_CUTOFF_DAYS` days before the start date. Confirmed or paid cancellations are flagged for manual refund handling.
+Legacy manual payment methods (`twint`, `bank_transfer`, and `cash`) are still represented in the database for operational follow-up, but payment confirmation is separate from reservation approval.
+
+Each reservation receives a secure customer management link. The raw token is only returned/sent to the customer; the database stores a hash. Customers can add comments and cancel `pending`, `awaiting_payment`, or `confirmed` bookings until `NUXT_BOOKING_CANCELLATION_CUTOFF_DAYS` days before the start date. `declined` requests cannot be cancelled by customers and do not block future availability. Confirmed or paid cancellations are flagged for manual refund handling.
 
 Public booking endpoints:
 
 | Endpoint | Purpose |
 |---|---|
 | `GET /api/availability` | Returns unavailable calendar dates derived from active bookings and blocked dates |
-| `POST /api/bookings` | Validates the request, upserts the customer by email, recalculates the price server-side, rejects unavailable ranges, creates the booking, stores the initial comment, and returns payment instructions plus a management link |
+| `POST /api/bookings` | Validates the request, upserts the customer by email, recalculates the price server-side, rejects unavailable ranges, creates the reservation, and returns a management link |
 | `GET /api/bookings/manage/:token` | Returns minimal booking, payment, comment, and cancellation details for a valid management token |
 | `POST /api/bookings/manage/:token/comments` | Adds a customer-visible comment |
 | `POST /api/bookings/manage/:token/cancel` | Cancels an eligible booking before the configured cutoff |
+
+Reservation emails are delivered through the configured mail transport and are bounded by `NUXT_EMAIL_DELIVERY_TIMEOUT_MS` so a slow provider never leaves the customer-facing request form waiting indefinitely. Email delivery errors are logged server-side after the reservation has been saved.
+
+Admin reservation endpoints:
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /api/admin/bookings/:id/confirm-reservation` | Confirms a pending reservation and notifies the customer |
+| `POST /api/admin/bookings/:id/decline-reservation` | Marks a pending reservation as `declined` and notifies the customer |
 
 ## Production Build
 
@@ -143,5 +161,5 @@ npm run preview
 | i18n | `@nuxtjs/i18n` | DE (default) + EN with `$t()` composable |
 | Data fetching | `useFetch` / `useAsyncData` | Server-side caching; public booking routes expose only validated, minimal data |
 | Images | Production Mustang photos in `/public/images` | Heavy vehicle images are served by the frontend CDN, not Supabase Storage |
-| Payments | Manual TWINT / bank transfer / cash | Keeps launch scope simple while preserving admin confirmation and refund handling |
+| Payments | Manual follow-up after reservation approval | Keeps launch scope simple while separating reservation approval from payment handling |
 | Customer booking access | Hashed magic-link token | No customer account required; direct lookup by personal data is avoided |

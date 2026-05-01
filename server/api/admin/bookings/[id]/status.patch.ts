@@ -1,14 +1,16 @@
 import { serverSupabaseServiceRole } from '#supabase/server'
-import type { BookingStatus, Database } from '@@/types/supabase'
+import type { Database } from '@@/types/supabase'
+import type { BookingStatus } from '@@/types/booking'
 
 const VALID_STATUSES = ['pending', 'awaiting_payment', 'confirmed', 'active', 'completed', 'cancelled'] as const
 
 const ALLOWED_TRANSITIONS: Record<BookingStatus, readonly BookingStatus[]> = {
-  pending: ['confirmed', 'cancelled'],
-  awaiting_payment: ['confirmed', 'cancelled'],
+  pending: ['confirmed'],
+  awaiting_payment: ['confirmed'],
   confirmed: ['active', 'cancelled'],
   active: ['completed'],
   completed: [],
+  declined: [],
   cancelled: [],
 }
 

@@ -1,6 +1,5 @@
 import { ref, computed } from 'vue'
-import type { BookingWithCustomer } from '@@/types/supabase'
-import type { PaymentMethod } from '@@/shared/booking'
+import type { BookingWithCustomer } from '@@/types/booking'
 
 export type FilterMode = 'all' | 'actionRequired'
 
@@ -50,10 +49,17 @@ export function useBookings() {
     }), shouldRefresh)
   }
 
-  function confirmPayment(id: string, paymentMethod: PaymentMethod, comment?: string): Promise<void> {
-    return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/confirm-payment`, {
-      method: 'PATCH',
-      body: { paymentMethod, comment },
+  function confirmReservation(id: string, note?: string): Promise<void> {
+    return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/confirm-reservation`, {
+      method: 'POST',
+      body: { note },
+    }))
+  }
+
+  function declineReservation(id: string, note?: string): Promise<void> {
+    return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/decline-reservation`, {
+      method: 'POST',
+      body: { note },
     }))
   }
 
@@ -67,6 +73,7 @@ export function useBookings() {
     error,
     refresh,
     postAdminComment,
-    confirmPayment,
+    confirmReservation,
+    declineReservation,
   }
 }

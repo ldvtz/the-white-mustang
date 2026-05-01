@@ -14,8 +14,7 @@ export default defineEventHandler(async (event): Promise<PublicAvailabilityRespo
   const [{ data: bookings, error: bookingsError }, { data: blockedDates, error: blockedError }] = await Promise.all([
     supabase
       .from('bookings')
-      .select('start_date, end_date')
-      .neq('status', 'cancelled')
+      .select('start_date, end_date, status')
       .lte('start_date', end)
       .gte('end_date', start),
     supabase
@@ -30,7 +29,7 @@ export default defineEventHandler(async (event): Promise<PublicAvailabilityRespo
 
   const unavailableDates = new Set<string>()
 
-  for (const booking of bookings ?? []) {
+  for (const booking of (bookings ?? []).filter((booking) => booking.status !== 'cancelled' && booking.status !== 'declined')) {
     for (const date of listIsoDateRange(booking.start_date, booking.end_date)) {
       unavailableDates.add(date)
     }

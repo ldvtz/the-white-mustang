@@ -133,5 +133,6 @@ test.describe('Booking request', () => {
   test('cancellation cutoff blocks bookings inside the configured window', () => {
     expect(canCancelBooking('confirmed', isoDaysFromNow(2), 3)).toBe(false)
     expect(canCancelBooking('confirmed', isoDaysFromNow(3), 3)).toBe(true)
+    expect(canCancelBooking('declined', isoDaysFromNow(10), 3)).toBe(false)
   })
 })

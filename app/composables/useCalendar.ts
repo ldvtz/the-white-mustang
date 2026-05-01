@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue'
-import type { BookingWithCustomer, BlockedDate } from '@@/types/supabase'
+import type { BookingWithCustomer, BlockedDate } from '@@/types/booking'
 
 export function useCalendar() {
   const requestFetch = useRequestFetch()
@@ -91,6 +91,7 @@ function statusColor(status: string): string {
     case 'active':    return '#16a34a'
     case 'pending':   return '#d97706'
     case 'awaiting_payment': return '#7c3aed'
+    case 'declined': return '#6b7280'
     default:          return '#8E8E93'
   }
 }

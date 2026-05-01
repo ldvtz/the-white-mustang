@@ -135,6 +135,7 @@ export type Database = {
           deposit_paid: boolean
           end_date: string
           id: string
+          locale: string
           payment_method: string | null
           payment_received_at: string | null
           refund_handling_required: boolean
@@ -151,6 +152,7 @@ export type Database = {
           deposit_paid?: boolean
           end_date: string
           id?: string
+          locale?: string
           payment_method?: string | null
           payment_received_at?: string | null
           refund_handling_required?: boolean
@@ -167,6 +169,7 @@ export type Database = {
           deposit_paid?: boolean
           end_date?: string
           id?: string
+          locale?: string
           payment_method?: string | null
           payment_received_at?: string | null
           refund_handling_required?: boolean
@@ -307,6 +310,7 @@ export type Database = {
         | "confirmed"
         | "active"
         | "completed"
+        | "declined"
         | "cancelled"
     }
     CompositeTypes: {
@@ -444,9 +448,9 @@ export const Constants = {
         "confirmed",
         "active",
         "completed",
+        "declined",
         "cancelled",
       ],
     },
   },
 } as const
-

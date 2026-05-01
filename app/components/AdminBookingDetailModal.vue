@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BookingWithCustomer } from '@@/types/supabase'
+import type { BookingWithCustomer } from '@@/types/booking'
 
 const props = defineProps<{
   booking: BookingWithCustomer
@@ -23,6 +23,7 @@ const statusClasses: Record<string, string> = {
   confirmed: 'bg-blue-100 text-blue-800',
   active: 'bg-green-100 text-green-800',
   completed: 'bg-stone-100 text-stone-600',
+  declined: 'bg-zinc-100 text-zinc-700',
   cancelled: 'bg-red-100 text-red-800',
 }
 
@@ -107,7 +108,7 @@ async function submitComment() {
         <div>
           <p class="text-steel-grey text-xs uppercase tracking-wide">{{ $t('admin.dashboard.detailModal.status') }}</p>
           <span class="inline-block mt-0.5 px-2 py-0.5 rounded text-xs font-semibold" :class="statusClasses[booking.status] ?? 'bg-stone-100 text-stone-600'">
-            {{ $t(`common.status.${booking.status}`) }}
+            {{ $t(`admin.dashboard.status.${booking.status}`) }}
           </span>
         </div>
         <div>

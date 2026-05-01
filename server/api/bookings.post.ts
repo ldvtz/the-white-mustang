@@ -1,5 +1,6 @@
 import { serverSupabaseServiceRole } from '#supabase/server'
-import type { Database, BookingStatus } from '@@/types/supabase'
+import type { Database } from '@@/types/supabase'
+import type { BookingStatus } from '@@/types/booking'
 import { calculateBookingPrice } from '@@/shared/booking'
 import { assertDatesAvailable, parseBookingBody, type PublicBookingBody } from '../utils/publicBooking'
 
@@ -45,6 +46,7 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
       start_date: parsed.startDate,
       end_date: parsed.endDate,
       total_price: price.total,
+      locale: parsed.locale,
     })
     .select('id, start_date, end_date, total_price, status')
     .single()
@@ -74,7 +76,7 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
       booking.end_date,
       booking.total_price,
       managementUrl,
-      typeof body.locale === 'string' ? body.locale : 'de',
+      parsed.locale,
     )
   } catch (error) {
     console.error('Failed to send booking management email', { bookingId: booking.id, error })

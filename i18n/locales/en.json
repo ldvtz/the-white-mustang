@@ -142,6 +142,7 @@
       "confirmed": "Confirmed",
       "active": "Active",
       "completed": "Completed",
+      "declined": "Declined",
       "cancelled": "Cancelled"
     }
   },
@@ -183,38 +184,54 @@
       "table": {
         "customer": "Customer",
         "dates": "Period",
+        "reservation": "Reservation",
         "status": "Status",
         "payment": "Payment",
         "deposit": "Deposit",
         "total": "Total",
+        "signals": "Signals",
         "actions": "Actions",
         "depositPaid": "Paid",
         "depositPending": "Pending",
-        "refundRequired": "Review refund"
+        "refundRequired": "Review refund",
+        "customerMessage": "Customer message",
+        "noSignals": "None",
+        "requestedAt": "Requested {date}"
       },
       "status": {
-        "pending": "Pending",
+        "pending": "Reservation Request",
         "awaiting_payment": "Awaiting Payment",
         "confirmed": "Confirmed",
         "active": "Active",
         "completed": "Completed",
+        "declined": "Declined",
         "cancelled": "Cancelled"
       },
       "actions": {
-        "confirmPayment": "Confirm Payment",
+        "confirmReservation": "Confirm",
+        "declineReservation": "Decline",
         "confirming": "Confirming…",
         "viewDetails": "View Details"
       },
-      "paymentModal": {
-        "title": "Confirm Payment",
-        "description": "Select the payment method and optionally add an internal note.",
-        "paymentMethodLabel": "Payment method",
-        "adminNoteLabel": "Internal note (optional)",
-        "adminNotePlaceholder": "Note for the team…",
-        "confirmButton": "Confirm",
+      "decisionModal": {
         "cancelButton": "Cancel",
-        "confirming": "Confirming…",
-        "error": "Action failed. Please try again."
+        "error": "Action failed. Please try again.",
+        "confirm": {
+          "title": "Confirm Reservation",
+          "description": "The reservation will be confirmed and the customer will be notified by email. Payment and handover remain separate steps.",
+          "noteLabel": "Internal note — not sent to customer (optional)",
+          "notePlaceholder": "Note for the team…",
+          "submitButton": "Confirm",
+          "submitting": "Confirming…"
+        },
+        "decline": {
+          "title": "Decline Reservation",
+          "description": "The request will be marked as declined and the customer will be notified by email.",
+          "noteLabel": "Reason for the customer (optional)",
+          "notePlaceholder": "Short reason or alternative…",
+          "submitButton": "Decline",
+          "submitting": "Declining…"
+        }
       },
       "detailModal": {
         "title": "Booking Details",
