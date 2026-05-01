@@ -7,8 +7,6 @@ const supabase = useSupabaseClient()
 const navItems = [
   { labelKey: 'admin.nav.dashboard', to: '/admin' },
   { labelKey: 'admin.nav.calendar', to: '/admin/calendar' },
-  { labelKey: 'admin.nav.handover', to: '/admin/handover' },
-  { labelKey: 'admin.nav.customers', to: '/admin/customers' },
 ]
 
 async function signOut() {
