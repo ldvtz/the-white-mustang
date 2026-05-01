@@ -11,6 +11,11 @@ export default defineNuxtConfig({
     bankTransferAccountName: '',
     bankTransferIban: '',
     bankTransferNote: '',
+    mailTransport: 'resend',
+    mailFrom: 'info@thewhitemustang.ch',
+    smtpHost: 'localhost',
+    smtpPort: 54325,
+    resendApiKey: '',
   },
 
   modules: [
