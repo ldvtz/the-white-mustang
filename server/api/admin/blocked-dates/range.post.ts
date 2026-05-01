@@ -1,4 +1,4 @@
-import { serverSupabaseServiceRole } from '#supabase/server'
+import { serverSupabaseAdminClient } from '../../../utils/supabaseAdmin'
 import type { Database } from '@@/types/supabase'
 
 const MAX_RANGE_DAYS = 366
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: `Range cannot exceed ${MAX_RANGE_DAYS} days` })
   }
 
-  const supabase = serverSupabaseServiceRole<Database>(event)
+  const supabase = serverSupabaseAdminClient<Database>(event)
 
   const { data, error } = await supabase
     .from('blocked_dates')

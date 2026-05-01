@@ -1,4 +1,4 @@
-import { serverSupabaseServiceRole } from '#supabase/server'
+import { serverSupabaseAdminClient } from '../../../utils/supabaseAdmin'
 import type { Database } from '@@/types/supabase'
 import type { BookingWithCustomer } from '@@/types/booking'
 
@@ -6,7 +6,7 @@ export default defineEventHandler(async (event): Promise<BookingWithCustomer> =>
   const id = getRouterParam(event, 'id')
   if (!id) throw createError({ statusCode: 400, message: 'Missing booking id' })
 
-  const supabase = serverSupabaseServiceRole<Database>(event)
+  const supabase = serverSupabaseAdminClient<Database>(event)
 
   const { data, error } = await supabase
     .from('bookings')

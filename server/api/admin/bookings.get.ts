@@ -1,11 +1,11 @@
-import { serverSupabaseServiceRole } from '#supabase/server'
+import { serverSupabaseAdminClient } from '../../utils/supabaseAdmin'
 import type { Database } from '@@/types/supabase'
 import type { BookingWithCustomer } from '@@/types/booking'
 
 export default defineEventHandler(async (event): Promise<BookingWithCustomer[]> => {
   await requireAdminUser(event)
 
-  const supabase = serverSupabaseServiceRole<Database>(event)
+  const supabase = serverSupabaseAdminClient<Database>(event)
 
   const { data, error } = await supabase
     .from('bookings')

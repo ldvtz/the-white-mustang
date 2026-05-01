@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto'
 import type { H3Event } from 'h3'
-import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
+import { serverSupabaseAdminClient } from './supabaseAdmin'
 
 export const MANAGEMENT_TOKEN_DAYS = 180
 
@@ -31,7 +31,7 @@ export function parseCutoffDays(value: unknown): number {
 }
 
 export async function getManagedBooking(event: H3Event, token: string) {
-  const supabase = serverSupabaseServiceRole<Database>(event)
+  const supabase = serverSupabaseAdminClient<Database>(event)
   const tokenHash = hashManagementToken(token)
 
   const { data: tokenRow, error: tokenError } = await supabase

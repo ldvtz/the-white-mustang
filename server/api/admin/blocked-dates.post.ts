@@ -1,4 +1,4 @@
-import { serverSupabaseServiceRole } from '#supabase/server'
+import { serverSupabaseAdminClient } from '../../utils/supabaseAdmin'
 import type { Database } from '@@/types/supabase'
 
 export default defineEventHandler(async (event) => {
@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const date = parseDateInput(body?.date, todayInZurich())
   const reason = parseReasonInput(body?.reason)
 
-  const supabase = serverSupabaseServiceRole<Database>(event)
+  const supabase = serverSupabaseAdminClient<Database>(event)
   const { data, error } = await supabase
     .from('blocked_dates')
     .insert({ date, reason })
