@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { type ComputedRef } from 'vue'
-import type { BookingStatus, BookingWithCustomer } from '@@/types/supabase'
+import type { BookingWithCustomer } from '@@/types/supabase'
+import type { PaymentMethod } from '@@/shared/booking'
 import type { FilterMode } from '~/composables/useBookings'
 
 definePageMeta({ layout: 'admin' })
@@ -20,10 +21,8 @@ const {
   status,
   error,
   refresh,
-  updateStatus,
-  markPaymentReceived,
   postAdminComment,
-  confirmDeposit,
+  confirmPayment,
 } = useBookings()
 
 const filters: { key: FilterMode; labelKey: string; count?: ComputedRef<number> }[] = [
@@ -46,17 +45,12 @@ const formatDate = (d: string) =>
 const formatCHF = (n: number) =>
   new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' }).format(n)
 
-function isTwintPending(b: BookingWithCustomer) {
-  return b.payment_method === 'twint' && b.status === 'pending'
-}
-function isBankTransferAwaiting(b: BookingWithCustomer) {
-  return b.payment_method === 'bank_transfer' && b.status === 'awaiting_payment'
-}
-function isCashDepositRequired(b: BookingWithCustomer) {
-  return b.payment_method === 'cash' && !b.deposit_paid
+function canConfirmPayment(b: BookingWithCustomer) {
+  return (b.status === 'pending' || b.status === 'awaiting_payment') && !b.deposit_paid
 }
 
-function paymentLabel(method: string) {
+function paymentLabel(method: string | null) {
+  if (!method) return '—'
   return t(`storefront.booking.payment.methods.${method}`)
 }
 
@@ -71,13 +65,11 @@ function closeDetailModal() {
 }
 
 // ── Payment confirm modal ────────────────────────────────────────────────────
-type ActionType = 'twint' | 'bank' | 'cash_deposit'
-type PendingPayment = { booking: BookingWithCustomer; actionType: ActionType }
-const pendingPayment = ref<PendingPayment | null>(null)
+const pendingPayment = ref<BookingWithCustomer | null>(null)
 const paymentModalError = ref<string | null>(null)
 
-function openPaymentModal(booking: BookingWithCustomer, actionType: ActionType) {
-  pendingPayment.value = { booking, actionType }
+function openPaymentModal(booking: BookingWithCustomer) {
+  pendingPayment.value = booking
   paymentModalError.value = null
 }
 function closePaymentModal() {
@@ -85,20 +77,12 @@ function closePaymentModal() {
   paymentModalError.value = null
 }
 
-async function handlePaymentConfirm(comment: string) {
+async function handlePaymentConfirm(comment: string, paymentMethod: PaymentMethod) {
   if (!pendingPayment.value) return
-  const { booking, actionType } = pendingPayment.value
-  const id = booking.id
-
-  const ACTION_HANDLER: Record<ActionType, () => Promise<void>> = {
-    twint: () => updateStatus(id, 'confirmed'),
-    bank: () => markPaymentReceived(id),
-    cash_deposit: () => confirmDeposit(id),
-  }
+  const id = pendingPayment.value.id
 
   try {
-    await ACTION_HANDLER[actionType]()
-    if (comment) await postAdminComment(id, comment, false, false)
+    await confirmPayment(id, paymentMethod, comment || undefined)
     closePaymentModal()
   } catch {
     paymentModalError.value = t('admin.dashboard.paymentModal.error')
@@ -216,34 +200,14 @@ async function handlePaymentConfirm(comment: string) {
             </td>
             <td class="px-4 py-3 text-right">
               <div class="flex items-center justify-end gap-2">
-                <!-- TWINT: manual confirm -->
+                <!-- Confirm payment (all pending / awaiting_payment bookings) -->
                 <button
-                  v-if="isTwintPending(booking)"
+                  v-if="canConfirmPayment(booking)"
                   :disabled="inflightIds.has(booking.id)"
                   class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-deep-charcoal text-alpine-white text-xs font-medium rounded transition-opacity disabled:opacity-50 min-h-[36px]"
-                  @click="openPaymentModal(booking, 'twint')"
+                  @click="openPaymentModal(booking)"
                 >
                   {{ t('admin.dashboard.actions.confirmPayment') }}
-                </button>
-
-                <!-- Bank transfer: payment received -->
-                <button
-                  v-else-if="isBankTransferAwaiting(booking)"
-                  :disabled="inflightIds.has(booking.id)"
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-taillight-ruby text-alpine-white text-xs font-medium rounded transition-opacity disabled:opacity-50 min-h-[36px]"
-                  @click="openPaymentModal(booking, 'bank')"
-                >
-                  {{ t('admin.dashboard.actions.paymentReceived') }}
-                </button>
-
-                <!-- Cash: confirm deposit -->
-                <button
-                  v-else-if="isCashDepositRequired(booking)"
-                  :disabled="inflightIds.has(booking.id)"
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-800 text-xs font-medium rounded hover:bg-amber-200 transition-colors disabled:opacity-50 min-h-[36px]"
-                  @click="openPaymentModal(booking, 'cash_deposit')"
-                >
-                  {{ t('admin.dashboard.actions.confirmDeposit') }}
                 </button>
 
                 <!-- View details -->
@@ -263,8 +227,7 @@ async function handlePaymentConfirm(comment: string) {
     <!-- Payment confirmation modal -->
     <AdminPaymentConfirmModal
       v-if="pendingPayment"
-      :booking="pendingPayment.booking"
-      :action-type="pendingPayment.actionType"
+      :booking="pendingPayment"
       :inflight-ids="inflightIds"
       :error="paymentModalError"
       @confirm="handlePaymentConfirm"

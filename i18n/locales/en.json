@@ -71,22 +71,11 @@
         "commentEmailHint": "For questions or special wishes, please contact us at"
       },
       "payment": {
-        "label": "Payment Method",
-        "description": "Payment is confirmed manually. You will receive the matching instructions after submission.",
         "methods": {
           "twint": "TWINT",
           "bank_transfer": "Bank Transfer",
           "cash": "Cash"
-        },
-        "nextSteps": {
-          "twint": "Please send the payment by TWINT. We will confirm your booking once payment is received.",
-          "bank_transfer": "Please transfer the amount by bank transfer. We will confirm your booking once payment is received.",
-          "cash": "Your booking is reserved. Cash payment is handled as agreed at handover."
-        },
-        "recipient": "Recipient: {value}",
-        "accountName": "Account name: {value}",
-        "iban": "IBAN: {value}",
-        "note": "Payment note: {value}"
+        }
       },
       "privacy": "I agree that The White Mustang may use my details to process this booking request.",
       "summary": {
@@ -97,14 +86,13 @@
       },
       "submit": "Send Request",
       "submitting": "Sending…",
-      "success": "Your request has been received. Reference: {id}",
-      "manageLink": "Manage booking",
+      "success": "Your reservation request has been received. We will be in touch shortly. Reference: {id}",
+      "manageLink": "Manage reservation",
       "errors": {
         "nameRequired": "Name is required.",
         "emailInvalid": "Please enter a valid email address.",
         "phoneInvalid": "Please enter a valid phone number.",
         "useCaseRequired": "Please choose the occasion.",
-        "paymentMethodRequired": "Please choose a payment method.",
         "datesRequired": "Please choose a start and return date.",
         "invalidDate": "Please choose valid calendar dates.",
         "pastDate": "The start date cannot be in the past.",
@@ -116,27 +104,29 @@
       }
     },
     "manage": {
-      "seoTitle": "Manage Booking | The White Mustang",
-      "seoDescription": "Manage your booking for The White Mustang.",
-      "motif": "/// Booking",
-      "heading": "Manage Booking",
-      "loading": "Loading booking…",
+      "seoTitle": "Manage Reservation | The White Mustang",
+      "seoDescription": "Manage your reservation request for The White Mustang.",
+      "motif": "/// Reservation",
+      "heading": "Manage Reservation",
+      "loading": "Loading reservation…",
       "reference": "Reference",
       "status": "Status",
+      "statusPending": "Reservation request received",
       "period": "Period",
       "total": "Total",
       "paymentHeading": "Payment",
-      "contactEmailHint": "For questions about your booking, please contact us at",
+      "paymentPending": "Payment details will be communicated to you by email once your reservation is confirmed.",
+      "contactEmailHint": "For questions about your reservation, please contact us at",
       "cancelHeading": "Cancellation",
-      "cancelAllowed": "You can cancel this booking online until {days} days before the start date.",
-      "cancelBlocked": "This booking can no longer be cancelled online. Please contact us directly.",
+      "cancelAllowed": "You can cancel this reservation online until {days} days before the start date.",
+      "cancelBlocked": "This reservation can no longer be cancelled online. Please contact us directly.",
       "cancelPlaceholder": "Cancellation reason (optional)",
-      "cancelSubmit": "Cancel Booking",
+      "cancelSubmit": "Cancel Reservation",
       "cancelling": "Cancelling…",
       "refundManual": "Any applicable refund is reviewed and handled manually.",
       "errors": {
-        "loadFailed": "This booking could not be loaded. The link may have expired.",
-        "cancelFailed": "The booking could not be cancelled. Please contact us directly."
+        "loadFailed": "This reservation could not be loaded. The link may have expired.",
+        "cancelFailed": "The reservation could not be cancelled. Please contact us directly."
       }
     },
     "footer": {
@@ -212,19 +202,13 @@
       },
       "actions": {
         "confirmPayment": "Confirm Payment",
-        "paymentReceived": "Payment Received",
-        "depositRequired": "Deposit Required",
         "confirming": "Confirming…",
-        "viewDetails": "View Details",
-        "confirmDeposit": "Confirm Deposit"
+        "viewDetails": "View Details"
       },
       "paymentModal": {
-        "titleTwint": "Confirm TWINT Payment",
-        "titleBank": "Confirm Bank Transfer",
-        "titleCashDeposit": "Confirm Cash Deposit",
-        "actionTwint": "Mark payment as received and confirm the booking.",
-        "actionBank": "Mark payment as received, confirm booking, and send confirmation email.",
-        "actionCashDeposit": "Mark deposit as paid and confirm the booking.",
+        "title": "Confirm Payment",
+        "description": "Select the payment method and optionally add an internal note.",
+        "paymentMethodLabel": "Payment method",
         "adminNoteLabel": "Internal note (optional)",
         "adminNotePlaceholder": "Note for the team…",
         "confirmButton": "Confirm",

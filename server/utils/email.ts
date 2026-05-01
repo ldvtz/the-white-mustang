@@ -48,7 +48,6 @@ export async function sendBookingRequestReceived(
   startDate: string,
   endDate: string,
   totalPrice: number,
-  paymentMethod: string,
   managementUrl: string,
   locale: string,
 ): Promise<void> {
@@ -57,12 +56,12 @@ export async function sendBookingRequestReceived(
   const chf = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' }).format(totalPrice)
 
   const subject = locale === 'en'
-    ? 'Your booking request — The White Mustang'
-    : 'Ihre Buchungsanfrage — The White Mustang'
+    ? 'Your reservation request — The White Mustang'
+    : 'Ihre Reservierungsanfrage — The White Mustang'
 
   const text = locale === 'en'
-    ? `Dear ${name},\n\nWe received your booking request from ${fmt(startDate)} to ${fmt(endDate)} (${chf}). Payment method: ${paymentMethod}.\n\nManage or cancel your booking here: ${managementUrl}\n\nThe White Mustang Team`
-    : `Guten Tag ${name},\n\nWir haben Ihre Buchungsanfrage vom ${fmt(startDate)} bis ${fmt(endDate)} (${chf}) erhalten. Zahlungsmethode: ${paymentMethod}.\n\nBuchung verwalten oder stornieren: ${managementUrl}\n\nIhr White Mustang Team`
+    ? `Dear ${name},\n\nWe received your reservation request from ${fmt(startDate)} to ${fmt(endDate)} (${chf}). We will be in touch regarding payment once your reservation is confirmed.\n\nManage or cancel your request here: ${managementUrl}\n\nThe White Mustang Team`
+    : `Guten Tag ${name},\n\nWir haben Ihre Reservierungsanfrage vom ${fmt(startDate)} bis ${fmt(endDate)} (${chf}) erhalten. Wir werden uns bezüglich der Zahlung bei Ihnen melden, sobald Ihre Reservierung bestätigt wurde.\n\nAnfrage verwalten oder stornieren: ${managementUrl}\n\nIhr White Mustang Team`
 
   await sendEmail({ to, subject, text, html: `<pre style="font-family:sans-serif">${text}</pre>` })
 }

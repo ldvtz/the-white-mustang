@@ -1,8 +1,6 @@
 import { expect, test, type APIRequestContext } from '@playwright/test'
 import { canCancelBooking } from '../../shared/booking'
 
-type PaymentMethod = 'twint' | 'bank_transfer' | 'cash'
-
 function isoDaysFromNow(days: number) {
   const date = new Date()
   date.setDate(date.getDate() + days)
@@ -22,18 +20,16 @@ function uniqueFutureRange(workerIndex: number, projectName: string, offset: num
   }
 }
 
-async function createBooking(request: APIRequestContext, paymentMethod: PaymentMethod, workerIndex: number, projectName: string, offset: number) {
+async function createBooking(request: APIRequestContext, workerIndex: number, projectName: string, offset: number) {
   const range = uniqueFutureRange(workerIndex, projectName, offset)
   const response = await request.post('/api/bookings', {
     data: {
       useCase: 'joyride',
       ...range,
-      name: `E2E ${paymentMethod}`,
-      email: `e2e-${paymentMethod}-${projectName}-${workerIndex}-${offset}-${Date.now()}@example.com`,
+      name: 'E2E Reservation',
+      email: `e2e-${projectName}-${workerIndex}-${offset}-${Date.now()}@example.com`,
       phone: '+41790000000',
       age: 35,
-      paymentMethod,
-      comment: `Initial ${paymentMethod} comment`,
       locale: 'en',
     },
   })
@@ -41,9 +37,7 @@ async function createBooking(request: APIRequestContext, paymentMethod: PaymentM
   return await response.json() as {
     id: string
     status: string
-    paymentMethod: PaymentMethod
     managementUrl: string
-    paymentInstructions: Record<string, string>
   }
 }
 
@@ -53,13 +47,10 @@ test.describe('Booking request', () => {
     await page.getByTestId('section-calendar').scrollIntoViewIfNeeded()
   })
 
-  test('booking form is visible with payment controls', async ({ page }) => {
+  test('booking form is visible without payment method controls', async ({ page }) => {
     await expect(page.getByTestId('booking-form')).toBeVisible()
     await expect(page.getByTestId('booking-submit')).toBeVisible()
-    await expect(page.getByTestId('payment-method')).toBeVisible()
-    await expect(page.getByTestId('payment-method-twint')).toBeAttached()
-    await expect(page.getByTestId('payment-method-bank_transfer')).toBeAttached()
-    await expect(page.getByTestId('payment-method-cash')).toBeAttached()
+    await expect(page.getByTestId('payment-method')).not.toBeAttached()
   })
 
   test('date range updates the price estimate', async ({ page }) => {
@@ -87,18 +78,12 @@ test.describe('Booking request', () => {
 
     await expect(page.getByTestId('booking-date-error')).toBeVisible()
     await expect(page.getByTestId('booking-name-error')).toBeVisible()
-    await expect(page.getByTestId('payment-method-error')).toBeVisible()
   })
 
-  test('booking API creates each manual payment method', async ({ request }, testInfo) => {
-    const twint = await createBooking(request, 'twint', testInfo.workerIndex, testInfo.project.name, 1)
-    const bank = await createBooking(request, 'bank_transfer', testInfo.workerIndex, testInfo.project.name, 3)
-    const cash = await createBooking(request, 'cash', testInfo.workerIndex, testInfo.project.name, 5)
-
-    expect(twint.status).toBe('pending')
-    expect(bank.status).toBe('awaiting_payment')
-    expect(bank.paymentInstructions.iban).toBeDefined()
-    expect(cash.status).toBe('confirmed')
+  test('booking API creates a reservation with pending status', async ({ request }, testInfo) => {
+    const booking = await createBooking(request, testInfo.workerIndex, testInfo.project.name, 1)
+    expect(booking.status).toBe('pending')
+    expect(booking.managementUrl).toBeTruthy()
   })
 
   test('booking API creates a same-day booking', async ({ request }, testInfo) => {
@@ -112,7 +97,6 @@ test.describe('Booking request', () => {
         email: `e2e-same-day-${testInfo.project.name}-${testInfo.workerIndex}-${Date.now()}@example.com`,
         phone: '+41790000000',
         age: 35,
-        paymentMethod: 'cash',
         locale: 'en',
       },
     })
@@ -125,7 +109,7 @@ test.describe('Booking request', () => {
   })
 
   test('management link supports comments and cancellation', async ({ request }, testInfo) => {
-    const booking = await createBooking(request, 'cash', testInfo.workerIndex, testInfo.project.name, 7)
+    const booking = await createBooking(request, testInfo.workerIndex, testInfo.project.name, 7)
     const managePath = new URL(booking.managementUrl).pathname.replace('/booking/manage/', '/api/bookings/manage/')
 
     const loaded = await request.get(managePath)
@@ -144,7 +128,6 @@ test.describe('Booking request', () => {
     expect(cancelled.ok()).toBeTruthy()
     const cancelledBody = await cancelled.json()
     expect(cancelledBody.booking.status).toBe('cancelled')
-    expect(cancelledBody.booking.refundHandlingRequired).toBe(true)
   })
 
   test('cancellation cutoff blocks bookings inside the configured window', () => {

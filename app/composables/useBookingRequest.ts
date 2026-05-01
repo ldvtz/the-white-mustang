@@ -2,10 +2,8 @@ import { computed, reactive, ref, type Ref } from 'vue'
 import {
   calculateBookingPrice,
   isValidBookingUseCase,
-  isValidPaymentMethod,
   validateBookingDates,
   type BookingPrice,
-  type PaymentMethod,
   type BookingUseCase,
 } from '@@/shared/booking'
 
@@ -18,7 +16,6 @@ export type BookingFormState = {
   phone: string
   nationality: string
   age: string
-  paymentMethod: PaymentMethod | ''
   privacyAccepted: boolean
 }
 
@@ -28,15 +25,6 @@ export type BookingSubmissionResponse = {
   endDate: string
   totalPrice: number
   status: string
-  paymentMethod: PaymentMethod
-  paymentInstructions: {
-    method: PaymentMethod
-    recipient?: string
-    note?: string
-    qrImageUrl?: string
-    accountName?: string
-    iban?: string
-  }
   managementUrl: string
 }
 
@@ -52,7 +40,6 @@ function initialForm(): BookingFormState {
     phone: '',
     nationality: '',
     age: '',
-    paymentMethod: '',
     privacyAccepted: false,
   }
 }
@@ -79,7 +66,6 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
     if (!EMAIL_RE.test(form.email.trim())) errors.email = 'storefront.booking.errors.emailInvalid'
     if (form.phone.trim().length < 7) errors.phone = 'storefront.booking.errors.phoneInvalid'
     if (!isValidBookingUseCase(form.useCase)) errors.useCase = 'storefront.booking.errors.useCaseRequired'
-    if (!isValidPaymentMethod(form.paymentMethod)) errors.paymentMethod = 'storefront.booking.errors.paymentMethodRequired'
     if (!dateValidation.ok) errors.dates = dateValidation.errorKey
     if (!form.privacyAccepted) errors.privacyAccepted = 'storefront.booking.errors.privacyRequired'
     if (form.age) {
@@ -127,7 +113,6 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
           phone: form.phone.trim(),
           nationality: form.nationality.trim() || undefined,
           age: form.age ? Number(form.age) : undefined,
-          paymentMethod: form.paymentMethod,
           locale: locale.value,
         },
       })

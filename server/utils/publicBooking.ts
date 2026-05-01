@@ -1,7 +1,6 @@
 import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
 import {
-  isValidPaymentMethod,
   isValidBookingUseCase,
   listIsoDateRange,
   validateBookingDates,
@@ -16,7 +15,6 @@ export type PublicBookingBody = {
   phone?: unknown
   nationality?: unknown
   age?: unknown
-  paymentMethod?: unknown
   locale?: unknown
 }
 
@@ -25,7 +23,6 @@ const MAX_TEXT_LENGTH = 160
 
 export function parseBookingBody(body: PublicBookingBody) {
   const useCase = body.useCase
-  const paymentMethod = body.paymentMethod
   const startDate = requireText(body.startDate, 'Missing start date')
   const endDate = requireText(body.endDate, 'Missing end date')
   const name = requireText(body.name, 'Missing name')
@@ -37,14 +34,11 @@ export function parseBookingBody(body: PublicBookingBody) {
   if (!isValidBookingUseCase(useCase)) {
     throw createError({ statusCode: 400, message: 'Invalid booking use case' })
   }
-  if (!isValidPaymentMethod(paymentMethod)) {
-    throw createError({ statusCode: 400, message: 'Invalid payment method' })
-  }
 
   if (!EMAIL_RE.test(email)) throw createError({ statusCode: 400, message: 'Invalid email' })
   if (phone.length < 7) throw createError({ statusCode: 400, message: 'Invalid phone' })
 
-  return { useCase, paymentMethod, startDate, endDate, name, email, phone, nationality, age }
+  return { useCase, startDate, endDate, name, email, phone, nationality, age }
 }
 
 export async function assertDatesAvailable(

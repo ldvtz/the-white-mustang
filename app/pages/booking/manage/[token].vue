@@ -7,21 +7,13 @@ type ManagedBookingResponse = {
     startDate: string
     endDate: string
     status: string
-    paymentMethod: string
+    paymentMethod: string | null
     totalPrice: number
     depositPaid: boolean
     cancelledAt: string | null
     cancellationNote: string | null
     refundHandlingRequired: boolean
     customerName: string
-  }
-  paymentInstructions: {
-    method: string
-    recipient?: string
-    note?: string
-    qrImageUrl?: string
-    accountName?: string
-    iban?: string
   }
   cancellation: {
     cutoffDays: number
@@ -101,7 +93,11 @@ async function cancelBooking() {
             </div>
             <div>
               <p class="text-xs font-bold uppercase tracking-wider text-steel-grey">{{ t('storefront.manage.status') }}</p>
-              <p class="mt-1 font-semibold">{{ t(`common.status.${data.booking.status}`) }}</p>
+              <p class="mt-1 font-semibold">
+                {{ data.booking.status === 'pending'
+                  ? t('storefront.manage.statusPending')
+                  : t(`common.status.${data.booking.status}`) }}
+              </p>
             </div>
             <div>
               <p class="text-xs font-bold uppercase tracking-wider text-steel-grey">{{ t('storefront.manage.period') }}</p>
@@ -117,22 +113,8 @@ async function cancelBooking() {
         <section data-testid="manage-payment" class="rounded-md border border-steel-grey/20 bg-alpine-white p-6">
           <h2 class="text-xl font-bold uppercase">{{ t('storefront.manage.paymentHeading') }}</h2>
           <p class="mt-2 text-sm leading-relaxed text-steel-grey">
-            {{ t(`storefront.booking.payment.nextSteps.${data.booking.paymentMethod}`) }}
+            {{ t('storefront.manage.paymentPending') }}
           </p>
-          <div class="mt-4 grid gap-2 text-sm">
-            <p v-if="data.paymentInstructions.recipient">
-              {{ t('storefront.booking.payment.recipient', { value: data.paymentInstructions.recipient }) }}
-            </p>
-            <p v-if="data.paymentInstructions.accountName">
-              {{ t('storefront.booking.payment.accountName', { value: data.paymentInstructions.accountName }) }}
-            </p>
-            <p v-if="data.paymentInstructions.iban">
-              {{ t('storefront.booking.payment.iban', { value: data.paymentInstructions.iban }) }}
-            </p>
-            <p v-if="data.paymentInstructions.note">
-              {{ t('storefront.booking.payment.note', { value: data.paymentInstructions.note }) }}
-            </p>
-          </div>
         </section>
 
         <section class="rounded-md border border-steel-grey/20 bg-alpine-white p-6">

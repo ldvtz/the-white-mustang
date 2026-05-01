@@ -120,7 +120,7 @@ async function submitComment() {
         </div>
         <div>
           <p class="text-steel-grey text-xs uppercase tracking-wide">{{ $t('admin.dashboard.detailModal.paymentMethod') }}</p>
-          <p class="text-deep-charcoal mt-0.5">{{ $t(`storefront.booking.payment.methods.${booking.payment_method}`) }}</p>
+          <p class="text-deep-charcoal mt-0.5">{{ booking.payment_method ? $t(`storefront.booking.payment.methods.${booking.payment_method}`) : $t('admin.dashboard.detailModal.notProvided') }}</p>
         </div>
         <div>
           <p class="text-steel-grey text-xs uppercase tracking-wide">{{ $t('admin.dashboard.detailModal.depositStatus') }}</p>

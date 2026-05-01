@@ -54,13 +54,19 @@ The `NUXT_SUPABASE_SECRET_KEY` service role key is used only inside protected se
 To stop Supabase:
 
 ```bash
-supabase stop
+npx supabase stop
 ```
 
 To reset the local database (apply all migrations from scratch):
 
 ```bash
-supabase db reset
+npx supabase db reset
+```
+
+To only apply new migrations:
+
+```bash
+npx supabase migration up
 ```
 
 ### 3. Regenerate TypeScript types (when schema changes)

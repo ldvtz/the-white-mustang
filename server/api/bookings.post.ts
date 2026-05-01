@@ -2,7 +2,6 @@ import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database, BookingStatus } from '@@/types/supabase'
 import { calculateBookingPrice } from '@@/shared/booking'
 import { assertDatesAvailable, parseBookingBody, type PublicBookingBody } from '../utils/publicBooking'
-import type { PaymentInstructions } from '../utils/paymentInstructions'
 
 type PublicBookingResponse = {
   id: string
@@ -10,8 +9,6 @@ type PublicBookingResponse = {
   endDate: string
   totalPrice: number
   status: BookingStatus
-  paymentMethod: string
-  paymentInstructions: PaymentInstructions
   managementUrl: string
 }
 
@@ -47,10 +44,9 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
       customer_id: customer.id,
       start_date: parsed.startDate,
       end_date: parsed.endDate,
-      payment_method: parsed.paymentMethod,
       total_price: price.total,
     })
-    .select('id, start_date, end_date, total_price, status, payment_method')
+    .select('id, start_date, end_date, total_price, status')
     .single()
 
   if (bookingError || !booking) {
@@ -69,7 +65,6 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
   if (tokenError) throw createError({ statusCode: 500, message: tokenError.message })
 
   const managementUrl = getManagementUrl(event, managementToken)
-  const paymentInstructions = getPaymentInstructions(event, parsed.paymentMethod)
 
   try {
     await sendBookingRequestReceived(
@@ -78,7 +73,6 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
       booking.start_date,
       booking.end_date,
       booking.total_price,
-      parsed.paymentMethod,
       managementUrl,
       typeof body.locale === 'string' ? body.locale : 'de',
     )
@@ -92,8 +86,6 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
     endDate: booking.end_date,
     totalPrice: booking.total_price,
     status: booking.status,
-    paymentMethod: booking.payment_method,
-    paymentInstructions,
     managementUrl,
   }
 })

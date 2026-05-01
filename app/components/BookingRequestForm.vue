@@ -67,7 +67,6 @@ onMounted(() => {
             @update:end-date="form.endDate = $event"
           />
           <BookingContactFields :form="form" :errors="visibleErrors" />
-          <BookingPaymentFields :form="form" :errors="visibleErrors" />
           <BookingCommentField :form="form" />
           <BookingPrivacyField :form="form" :errors="visibleErrors" />
         </section>

@@ -1,4 +1,4 @@
-import { canCancelBooking, isValidPaymentMethod } from '@@/shared/booking'
+import { canCancelBooking } from '@@/shared/booking'
 
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, 'token')
@@ -7,9 +7,6 @@ export default defineEventHandler(async (event) => {
   const { supabase, booking } = await getManagedBooking(event, token)
   const config = useRuntimeConfig(event)
   const cutoffDays = parseCutoffDays(config.bookingCancellationCutoffDays)
-  if (!isValidPaymentMethod(booking.payment_method)) {
-    throw createError({ statusCode: 500, message: 'Invalid booking payment method' })
-  }
 
   const { data: comments, error: commentsError } = await supabase
     .from('booking_comments')
@@ -36,7 +33,6 @@ export default defineEventHandler(async (event) => {
       customerName: booking.customers.name,
     },
     comments: comments ?? [],
-    paymentInstructions: getPaymentInstructions(event, booking.payment_method),
     cancellation: {
       cutoffDays,
       canCancel: canCancelBooking(booking.status, booking.start_date, cutoffDays),

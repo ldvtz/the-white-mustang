@@ -55,65 +55,6 @@ export type Database = {
         }
         Relationships: []
       }
-      bookings: {
-        Row: {
-          cancellation_note: string | null
-          cancelled_at: string | null
-          cancelled_by: string | null
-          created_at: string
-          customer_id: string
-          deposit_paid: boolean
-          end_date: string
-          id: string
-          payment_method: string
-          payment_received_at: string | null
-          refund_handling_required: boolean
-          start_date: string
-          status: Database["public"]["Enums"]["booking_status"]
-          total_price: number
-        }
-        Insert: {
-          cancellation_note?: string | null
-          cancelled_at?: string | null
-          cancelled_by?: string | null
-          created_at?: string
-          customer_id: string
-          deposit_paid?: boolean
-          end_date: string
-          id?: string
-          payment_method: string
-          payment_received_at?: string | null
-          refund_handling_required?: boolean
-          start_date: string
-          status?: Database["public"]["Enums"]["booking_status"]
-          total_price: number
-        }
-        Update: {
-          cancellation_note?: string | null
-          cancelled_at?: string | null
-          cancelled_by?: string | null
-          created_at?: string
-          customer_id?: string
-          deposit_paid?: boolean
-          end_date?: string
-          id?: string
-          payment_method?: string
-          payment_received_at?: string | null
-          refund_handling_required?: boolean
-          start_date?: string
-          status?: Database["public"]["Enums"]["booking_status"]
-          total_price?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bookings_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "customers"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       booking_comments: {
         Row: {
           author_type: string
@@ -180,6 +121,65 @@ export type Database = {
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bookings: {
+        Row: {
+          cancellation_note: string | null
+          cancelled_at: string | null
+          cancelled_by: string | null
+          created_at: string
+          customer_id: string
+          deposit_paid: boolean
+          end_date: string
+          id: string
+          payment_method: string | null
+          payment_received_at: string | null
+          refund_handling_required: boolean
+          start_date: string
+          status: Database["public"]["Enums"]["booking_status"]
+          total_price: number
+        }
+        Insert: {
+          cancellation_note?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          created_at?: string
+          customer_id: string
+          deposit_paid?: boolean
+          end_date: string
+          id?: string
+          payment_method?: string | null
+          payment_received_at?: string | null
+          refund_handling_required?: boolean
+          start_date: string
+          status?: Database["public"]["Enums"]["booking_status"]
+          total_price: number
+        }
+        Update: {
+          cancellation_note?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          created_at?: string
+          customer_id?: string
+          deposit_paid?: boolean
+          end_date?: string
+          id?: string
+          payment_method?: string | null
+          payment_received_at?: string | null
+          refund_handling_required?: boolean
+          start_date?: string
+          status?: Database["public"]["Enums"]["booking_status"]
+          total_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
             referencedColumns: ["id"]
           },
         ]
@@ -298,16 +298,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       booking_status:
         | "pending"
+        | "awaiting_payment"
         | "confirmed"
         | "active"
         | "completed"
         | "cancelled"
-        | "awaiting_payment"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -440,21 +440,13 @@ export const Constants = {
     Enums: {
       booking_status: [
         "pending",
+        "awaiting_payment",
         "confirmed",
         "active",
         "completed",
         "cancelled",
-        "awaiting_payment",
       ],
     },
   },
 } as const
 
-export type BookingStatus = Enums<"booking_status">
-export type BlockedDate = Tables<"blocked_dates">
-export type BookingComment = Tables<"booking_comments">
-export type PaymentMethod = "twint" | "bank_transfer" | "cash"
-export type BookingWithCustomer = Tables<"bookings"> & {
-  customers: Pick<Tables<"customers">, "name" | "email" | "phone" | "nationality" | "age">
-  booking_comments?: Pick<Tables<"booking_comments">, "id" | "author_type" | "message" | "visible_to_customer" | "created_at">[]
-}

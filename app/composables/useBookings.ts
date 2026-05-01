@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
-import type { BookingStatus, BookingWithCustomer } from '@@/types/supabase'
+import type { BookingWithCustomer } from '@@/types/supabase'
+import type { PaymentMethod } from '@@/shared/booking'
 
 export type FilterMode = 'all' | 'actionRequired'
 
@@ -15,7 +16,8 @@ export function useBookings() {
   )
 
   const isActionRequired = (b: BookingWithCustomer): boolean =>
-    b.status === 'awaiting_payment'
+    b.status === 'pending'
+    || b.status === 'awaiting_payment'
     || b.refund_handling_required
     || (b.booking_comments ?? []).some((comment) => comment.author_type === 'customer')
 
@@ -41,17 +43,6 @@ export function useBookings() {
     }
   }
 
-  function updateStatus(id: string, newStatus: BookingStatus): Promise<void> {
-    return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/status`, {
-      method: 'PATCH',
-      body: { status: newStatus },
-    }))
-  }
-
-  function markPaymentReceived(id: string): Promise<void> {
-    return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/payment-received`, { method: 'POST' }))
-  }
-
   function postAdminComment(id: string, message: string, visibleToCustomer = false, shouldRefresh = true): Promise<void> {
     return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/comments`, {
       method: 'POST',
@@ -59,8 +50,11 @@ export function useBookings() {
     }), shouldRefresh)
   }
 
-  function confirmDeposit(id: string): Promise<void> {
-    return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/confirm-deposit`, { method: 'POST' }))
+  function confirmPayment(id: string, paymentMethod: PaymentMethod, comment?: string): Promise<void> {
+    return withInflightId(id, () => $fetch(`/api/admin/bookings/${id}/confirm-payment`, {
+      method: 'PATCH',
+      body: { paymentMethod, comment },
+    }))
   }
 
   return {
@@ -72,9 +66,7 @@ export function useBookings() {
     status,
     error,
     refresh,
-    updateStatus,
-    markPaymentReceived,
     postAdminComment,
-    confirmDeposit,
+    confirmPayment,
   }
 }

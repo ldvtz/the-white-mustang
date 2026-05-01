@@ -71,22 +71,11 @@
         "commentEmailHint": "Für Fragen oder besondere Wünsche kontaktieren Sie uns bitte unter"
       },
       "payment": {
-        "label": "Zahlungsmethode",
-        "description": "Die Zahlung wird manuell bestätigt. Sie erhalten die passenden Angaben nach dem Absenden.",
         "methods": {
           "twint": "TWINT",
           "bank_transfer": "Banküberweisung",
           "cash": "Barzahlung"
-        },
-        "nextSteps": {
-          "twint": "Bitte senden Sie die Zahlung per TWINT. Wir bestätigen die Buchung nach Zahlungseingang.",
-          "bank_transfer": "Bitte überweisen Sie den Betrag per Banküberweisung. Wir bestätigen die Buchung nach Zahlungseingang.",
-          "cash": "Ihre Buchung ist vorgemerkt. Die Barzahlung erfolgt gemäss Vereinbarung bei der Übergabe."
-        },
-        "recipient": "Empfänger: {value}",
-        "accountName": "Kontoinhaber: {value}",
-        "iban": "IBAN: {value}",
-        "note": "Zahlungsnotiz: {value}"
+        }
       },
       "privacy": "Ich bin einverstanden, dass The White Mustang meine Angaben zur Bearbeitung der Buchungsanfrage verwendet.",
       "summary": {
@@ -97,14 +86,13 @@
       },
       "submit": "Anfrage senden",
       "submitting": "Senden…",
-      "success": "Ihre Anfrage ist eingegangen. Referenz: {id}",
-      "manageLink": "Buchung verwalten",
+      "success": "Ihre Reservierungsanfrage ist eingegangen. Wir melden uns in Kürze bei Ihnen. Referenz: {id}",
+      "manageLink": "Reservierung verwalten",
       "errors": {
         "nameRequired": "Name ist erforderlich.",
         "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
         "phoneInvalid": "Bitte geben Sie eine gültige Telefonnummer ein.",
         "useCaseRequired": "Bitte wählen Sie den Anlass.",
-        "paymentMethodRequired": "Bitte wählen Sie eine Zahlungsmethode.",
         "datesRequired": "Bitte wählen Sie Start- und Rückgabedatum.",
         "invalidDate": "Bitte wählen Sie gültige Kalenderdaten.",
         "pastDate": "Das Startdatum darf nicht in der Vergangenheit liegen.",
@@ -116,27 +104,29 @@
       }
     },
     "manage": {
-      "seoTitle": "Buchung verwalten | The White Mustang",
-      "seoDescription": "Verwalten Sie Ihre Buchung für The White Mustang.",
-      "motif": "/// Buchung",
-      "heading": "Buchung verwalten",
-      "loading": "Buchung wird geladen…",
+      "seoTitle": "Reservierung verwalten | The White Mustang",
+      "seoDescription": "Verwalten Sie Ihre Reservierungsanfrage für The White Mustang.",
+      "motif": "/// Reservierung",
+      "heading": "Reservierung verwalten",
+      "loading": "Reservierung wird geladen…",
       "reference": "Referenz",
       "status": "Status",
+      "statusPending": "Reservierungsanfrage eingegangen",
       "period": "Zeitraum",
       "total": "Betrag",
       "paymentHeading": "Zahlung",
-      "contactEmailHint": "Bei Fragen zu Ihrer Buchung kontaktieren Sie uns bitte unter",
+      "paymentPending": "Die Zahlungsdetails werden Ihnen per E-Mail mitgeteilt, sobald Ihre Reservierung bestätigt wurde.",
+      "contactEmailHint": "Bei Fragen zu Ihrer Reservierung kontaktieren Sie uns bitte unter",
       "cancelHeading": "Stornierung",
-      "cancelAllowed": "Sie können diese Buchung bis {days} Tage vor dem Startdatum online stornieren.",
-      "cancelBlocked": "Diese Buchung kann online nicht mehr storniert werden. Bitte kontaktieren Sie uns direkt.",
+      "cancelAllowed": "Sie können diese Reservierung bis {days} Tage vor dem Startdatum online stornieren.",
+      "cancelBlocked": "Diese Reservierung kann online nicht mehr storniert werden. Bitte kontaktieren Sie uns direkt.",
       "cancelPlaceholder": "Grund der Stornierung (optional)",
-      "cancelSubmit": "Buchung stornieren",
+      "cancelSubmit": "Reservierung stornieren",
       "cancelling": "Storniere…",
       "refundManual": "Eine allfällige Rückzahlung wird manuell geprüft und abgewickelt.",
       "errors": {
-        "loadFailed": "Diese Buchung konnte nicht geladen werden. Der Link ist möglicherweise abgelaufen.",
-        "cancelFailed": "Die Buchung konnte nicht storniert werden. Bitte kontaktieren Sie uns direkt."
+        "loadFailed": "Diese Reservierung konnte nicht geladen werden. Der Link ist möglicherweise abgelaufen.",
+        "cancelFailed": "Die Reservierung konnte nicht storniert werden. Bitte kontaktieren Sie uns direkt."
       }
     },
     "footer": {
@@ -212,19 +202,13 @@
       },
       "actions": {
         "confirmPayment": "Zahlung bestätigen",
-        "paymentReceived": "Zahlung erhalten",
-        "depositRequired": "Depot erforderlich",
         "confirming": "Bestätige…",
-        "viewDetails": "Details anzeigen",
-        "confirmDeposit": "Depot bestätigen"
+        "viewDetails": "Details anzeigen"
       },
       "paymentModal": {
-        "titleTwint": "TWINT-Zahlung bestätigen",
-        "titleBank": "Banküberweisung bestätigen",
-        "titleCashDeposit": "Barzahlung-Depot bestätigen",
-        "actionTwint": "Zahlung als bestätigt markieren und Buchung bestätigen.",
-        "actionBank": "Zahlung als erhalten markieren, Buchung bestätigen und Bestätigungs-E-Mail senden.",
-        "actionCashDeposit": "Depot als bezahlt markieren und Buchung bestätigen.",
+        "title": "Zahlung bestätigen",
+        "description": "Wählen Sie die Zahlungsmethode und fügen Sie optional eine interne Notiz hinzu.",
+        "paymentMethodLabel": "Zahlungsmethode",
         "adminNoteLabel": "Interne Notiz (optional)",
         "adminNotePlaceholder": "Notiz für das Team…",
         "confirmButton": "Bestätigen",
