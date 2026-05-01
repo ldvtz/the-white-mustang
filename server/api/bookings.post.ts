@@ -1,4 +1,4 @@
-import { serverSupabaseAdminClient } from '../utils/supabaseAdmin'
+import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
 import type { BookingStatus } from '@@/types/booking'
 import { calculateBookingPrice } from '@@/shared/booking'
@@ -16,7 +16,7 @@ type PublicBookingResponse = {
 export default defineEventHandler(async (event): Promise<PublicBookingResponse> => {
   const body = await readBody<PublicBookingBody>(event)
   const parsed = parseBookingBody(body)
-  const supabase = serverSupabaseAdminClient<Database>(event)
+  const supabase = serverSupabaseServiceRole<Database>(event)
 
   await assertDatesAvailable(supabase, parsed.startDate, parsed.endDate)
   const price = calculateBookingPrice(parsed.startDate, parsed.endDate, parsed.useCase)

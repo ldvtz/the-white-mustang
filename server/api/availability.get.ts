@@ -1,4 +1,4 @@
-import { serverSupabaseAdminClient } from '../utils/supabaseAdmin'
+import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
 import { addDaysIso, listIsoDateRange, todayIso } from '@@/shared/booking'
 
@@ -7,7 +7,7 @@ type PublicAvailabilityResponse = {
 }
 
 export default defineEventHandler(async (event): Promise<PublicAvailabilityResponse> => {
-  const supabase = serverSupabaseAdminClient<Database>(event)
+  const supabase = serverSupabaseServiceRole<Database>(event)
   const start = todayIso()
   const end = addDaysIso(start, 370)
 

@@ -1,4 +1,4 @@
-import { serverSupabaseAdminClient } from '../../../../utils/supabaseAdmin'
+import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
 
 export default defineEventHandler(async (event) => {
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Message too long (max 1200 chars)' })
   }
 
-  const supabase = serverSupabaseAdminClient<Database>(event)
+  const supabase = serverSupabaseServiceRole<Database>(event)
 
   const { count, error: bookingError } = await supabase
     .from('bookings')

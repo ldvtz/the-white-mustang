@@ -1,4 +1,4 @@
-import { serverSupabaseAdminClient } from '../../../../utils/supabaseAdmin'
+import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
 
 const MAX_NOTE_LENGTH = 1200
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody<{ note?: unknown }>(event)
   const note = optionalNote(body.note)
   const now = new Date().toISOString()
-  const supabase = serverSupabaseAdminClient<Database>(event)
+  const supabase = serverSupabaseServiceRole<Database>(event)
 
   const { data: booking, error: fetchError } = await supabase
     .from('bookings')

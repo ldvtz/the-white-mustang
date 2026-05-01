@@ -1,4 +1,4 @@
-import { serverSupabaseAdminClient } from '../../../../utils/supabaseAdmin'
+import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
 import type { BookingStatus } from '@@/types/booking'
 
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Invalid status value' })
   }
 
-  const supabase = serverSupabaseAdminClient<Database>(event)
+  const supabase = serverSupabaseServiceRole<Database>(event)
 
   const { data: booking, error: fetchError } = await supabase
     .from('bookings')

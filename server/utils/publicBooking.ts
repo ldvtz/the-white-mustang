@@ -1,5 +1,5 @@
+import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
-import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   isValidBookingUseCase,
   listIsoDateRange,
@@ -45,7 +45,7 @@ export function parseBookingBody(body: PublicBookingBody) {
 }
 
 export async function assertDatesAvailable(
-  supabase: SupabaseClient<Database>,
+  supabase: ReturnType<typeof serverSupabaseServiceRole<Database>>,
   startDate: string,
   endDate: string,
 ): Promise<void> {
@@ -93,7 +93,7 @@ function parseLocale(value: unknown): 'de' | 'en' {
 }
 
 async function fetchUnavailableDates(
-  supabase: SupabaseClient<Database>,
+  supabase: ReturnType<typeof serverSupabaseServiceRole<Database>>,
   startDate: string,
   endDate: string,
 ): Promise<Set<string>> {

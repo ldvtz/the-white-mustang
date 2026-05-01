@@ -1,4 +1,4 @@
-import { serverSupabaseAdminClient } from '../../../../utils/supabaseAdmin'
+import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
 import { isValidPaymentMethod } from '@@/shared/booking'
 
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   const paymentMethod = body.paymentMethod
   const comment = typeof body.comment === 'string' && body.comment.trim() ? body.comment.trim() : null
 
-  const supabase = serverSupabaseAdminClient<Database>(event)
+  const supabase = serverSupabaseServiceRole<Database>(event)
 
   const { data: booking, error: fetchError } = await supabase
     .from('bookings')
