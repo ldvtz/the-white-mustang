@@ -15,6 +15,7 @@ export type PublicBookingBody = {
   phone?: unknown
   nationality?: unknown
   age?: unknown
+  comment?: unknown
   locale?: unknown
 }
 
@@ -30,6 +31,7 @@ export function parseBookingBody(body: PublicBookingBody) {
   const phone = requireText(body.phone, 'Missing phone')
   const nationality = optionalText(body.nationality)
   const age = optionalAge(body.age)
+  const comment = optionalLongText(body.comment)
   const locale = parseLocale(body.locale)
 
   if (!isValidBookingUseCase(useCase)) {
@@ -39,7 +41,7 @@ export function parseBookingBody(body: PublicBookingBody) {
   if (!EMAIL_RE.test(email)) throw createError({ statusCode: 400, message: 'Invalid email' })
   if (phone.length < 7) throw createError({ statusCode: 400, message: 'Invalid phone' })
 
-  return { useCase, startDate, endDate, name, email, phone, nationality, age, locale }
+  return { useCase, startDate, endDate, name, email, phone, nationality, age, comment, locale }
 }
 
 export async function assertDatesAvailable(
@@ -67,6 +69,14 @@ function optionalText(value: unknown): string | null {
   if (typeof value !== 'string') throw createError({ statusCode: 400, message: 'Invalid text value' })
   const trimmed = value.trim()
   if (trimmed.length > MAX_TEXT_LENGTH) throw createError({ statusCode: 400, message: 'Text value is too long' })
+  return trimmed || null
+}
+
+function optionalLongText(value: unknown): string | null {
+  if (value === undefined || value === null || value === '') return null
+  if (typeof value !== 'string') throw createError({ statusCode: 400, message: 'Invalid text value' })
+  const trimmed = value.trim()
+  if (trimmed.length > 500) throw createError({ statusCode: 400, message: 'Comment is too long' })
   return trimmed || null
 }
 

@@ -151,6 +151,10 @@ useSeoMeta({
         <p class="text-white/60 text-sm tracking-wider uppercase">
           {{ t('storefront.footer.tagline') }}
         </p>
+        <p class="text-white/60 text-sm">
+          {{ t('storefront.footer.contact') }}
+          <a href="mailto:info@thewhitemustang.ch" class="text-taillight-ruby underline">info@thewhitemustang.ch</a>
+        </p>
         <p class="text-white/30 text-xs mt-4 border-t border-white/10 pt-6 w-full">
           {{ t('storefront.footer.legal') }}
         </p>

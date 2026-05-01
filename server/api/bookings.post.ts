@@ -66,6 +66,17 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
 
   if (tokenError) throw createError({ statusCode: 500, message: tokenError.message })
 
+  if (parsed.comment) {
+    await supabase
+      .from('booking_comments')
+      .insert({
+        booking_id: booking.id,
+        author_type: 'customer',
+        message: parsed.comment,
+        visible_to_customer: true,
+      })
+  }
+
   const managementUrl = getManagementUrl(event, managementToken)
 
   try {

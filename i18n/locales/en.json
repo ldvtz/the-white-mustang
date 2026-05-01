@@ -68,7 +68,8 @@
         "email": "Email",
         "phone": "Phone",
         "age": "Age",
-        "commentEmailHint": "For questions or special wishes, please contact us at"
+        "comment": "Comments & Wishes",
+        "commentPlaceholder": "Further comments, wishes, or questions …"
       },
       "payment": {
         "methods": {
@@ -132,6 +133,7 @@
     "footer": {
       "tagline": "American Emotion. Swiss Perfection.",
       "motif": "///",
+      "contact": "Questions or special wishes? Get in touch:",
       "legal": "© 2025 The White Mustang · thewhitemustang.ch · All rights reserved"
     }
   },

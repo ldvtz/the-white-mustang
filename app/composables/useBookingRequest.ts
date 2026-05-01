@@ -16,6 +16,7 @@ export type BookingFormState = {
   phone: string
   nationality: string
   age: string
+  comment: string
   privacyAccepted: boolean
 }
 
@@ -40,6 +41,7 @@ function initialForm(): BookingFormState {
     phone: '',
     nationality: '',
     age: '',
+    comment: '',
     privacyAccepted: false,
   }
 }
@@ -113,6 +115,7 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
           phone: form.phone.trim(),
           nationality: form.nationality.trim() || undefined,
           age: form.age ? Number(form.age) : undefined,
+          comment: form.comment.trim() || undefined,
           locale: locale.value,
         },
       })
