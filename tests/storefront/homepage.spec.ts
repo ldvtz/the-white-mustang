@@ -15,6 +15,10 @@ test.describe('Homepage — page structure', () => {
     await expect(h1).not.toBeEmpty()
   })
 
+  test('hero uses the front-left Mustang image', async ({ page }) => {
+    await expect(page.getByTestId('hero-image')).toHaveAttribute('src', '/images/mustang-frontleft.png')
+  })
+
   test('all five sections are present', async ({ page }) => {
     await expect(page.getByTestId('storefront-nav')).toBeVisible()
     await expect(page.getByTestId('section-hero')).toBeVisible()
@@ -23,12 +27,19 @@ test.describe('Homepage — page structure', () => {
     await expect(page.getByTestId('storefront-footer')).toBeVisible()
   })
 
-  test('slideshow contains 4 images with non-empty src', async ({ page }) => {
+  test('slideshow contains the 6 production Mustang images', async ({ page }) => {
+    const expectedImages = [
+      '/images/mustang-frontleft.png',
+      '/images/mustang-frontright-cab.png',
+      '/images/mustang-backleft-cab.png',
+      '/images/mustang-backright.png',
+      '/images/mustang-interior-side.jpeg',
+      '/images/mustang-interior.jpeg',
+    ]
+
     await page.getByTestId('section-gallery').scrollIntoViewIfNeeded()
-    for (let i = 1; i <= 4; i++) {
-      const img = page.getByTestId(`gallery-image-${i}`)
-      const src = await img.getAttribute('src')
-      expect(src).toBeTruthy()
+    for (const [index, expectedSrc] of expectedImages.entries()) {
+      await expect(page.getByTestId(`gallery-image-${index + 1}`)).toHaveAttribute('src', expectedSrc)
     }
   })
 

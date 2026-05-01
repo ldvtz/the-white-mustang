@@ -34,7 +34,7 @@ useSeoMeta({
   description: () => t('storefront.seoDescription'),
   ogTitle: () => t('storefront.seoTitle'),
   ogDescription: () => t('storefront.seoDescription'),
-  ogImage: '/images/temp_mustang_1.webp',
+  ogImage: '/images/mustang-frontleft.png',
   ogType: 'website',
 })
 
@@ -54,8 +54,9 @@ useSeoMeta({
       <!-- Background image -->
       <div class="absolute inset-0 overflow-hidden">
         <img
-          src="/images/temp_mustang_1.webp"
+          src="/images/mustang-frontleft.png"
           :alt="t('storefront.gallery.alt')"
+          data-testid="hero-image"
           class="w-full h-full object-cover object-center"
         />
         <!-- Gradient overlay -->

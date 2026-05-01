@@ -142,6 +142,6 @@ npm run preview
 | Admin access | Supabase Auth `app_metadata` + Nuxt route middleware | Pages and server endpoints both verify admin sessions |
 | i18n | `@nuxtjs/i18n` | DE (default) + EN with `$t()` composable |
 | Data fetching | `useFetch` / `useAsyncData` | Server-side caching; public booking routes expose only validated, minimal data |
-| Images | `/public` or CDN | Heavy vehicle images are not stored in the database |
+| Images | Production Mustang photos in `/public/images` | Heavy vehicle images are served by the frontend CDN, not Supabase Storage |
 | Payments | Manual TWINT / bank transfer / cash | Keeps launch scope simple while preserving admin confirmation and refund handling |
 | Customer booking access | Hashed magic-link token | No customer account required; direct lookup by personal data is avoided |

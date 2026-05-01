@@ -2,14 +2,16 @@
 const { t } = useI18n()
 
 const images = [
-  { src: '/images/temp_mustang_1.webp', index: 1 },
-  { src: '/images/temp_mustang_2.webp', index: 2 },
-  { src: '/images/temp_mustang_3.webp', index: 3 },
-  { src: '/images/temp_mustang_4.webp', index: 4 },
+  { src: '/images/mustang-frontleft.png', index: 1 },
+  { src: '/images/mustang-frontright-cab.png', index: 2 },
+  { src: '/images/mustang-backleft-cab.png', index: 3 },
+  { src: '/images/mustang-backright.png', index: 4 },
+  { src: '/images/mustang-interior-side.jpeg', index: 5 },
+  { src: '/images/mustang-interior.jpeg', index: 6 },
 ]
 
 const current = ref(0)
-let timer: ReturnType<typeof setInterval>
+let timer: ReturnType<typeof setInterval> | undefined
 
 function goTo(i: number) {
   current.value = i
@@ -27,19 +29,16 @@ function next() {
 }
 
 function resetTimer() {
-  clearInterval(timer)
+  if (timer) clearInterval(timer)
   timer = setInterval(() => {
     current.value = (current.value + 1) % images.length
   }, 5000)
 }
 
-onMounted(() => {
-  timer = setInterval(() => {
-    current.value = (current.value + 1) % images.length
-  }, 5000)
+onMounted(resetTimer)
+onUnmounted(() => {
+  if (timer) clearInterval(timer)
 })
-
-onUnmounted(() => clearInterval(timer))
 
 const stats = computed(() => [
   { value: '500',   unit: 'PS',   labelKey: 'storefront.specs.stats.power' },
@@ -57,106 +56,94 @@ const features = computed(() => [
 </script>
 
 <template>
-  <div
-    data-testid="section-gallery"
-    class="bg-deep-charcoal lg:grid lg:grid-cols-[55%_45%] lg:min-h-[640px]"
-  >
-    <!-- ── LEFT: Slideshow ──────────────────────────────────────────────── -->
-    <div class="relative aspect-[4/3] lg:aspect-auto overflow-hidden">
-      <!-- Images (crossfade) -->
-      <img
-        v-for="(img, i) in images"
-        :key="img.src"
-        :src="img.src"
-        :alt="`${t('storefront.gallery.alt')} ${img.index}`"
-        :data-testid="`gallery-image-${img.index}`"
-        :class="[
-          'absolute inset-0 w-full h-full object-cover transition-opacity duration-700',
-          i === current ? 'opacity-100' : 'opacity-0'
-        ]"
-      />
-
-      <!-- Gradient edge fade into specs panel (desktop only) -->
-      <div class="hidden lg:block absolute inset-y-0 right-0 w-16 bg-gradient-to-r from-transparent to-deep-charcoal" />
-
-      <!-- Prev / Next arrows -->
-      <button
-        class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-black/40 hover:bg-black/60 text-white rounded-full transition-colors"
-        aria-label="Previous image"
-        @click="prev"
-      >
-        ‹
-      </button>
-      <button
-        class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-black/40 hover:bg-black/60 text-white rounded-full transition-colors"
-        aria-label="Next image"
-        @click="next"
-      >
-        ›
-      </button>
-
-      <!-- Dots -->
-      <div class="absolute bottom-5 left-0 right-0 flex justify-center gap-2">
-        <button
-          v-for="(_, i) in images"
-          :key="i"
+  <section id="gallery" data-testid="section-gallery" class="bg-alpine-white py-20 lg:py-24">
+    <div class="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,0.88fr)] lg:items-center">
+      <div class="relative aspect-[4/3] overflow-hidden rounded-md bg-pearl-white shadow-[0_24px_70px_rgba(28,28,30,0.14)]">
+        <img
+          v-for="(img, i) in images"
+          :key="img.src"
+          :src="img.src"
+          :alt="`${t('storefront.gallery.alt')} ${img.index}`"
+          :data-testid="`gallery-image-${img.index}`"
           :class="[
-            'w-2 h-2 rounded-full transition-all duration-300',
-            i === current ? 'bg-taillight-ruby w-6' : 'bg-white/40 hover:bg-white/70'
+            'absolute inset-0 h-full w-full object-cover transition-opacity duration-700',
+            i === current ? 'opacity-100' : 'opacity-0'
           ]"
-          :aria-label="`Image ${i + 1}`"
-          @click="goTo(i)"
         />
-      </div>
-    </div>
 
-    <!-- ── RIGHT: Specs ─────────────────────────────────────────────────── -->
-    <div class="flex flex-col justify-center px-8 py-12 lg:px-12 lg:py-16">
-      <!-- Section label -->
-      <p class="text-taillight-ruby text-xs font-bold uppercase tracking-[0.25em] mb-3">
-        {{ t('storefront.gallery.heading') }}
-      </p>
-
-      <!-- Engine name -->
-      <h2
-        data-testid="specs-engine-title"
-        class="text-white font-bold uppercase text-3xl lg:text-4xl tracking-tight leading-none mb-1"
-      >
-        5.0 V8
-      </h2>
-      <h3 class="text-white font-bold uppercase text-3xl lg:text-4xl tracking-tight leading-none mb-2">
-        COYOTE
-      </h3>
-      <p class="text-steel-grey text-xs uppercase tracking-widest mb-10">
-        {{ t('storefront.specs.subtitle') }}
-      </p>
-
-      <!-- Stats grid -->
-      <div class="grid grid-cols-2 gap-px bg-white/10 mb-10">
-        <div
-          v-for="stat in stats"
-          :key="stat.labelKey"
-          class="bg-deep-charcoal py-5 pr-4"
+        <button
+          class="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-deep-charcoal/55 text-2xl leading-none text-white transition-colors hover:bg-deep-charcoal/75"
+          aria-label="Previous image"
+          @click="prev"
         >
-          <div class="flex items-baseline gap-1.5">
-            <span class="text-white font-bold text-3xl leading-none">{{ stat.value }}</span>
-            <span class="text-steel-grey text-sm">{{ stat.unit }}</span>
-          </div>
-          <p class="text-steel-grey text-xs uppercase tracking-widest mt-1">{{ t(stat.labelKey) }}</p>
+          ‹
+        </button>
+        <button
+          class="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-deep-charcoal/55 text-2xl leading-none text-white transition-colors hover:bg-deep-charcoal/75"
+          aria-label="Next image"
+          @click="next"
+        >
+          ›
+        </button>
+
+        <div class="absolute bottom-5 left-0 right-0 flex justify-center gap-2">
+          <button
+            v-for="(_, i) in images"
+            :key="i"
+            :class="[
+              'h-2 w-2 rounded-full transition-all duration-300',
+              i === current ? 'w-7 bg-taillight-ruby' : 'bg-white/70 hover:bg-white'
+            ]"
+            :aria-label="`Image ${i + 1}`"
+            @click="goTo(i)"
+          />
         </div>
       </div>
 
-      <!-- Feature list -->
-      <ul class="space-y-2.5">
-        <li
-          v-for="key in features"
-          :key="key"
-          class="flex items-start gap-3 text-white/60 text-sm"
+      <div class="border-t border-steel-grey/20 pt-8 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0">
+        <p class="mb-4 text-xs font-bold uppercase tracking-[0.25em] text-taillight-ruby">
+          {{ t('storefront.gallery.heading') }}
+        </p>
+        <h2
+          data-testid="specs-engine-title"
+          class="text-4xl font-bold uppercase leading-none tracking-tight text-deep-charcoal lg:text-5xl"
         >
-          <span class="text-taillight-ruby font-bold shrink-0 mt-0.5">—</span>
-          <span>{{ t(key) }}</span>
-        </li>
-      </ul>
+          5.0 V8
+        </h2>
+        <h3 class="mt-1 text-4xl font-bold uppercase leading-none tracking-tight text-deep-charcoal lg:text-5xl">
+          Coyote
+        </h3>
+        <p class="mt-4 text-xs uppercase tracking-widest text-steel-grey">
+          {{ t('storefront.specs.subtitle') }}
+        </p>
+
+        <dl class="my-10 grid grid-cols-2 border-y border-steel-grey/20">
+          <div
+            v-for="stat in stats"
+            :key="stat.labelKey"
+            class="border-steel-grey/20 py-6 odd:border-r even:pl-6 sm:odd:pr-6"
+          >
+            <dt class="text-xs font-semibold uppercase tracking-widest text-steel-grey">
+              {{ t(stat.labelKey) }}
+            </dt>
+            <dd class="mt-2 flex items-baseline gap-2 text-deep-charcoal">
+              <span class="text-4xl font-bold leading-none">{{ stat.value }}</span>
+              <span class="text-sm text-steel-grey">{{ stat.unit }}</span>
+            </dd>
+          </div>
+        </dl>
+
+        <ul class="space-y-3">
+          <li
+            v-for="key in features"
+            :key="key"
+            class="flex items-start gap-3 text-sm leading-6 text-deep-charcoal/70"
+          >
+            <span class="mt-2 h-px w-5 shrink-0 bg-taillight-ruby" />
+            <span>{{ t(key) }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
