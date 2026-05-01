@@ -34,6 +34,12 @@ async function withEmailDeliveryTimeout<T>(operation: Promise<T>, timeoutMs: num
   }
 }
 
+const chfFormatter = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' })
+
+function emailGreeting(name: string, locale: string): string {
+  return locale === 'en' ? `Dear ${name},` : `Guten Tag ${name},`
+}
+
 async function sendEmail(opts: EmailOptions): Promise<void> {
   const config = useRuntimeConfig()
   const timeoutMs = getEmailDeliveryTimeoutMs(config.emailDeliveryTimeoutMs)
@@ -72,9 +78,9 @@ function buildEmailHtml(opts: {
   details?: { startDate: string; endDate: string; price?: string }
   ctaButton?: { label: string; url: string }
   reasonBlock?: string
-  closing: string
 }): string {
   const de = opts.locale !== 'en'
+  const closing = de ? 'Ihr White Mustang Team' : 'The White Mustang Team'
 
   const detailsHtml = opts.details
     ? `
@@ -192,7 +198,7 @@ function buildEmailHtml(opts: {
               ${ctaHtml}
               <p style="margin:32px 0 0 0;font-size:14px;line-height:1.6;color:#1C1C1E;">
                 ${de ? 'Mit freundlichen Grüssen,' : 'Warm regards,'}<br />
-                <strong>${opts.closing}</strong>
+                <strong>${closing}</strong>
               </p>
             </td>
           </tr>
@@ -223,9 +229,9 @@ export async function sendBookingConfirmation(
   totalPrice: number,
   locale: string,
 ): Promise<void> {
-  const fmt = (d: string) =>
-    new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'de-CH', { dateStyle: 'medium' }).format(new Date(d))
-  const chf = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' }).format(totalPrice)
+  const dateFormatter = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'de-CH', { dateStyle: 'medium' })
+  const fmt = (d: string) => dateFormatter.format(new Date(d))
+  const chf = chfFormatter.format(totalPrice)
 
   const subject = locale === 'en'
     ? 'Your booking is confirmed — The White Mustang'
@@ -237,7 +243,7 @@ export async function sendBookingConfirmation(
 
   const html = buildEmailHtml({
     locale,
-    greeting: locale === 'en' ? `Dear ${name},` : `Guten Tag ${name},`,
+    greeting: emailGreeting(name, locale),
     paragraphs: locale === 'en'
       ? [
           'Your payment has been received and your booking is fully confirmed. Everything is set — we look forward to handing over the keys.',
@@ -246,7 +252,6 @@ export async function sendBookingConfirmation(
           'Ihre Zahlung ist eingegangen und Ihre Buchung ist vollständig bestätigt. Alles ist bereit — wir freuen uns auf die Schlüsselübergabe.',
         ],
     details: { startDate: fmt(startDate), endDate: fmt(endDate), price: chf },
-    closing: locale === 'en' ? 'The White Mustang Team' : 'Ihr White Mustang Team',
   })
 
   await sendEmail({ to, subject, text, html })
@@ -260,9 +265,9 @@ export async function sendReservationConfirmation(
   totalPrice: number,
   locale: string,
 ): Promise<void> {
-  const fmt = (d: string) =>
-    new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'de-CH', { dateStyle: 'medium' }).format(new Date(d))
-  const chf = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' }).format(totalPrice)
+  const dateFormatter = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'de-CH', { dateStyle: 'medium' })
+  const fmt = (d: string) => dateFormatter.format(new Date(d))
+  const chf = chfFormatter.format(totalPrice)
 
   const subject = locale === 'en'
     ? 'Your reservation is confirmed — The White Mustang'
@@ -274,7 +279,7 @@ export async function sendReservationConfirmation(
 
   const html = buildEmailHtml({
     locale,
-    greeting: locale === 'en' ? `Dear ${name},` : `Guten Tag ${name},`,
+    greeting: emailGreeting(name, locale),
     paragraphs: locale === 'en'
       ? [
           'Your reservation is confirmed. We look forward to welcoming you.',
@@ -285,7 +290,6 @@ export async function sendReservationConfirmation(
           'Wir melden uns separat mit den nächsten Schritten zu Zahlung und Übergabe.',
         ],
     details: { startDate: fmt(startDate), endDate: fmt(endDate), price: chf },
-    closing: locale === 'en' ? 'The White Mustang Team' : 'Ihr White Mustang Team',
   })
 
   await sendEmail({ to, subject, text, html })
@@ -299,8 +303,8 @@ export async function sendReservationDeclined(
   locale: string,
   reason?: string | null,
 ): Promise<void> {
-  const fmt = (d: string) =>
-    new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'de-CH', { dateStyle: 'medium' }).format(new Date(d))
+  const dateFormatter = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'de-CH', { dateStyle: 'medium' })
+  const fmt = (d: string) => dateFormatter.format(new Date(d))
   const reasonText = reason
     ? (locale === 'en' ? `\n\nReason: ${reason}` : `\n\nGrund: ${reason}`)
     : ''
@@ -315,7 +319,7 @@ export async function sendReservationDeclined(
 
   const html = buildEmailHtml({
     locale,
-    greeting: locale === 'en' ? `Dear ${name},` : `Guten Tag ${name},`,
+    greeting: emailGreeting(name, locale),
     paragraphs: locale === 'en'
       ? [
           'We regret to inform you that we are unable to confirm your reservation request for the period below.',
@@ -327,7 +331,6 @@ export async function sendReservationDeclined(
         ],
     details: { startDate: fmt(startDate), endDate: fmt(endDate) },
     reasonBlock: reason ?? undefined,
-    closing: locale === 'en' ? 'The White Mustang Team' : 'Ihr White Mustang Team',
   })
 
   await sendEmail({ to, subject, text, html })
@@ -342,9 +345,9 @@ export async function sendBookingRequestReceived(
   managementUrl: string,
   locale: string,
 ): Promise<void> {
-  const fmt = (d: string) =>
-    new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'de-CH', { dateStyle: 'medium' }).format(new Date(d))
-  const chf = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' }).format(totalPrice)
+  const dateFormatter = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'de-CH', { dateStyle: 'medium' })
+  const fmt = (d: string) => dateFormatter.format(new Date(d))
+  const chf = chfFormatter.format(totalPrice)
 
   const subject = locale === 'en'
     ? 'Your reservation request — The White Mustang'
@@ -356,7 +359,7 @@ export async function sendBookingRequestReceived(
 
   const html = buildEmailHtml({
     locale,
-    greeting: locale === 'en' ? `Dear ${name},` : `Guten Tag ${name},`,
+    greeting: emailGreeting(name, locale),
     paragraphs: locale === 'en'
       ? [
           'We have received your reservation request for the period below. We will review it and be in touch within 24 hours.',
@@ -371,7 +374,6 @@ export async function sendBookingRequestReceived(
       label: locale === 'en' ? 'Manage My Request' : 'Anfrage verwalten',
       url: managementUrl,
     },
-    closing: locale === 'en' ? 'The White Mustang Team' : 'Ihr White Mustang Team',
   })
 
   await sendEmail({ to, subject, text, html })
