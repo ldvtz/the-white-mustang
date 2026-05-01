@@ -34,11 +34,11 @@ Anon key:     <your-local-anon-key>
 Service key:  <your-local-service-role-key>
 ```
 
-Copy the `API URL` and `Anon key` into your `.env` file:
+Copy the `API URL`, `Anon key`, and `Service key` into your `.env` file:
 
 ```env
-SUPABASE_URL=http://127.0.0.1:54321
-SUPABASE_KEY=<anon-key-from-above>
+NUXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NUXT_PUBLIC_SUPABASE_KEY=<anon-key-from-above>
 NUXT_SUPABASE_SECRET_KEY=<service-role-key-from-above>
 NUXT_BOOKING_CANCELLATION_CUTOFF_DAYS=3
 NUXT_TWINT_PAYMENT_RECIPIENT="The White Mustang"
@@ -54,7 +54,13 @@ NUXT_SMTP_PORT=54325
 NUXT_EMAIL_DELIVERY_TIMEOUT_MS=5000
 ```
 
-The `NUXT_SUPABASE_SECRET_KEY` service role key is used only inside protected server routes. Never expose it to the browser.
+The `NUXT_SUPABASE_SECRET_KEY` service role key is used only inside protected server routes. Never expose it to the browser. In production, configure these Supabase values in Vercel as runtime environment variables and redeploy after changing them:
+
+```env
+NUXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
+NUXT_PUBLIC_SUPABASE_KEY=<publishable-or-anon-key>
+NUXT_SUPABASE_SECRET_KEY=<secret-or-service-role-key>
+```
 
 Local reservation emails are captured by Supabase Mailpit at `http://localhost:54324`; they are not delivered to real inboxes. Restart `npm run dev` after changing `.env`.
 
