@@ -151,9 +151,17 @@ function toDateString(date: Date): string {
     <ClientOnly>
       <FullCalendar :options="calendarOptions" />
       <template #fallback>
-        <div class="h-96 flex items-center justify-center text-steel-grey">
-          <span>{{ t('admin.common.loading') }}</span>
-        </div>
+        <section
+          class="h-96 flex flex-col items-center justify-center px-6 text-center text-steel-grey"
+          aria-labelledby="availability-summary"
+        >
+          <h3 id="availability-summary" class="sr-only">
+            {{ t('storefront.pricing.heading') }}
+          </h3>
+          <p class="text-sm">
+            {{ t('storefront.pricing.calendarNote') }}
+          </p>
+        </section>
       </template>
     </ClientOnly>
     <PricingLegend />

@@ -3,7 +3,10 @@
     "seoTitle": "The White Mustang — American Emotion. Swiss Perfection.",
     "seoDescription": "Rent the white Ford Mustang GT 5.0 V8 Convertible for your wedding or an unforgettable weekend in the Swiss Alps.",
     "nav": {
-      "book": "Book Now"
+      "book": "Book Now",
+      "logoLabel": "Go to homepage",
+      "languageDe": "DE",
+      "languageEn": "EN"
     },
     "hero": {
       "tagline": "/// American Emotion. Swiss Perfection.",
@@ -29,7 +32,10 @@
     },
     "gallery": {
       "heading": "The Mustang",
-      "alt": "The White Mustang GT 5.0 V8 Convertible"
+      "alt": "The White Mustang GT 5.0 V8 Convertible",
+      "previous": "Previous image",
+      "next": "Next image",
+      "imageButton": "Show image {number}"
     },
     "pricing": {
       "heading": "Pricing & Availability",

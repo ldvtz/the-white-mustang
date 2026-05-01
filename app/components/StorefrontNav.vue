@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const { t, locale, setLocale } = useI18n()
+const { t, locale } = useI18n()
+const switchLocalePath = useSwitchLocalePath()
 const isScrolled = ref(false)
 
 onMounted(() => {
@@ -21,7 +22,7 @@ onMounted(() => {
   >
     <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
       <!-- Logo -->
-      <a href="#hero" class="flex items-center">
+      <a href="#hero" class="flex items-center" :aria-label="t('storefront.nav.logoLabel')">
         <img
           :src="isScrolled ? '/logos/the-white-mustang.svg' : '/logos/the-white-mustang-white.svg'"
           alt="The White Mustang"
@@ -33,29 +34,35 @@ onMounted(() => {
       <div class="flex items-center gap-6">
         <!-- Language switcher -->
         <div data-testid="lang-switcher" class="flex items-center gap-1 text-sm font-medium">
-          <button
+          <NuxtLink
+            data-testid="lang-de"
+            :to="switchLocalePath('de')"
+            hreflang="de-CH"
+            :aria-current="locale === 'de' ? 'page' : undefined"
             :class="[
               'px-2 py-1 rounded transition-colors',
               locale === 'de'
                 ? (isScrolled ? 'text-deep-charcoal' : 'text-white')
                 : (isScrolled ? 'text-steel-grey hover:text-deep-charcoal' : 'text-white/60 hover:text-white')
             ]"
-            @click="setLocale('de')"
           >
-            DE
-          </button>
+            {{ t('storefront.nav.languageDe') }}
+          </NuxtLink>
           <span :class="isScrolled ? 'text-steel-grey' : 'text-white/40'">|</span>
-          <button
+          <NuxtLink
+            data-testid="lang-en"
+            :to="switchLocalePath('en')"
+            hreflang="en-US"
+            :aria-current="locale === 'en' ? 'page' : undefined"
             :class="[
               'px-2 py-1 rounded transition-colors',
               locale === 'en'
                 ? (isScrolled ? 'text-deep-charcoal' : 'text-white')
                 : (isScrolled ? 'text-steel-grey hover:text-deep-charcoal' : 'text-white/60 hover:text-white')
             ]"
-            @click="setLocale('en')"
           >
-            EN
-          </button>
+            {{ t('storefront.nav.languageEn') }}
+          </NuxtLink>
         </div>
 
         <!-- CTA -->

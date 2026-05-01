@@ -38,4 +38,11 @@ test.describe('Navigation — navbar & CTAs', () => {
     expect(box).not.toBeNull()
     expect(box!.height).toBeGreaterThanOrEqual(44)
   })
+
+  test('language switcher exposes crawlable localized links', async ({ page }) => {
+    await expect(page.getByTestId('lang-de')).toHaveAttribute('href', '/')
+    await expect(page.getByTestId('lang-de')).toHaveAttribute('hreflang', 'de-CH')
+    await expect(page.getByTestId('lang-en')).toHaveAttribute('href', '/en')
+    await expect(page.getByTestId('lang-en')).toHaveAttribute('hreflang', 'en-US')
+  })
 })

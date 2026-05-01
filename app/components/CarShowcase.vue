@@ -2,12 +2,12 @@
 const { t } = useI18n()
 
 const images = [
-  { src: '/images/mustang-frontleft.png', index: 1 },
-  { src: '/images/mustang-frontright-cab.png', index: 2 },
-  { src: '/images/mustang-backleft-cab.png', index: 3 },
-  { src: '/images/mustang-backright.png', index: 4 },
-  { src: '/images/mustang-interior-side.jpeg', index: 5 },
-  { src: '/images/mustang-interior.jpeg', index: 6 },
+  { src: '/images/mustang-frontleft.webp', index: 1 },
+  { src: '/images/mustang-frontright-cab.webp', index: 2 },
+  { src: '/images/mustang-backleft-cab.webp', index: 3 },
+  { src: '/images/mustang-backright.webp', index: 4 },
+  { src: '/images/mustang-interior-side.webp', index: 5 },
+  { src: '/images/mustang-interior.webp', index: 6 },
 ]
 
 const current = ref(0)
@@ -59,12 +59,17 @@ const features = computed(() => [
   <section id="gallery" data-testid="section-gallery" class="bg-alpine-white py-20 lg:py-24">
     <div class="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,0.88fr)] lg:items-center">
       <div class="relative aspect-[4/3] overflow-hidden rounded-md bg-pearl-white shadow-[0_24px_70px_rgba(28,28,30,0.14)]">
-        <img
+        <NuxtImg
           v-for="(img, i) in images"
           :key="img.src"
           :src="img.src"
           :alt="`${t('storefront.gallery.alt')} ${img.index}`"
           :data-testid="`gallery-image-${img.index}`"
+          width="1200"
+          height="900"
+          sizes="100vw lg:58vw"
+          loading="lazy"
+          decoding="async"
           :class="[
             'absolute inset-0 h-full w-full object-cover transition-opacity duration-700',
             i === current ? 'opacity-100' : 'opacity-0'
@@ -73,14 +78,14 @@ const features = computed(() => [
 
         <button
           class="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-deep-charcoal/55 text-2xl leading-none text-white transition-colors hover:bg-deep-charcoal/75"
-          aria-label="Previous image"
+          :aria-label="t('storefront.gallery.previous')"
           @click="prev"
         >
           ‹
         </button>
         <button
           class="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-deep-charcoal/55 text-2xl leading-none text-white transition-colors hover:bg-deep-charcoal/75"
-          aria-label="Next image"
+          :aria-label="t('storefront.gallery.next')"
           @click="next"
         >
           ›
@@ -94,7 +99,8 @@ const features = computed(() => [
               'h-2 w-2 rounded-full transition-all duration-300',
               i === current ? 'w-7 bg-taillight-ruby' : 'bg-white/70 hover:bg-white'
             ]"
-            :aria-label="`Image ${i + 1}`"
+            :aria-label="t('storefront.gallery.imageButton', { number: i + 1 })"
+            :aria-pressed="i === current"
             @click="goTo(i)"
           />
         </div>
@@ -108,11 +114,8 @@ const features = computed(() => [
           data-testid="specs-engine-title"
           class="text-4xl font-bold uppercase leading-none tracking-tight text-deep-charcoal lg:text-5xl"
         >
-          5.0 V8
+          5.0 V8 <span class="block">Coyote</span>
         </h2>
-        <h3 class="mt-1 text-4xl font-bold uppercase leading-none tracking-tight text-deep-charcoal lg:text-5xl">
-          Coyote
-        </h3>
         <p class="mt-4 text-xs uppercase tracking-widest text-steel-grey">
           {{ t('storefront.specs.subtitle') }}
         </p>

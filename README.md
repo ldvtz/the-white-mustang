@@ -2,7 +2,7 @@
 
 Digital storefront for [thewhitemustang.ch](https://thewhitemustang.ch) — a premium Ford Mustang GT 5.0 V8 Cabriolet hire service for weddings and weekend joyrides in the Swiss Alps.
 
-Built with Nuxt 3, Tailwind CSS, and Supabase.
+Built with Nuxt 4, Tailwind CSS, Supabase, Nuxt Image, and Nuxt Sitemap.
 
 ## Local Development Setup
 
@@ -150,16 +150,19 @@ npm run build
 npm run preview
 ```
 
+The public sitemap is served at `/sitemap.xml`, and `public/robots.txt` points crawlers to `https://thewhitemustang.ch/sitemap.xml`. Public storefront pages render canonical, `hreflang`, Open Graph, Twitter card, and JSON-LD metadata server-side.
+
 ## Architecture
 
 | Concern | Choice | Why |
 |---|---|---|
-| Framework | Nuxt 3 | SSR, file-based routing, built-in i18n support |
+| Framework | Nuxt 4 | SSR, file-based routing, built-in i18n support |
 | Styling | Tailwind CSS | Utility-first, no runtime overhead |
 | Database / Auth | Supabase | Postgres with RLS, real-time, and managed auth |
 | Admin access | Supabase Auth `app_metadata` + Nuxt route middleware | Pages and server endpoints both verify admin sessions |
-| i18n | `@nuxtjs/i18n` | DE (default) + EN with `$t()` composable |
+| i18n + SEO | `@nuxtjs/i18n` with `baseUrl` and `useLocaleHead()` | DE (default) + EN routes emit canonical, alternate, `lang`, and Open Graph locale tags |
 | Data fetching | `useFetch` / `useAsyncData` | Server-side caching; public booking routes expose only validated, minimal data |
-| Images | Production Mustang photos in `/public/images` | Heavy vehicle images are served by the frontend CDN, not Supabase Storage |
+| Images | Optimized WebP photos in `/public/images` + `@nuxt/image` | Critical Mustang media stays on the frontend CDN, avoids Supabase Storage bandwidth, and ships responsive image variants for Core Web Vitals |
+| Sitemap | `@nuxtjs/sitemap` + route rules | Public localized storefront routes are discoverable; admin, API, and magic-link booking pages are excluded from indexing |
 | Payments | Manual follow-up after reservation approval | Keeps launch scope simple while separating reservation approval from payment handling |
 | Customer booking access | Hashed magic-link token | No customer account required; direct lookup by personal data is avoided |

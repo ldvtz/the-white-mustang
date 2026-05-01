@@ -1,2 +1,9 @@
 User-Agent: *
-Disallow:
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /en/admin/
+Disallow: /booking/manage/
+Disallow: /en/booking/manage/
+
+Sitemap: https://thewhitemustang.ch/sitemap.xml

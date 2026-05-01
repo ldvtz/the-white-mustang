@@ -3,7 +3,10 @@
     "seoTitle": "The White Mustang — American Emotion. Swiss Perfection.",
     "seoDescription": "Mieten Sie den weissen Ford Mustang GT 5.0 V8 Cabriolet für Ihre Hochzeit oder ein unvergessliches Wochenende in den Schweizer Alpen.",
     "nav": {
-      "book": "Jetzt buchen"
+      "book": "Jetzt buchen",
+      "logoLabel": "Zur Startseite",
+      "languageDe": "DE",
+      "languageEn": "EN"
     },
     "hero": {
       "tagline": "/// American Emotion. Swiss Perfection.",
@@ -29,7 +32,10 @@
     },
     "gallery": {
       "heading": "Der Mustang",
-      "alt": "The White Mustang GT 5.0 V8 Cabriolet"
+      "alt": "The White Mustang GT 5.0 V8 Cabriolet",
+      "previous": "Vorheriges Bild",
+      "next": "Nächstes Bild",
+      "imageButton": "Bild {number} anzeigen"
     },
     "pricing": {
       "heading": "Preise & Verfügbarkeit",

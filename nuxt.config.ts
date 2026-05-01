@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  devtools: { enabled: process.env.NODE_ENV !== 'production' },
 
   runtimeConfig: {
     bookingCancellationCutoffDays: 3,
@@ -23,7 +23,14 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/i18n',
+    '@nuxt/image',
+    '@nuxtjs/sitemap',
   ],
+
+  site: {
+    url: 'https://thewhitemustang.ch',
+    name: 'The White Mustang',
+  },
 
   supabase: {
     redirect: false,
@@ -31,6 +38,7 @@ export default defineNuxtConfig({
   },
 
   i18n: {
+    baseUrl: 'https://thewhitemustang.ch',
     locales: [
       { code: 'de', language: 'de-CH', name: 'Deutsch', file: 'de.json' },
       { code: 'en', language: 'en-US', name: 'English', file: 'en.json' },
@@ -44,6 +52,38 @@ export default defineNuxtConfig({
 
   tailwindcss: {
     configPath: '@@/tailwind.config.ts',
+  },
+
+  image: {
+    format: ['webp'],
+    quality: 78,
+    screens: {
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+    },
+  },
+
+  sitemap: {
+    exclude: [
+      '/admin/**',
+      '/en/admin/**',
+      '/booking/manage/**',
+      '/en/booking/manage/**',
+      '/api/**',
+    ],
+  },
+
+  routeRules: {
+    '/': { sitemap: { changefreq: 'weekly', priority: 1 } },
+    '/en': { sitemap: { changefreq: 'weekly', priority: 1 } },
+    '/admin/**': { robots: false },
+    '/en/admin/**': { robots: false },
+    '/booking/manage/**': { robots: false },
+    '/en/booking/manage/**': { robots: false },
+    '/api/**': { robots: false },
   },
 
   app: {

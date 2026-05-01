@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import type { Instance } from 'flatpickr/dist/types/instance'
-import 'flatpickr/dist/flatpickr.min.css'
-import '~/assets/css/flatpickr-brand.css'
 
 const props = defineProps<{
   modelValue: string
@@ -20,6 +18,11 @@ let fp: Instance | null = null
 
 onMounted(async () => {
   if (!inputRef.value) return
+
+  await Promise.all([
+    import('flatpickr/dist/flatpickr.min.css'),
+    import('~/assets/css/flatpickr-brand.css'),
+  ])
 
   const { default: flatpickr } = await import('flatpickr')
 

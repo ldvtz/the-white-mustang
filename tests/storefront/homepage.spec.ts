@@ -16,10 +16,12 @@ test.describe('Homepage — page structure', () => {
   })
 
   test('hero uses the front-left Mustang image', async ({ page }) => {
-    await expect(page.getByTestId('hero-image')).toHaveAttribute('src', '/images/mustang-frontleft.png')
+    await expect(page.getByTestId('hero-image')).toHaveAttribute('src', /mustang-frontleft\.webp/)
+    await expect(page.getByTestId('hero-image')).toHaveAttribute('fetchpriority', 'high')
   })
 
-  test('all five sections are present', async ({ page }) => {
+  test('all public landmarks and sections are present', async ({ page }) => {
+    await expect(page.locator('main')).toHaveCount(1)
     await expect(page.getByTestId('storefront-nav')).toBeVisible()
     await expect(page.getByTestId('section-hero')).toBeVisible()
     await expect(page.getByTestId('section-gallery')).toBeVisible()
@@ -29,17 +31,18 @@ test.describe('Homepage — page structure', () => {
 
   test('slideshow contains the 6 production Mustang images', async ({ page }) => {
     const expectedImages = [
-      '/images/mustang-frontleft.png',
-      '/images/mustang-frontright-cab.png',
-      '/images/mustang-backleft-cab.png',
-      '/images/mustang-backright.png',
-      '/images/mustang-interior-side.jpeg',
-      '/images/mustang-interior.jpeg',
+      'mustang-frontleft.webp',
+      'mustang-frontright-cab.webp',
+      'mustang-backleft-cab.webp',
+      'mustang-backright.webp',
+      'mustang-interior-side.webp',
+      'mustang-interior.webp',
     ]
 
     await page.getByTestId('section-gallery').scrollIntoViewIfNeeded()
     for (const [index, expectedSrc] of expectedImages.entries()) {
-      await expect(page.getByTestId(`gallery-image-${index + 1}`)).toHaveAttribute('src', expectedSrc)
+      await expect(page.getByTestId(`gallery-image-${index + 1}`)).toHaveAttribute('src', new RegExp(expectedSrc))
+      await expect(page.getByTestId(`gallery-image-${index + 1}`)).toHaveAttribute('loading', 'lazy')
     }
   })
 
@@ -56,5 +59,19 @@ test.describe('Homepage — page structure', () => {
     await expect(page.getByTestId('legend-weekend')).toBeVisible()
     await expect(page.getByTestId('legend-peak')).toBeVisible()
     await expect(page.getByTestId('legend-wedding')).toBeVisible()
+  })
+
+  test('renders crawlable locale and structured-data SEO tags', async ({ page }) => {
+    await expect(page.locator('html')).toHaveAttribute('lang', 'de-CH')
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://thewhitemustang.ch')
+    await expect(page.locator('link[rel="alternate"][hreflang="en-US"]')).toHaveAttribute('href', 'https://thewhitemustang.ch/en')
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://thewhitemustang.ch/images/mustang-frontleft.webp')
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image')
+
+    const schemaText = await page.locator('script[type="application/ld+json"]').textContent()
+    expect(schemaText).not.toBeNull()
+    const schema = JSON.parse(schemaText!)
+    expect(schema['@type']).toBe('LocalBusiness')
+    expect(schema.image).toBe('https://thewhitemustang.ch/images/mustang-frontleft.webp')
   })
 })
