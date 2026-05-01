@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { listIsoDateRange } from '@@/shared/booking'
+
 definePageMeta({ layout: 'default' })
 
 const { t } = useI18n()
@@ -26,6 +28,14 @@ const unavailableDates = computed(() => availability.value?.unavailableDates ?? 
 
 function selectBookingDate(date: string) {
   if (!bookingSelection.startDate || bookingSelection.endDate || date < bookingSelection.startDate) {
+    bookingSelection.startDate = date
+    bookingSelection.endDate = ''
+    return
+  }
+
+  const range = listIsoDateRange(bookingSelection.startDate, date)
+  const blocked = new Set(unavailableDates.value)
+  if (range.some(d => blocked.has(d))) {
     bookingSelection.startDate = date
     bookingSelection.endDate = ''
     return

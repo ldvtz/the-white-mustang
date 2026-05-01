@@ -16,6 +16,10 @@ const { locale } = useI18n()
 const inputRef = ref<HTMLInputElement | null>(null)
 let fp: Instance | null = null
 
+function localIso(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
 onMounted(async () => {
   if (!inputRef.value) return
 
@@ -40,7 +44,7 @@ onMounted(async () => {
     defaultDate: props.modelValue || undefined,
     disableMobile: true,
     onChange: (dates) => {
-      emit('update:modelValue', dates[0] ? dates[0].toISOString().slice(0, 10) : '')
+      emit('update:modelValue', dates[0] ? localIso(dates[0]) : '')
     },
   })
 })
@@ -49,7 +53,7 @@ onBeforeUnmount(() => fp?.destroy())
 
 watch(() => props.modelValue, (val) => {
   if (!fp) return
-  const current = fp.selectedDates[0] ? fp.selectedDates[0].toISOString().slice(0, 10) : ''
+  const current = fp.selectedDates[0] ? localIso(fp.selectedDates[0]) : ''
   if (current === val) return
   if (val) fp.setDate(val, false)
   else fp.clear(false)

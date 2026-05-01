@@ -135,7 +135,7 @@ const calendarOptions = computed<CalendarOptions>(() => ({
 }))
 
 function handleDateClick(info: DateClickArg) {
-  if (unavailableDateSet.value.has(info.dateStr)) return
+  if (unavailableDateSet.value.has(info.dateStr) || blockedSet.value.has(info.dateStr)) return
   emit('selectDate', info.dateStr)
 }
 

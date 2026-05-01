@@ -21,11 +21,11 @@ const {
 } = useBookingRequest(unavailableDateSet)
 
 watch(() => props.selectedStartDate, (date) => {
-  if (date) form.startDate = date
+  form.startDate = date
 })
 
 watch(() => props.selectedEndDate, (date) => {
-  if (date) form.endDate = date
+  form.endDate = date
 })
 
 const visibleErrors = computed(() => hasSubmitted.value ? fieldErrors.value : {})

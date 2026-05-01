@@ -82,19 +82,6 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
 
   const hasErrors = computed(() => Object.keys(fieldErrors.value).length > 0)
 
-  function selectDate(date: string) {
-    confirmation.value = null
-    submitErrorKey.value = null
-
-    if (!form.startDate || form.endDate || date < form.startDate) {
-      form.startDate = date
-      form.endDate = ''
-      return
-    }
-
-    form.endDate = date
-  }
-
   async function submit() {
     hasSubmitted.value = true
     submitErrorKey.value = null
@@ -137,7 +124,6 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
     isSubmitting,
     submitErrorKey,
     confirmation,
-    selectDate,
     submit,
   }
 }
