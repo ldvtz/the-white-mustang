@@ -128,7 +128,7 @@ function buildEmailHtml(opts: {
   const reasonHtml = opts.reasonBlock
     ? `
       <table width="100%" cellpadding="0" cellspacing="0" border="0"
-             style="margin:20px 0 8px 0;background-color:#F0F0F0;border-left:3px solid #8E8E93;">
+             style="margin:20px 0 8px 0;background-color:#F0F0F0;border-left:3px solid #C8102E;">
         <tr>
           <td style="padding:16px 20px;font-size:14px;line-height:1.6;color:#1C1C1E;">
             <strong style="font-size:11px;letter-spacing:1px;text-transform:uppercase;
@@ -176,7 +176,7 @@ function buildEmailHtml(opts: {
         <table width="600" cellpadding="0" cellspacing="0" border="0"
                style="max-width:600px;width:100%;background-color:#FFFFFF;">
           <tr>
-            <td align="center" style="background-color:#C8102E;padding:28px 40px;">
+            <td align="center" style="background-color:#C8102E;padding:28px 40px;color:#FFFFFF;">
               <p style="margin:0;font-size:13px;font-weight:700;letter-spacing:3px;
                         text-transform:uppercase;color:#FFFFFF;">
                 THE WHITE MUSTANG
