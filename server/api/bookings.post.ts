@@ -93,6 +93,22 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
     console.error('Failed to send booking management email', { bookingId: booking.id, error })
   }
 
+  try {
+    const adminUrl = `${getRequestURL(event).origin}/admin/bookings/${booking.id}`
+    await sendAdminNewBookingNotification(
+      booking.id,
+      parsed.name,
+      parsed.email,
+      parsed.phone,
+      booking.start_date,
+      booking.end_date,
+      booking.total_price,
+      adminUrl,
+    )
+  } catch (error) {
+    console.error('Failed to send admin new booking notification', { bookingId: booking.id, error })
+  }
+
   return {
     id: booking.id,
     startDate: booking.start_date,

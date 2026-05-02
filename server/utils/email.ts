@@ -334,6 +334,81 @@ export async function sendReservationDeclined(
   await sendEmail({ to, subject, text, html })
 }
 
+export async function sendAdminNewBookingNotification(
+  _bookingId: string,
+  customerName: string,
+  customerEmail: string,
+  customerPhone: string,
+  startDate: string,
+  endDate: string,
+  totalPrice: number,
+  adminUrl: string,
+): Promise<void> {
+  const dateFormatter = new Intl.DateTimeFormat('de-CH', { dateStyle: 'medium' })
+  const fmt = (d: string) => dateFormatter.format(new Date(d))
+  const chf = chfFormatter.format(totalPrice)
+
+  const html = buildEmailHtml({
+    locale: 'de',
+    greeting: 'Neue Buchungsanfrage eingegangen.',
+    paragraphs: [
+      `<strong>Name:</strong> ${customerName}`,
+      `<strong>E-Mail:</strong> ${customerEmail}`,
+      `<strong>Telefon:</strong> ${customerPhone}`,
+    ],
+    details: { startDate: fmt(startDate), endDate: fmt(endDate), price: chf },
+    ctaButton: { label: 'Buchung ansehen', url: adminUrl },
+  })
+
+  await sendEmail({
+    to: 'info@thewhitemustang.ch',
+    subject: `Neue Buchungsanfrage — ${customerName}`,
+    text: `Neue Buchungsanfrage von ${customerName} (${customerEmail}, ${customerPhone})\nVon: ${fmt(startDate)}\nBis: ${fmt(endDate)}\nBetrag: ${chf}\n\n${adminUrl}`,
+    html,
+  })
+}
+
+export async function sendAdminCancellationNotification(
+  _bookingId: string,
+  customerName: string,
+  customerEmail: string,
+  startDate: string,
+  endDate: string,
+  totalPrice: number,
+  refundHandlingRequired: boolean,
+  cancellationNote: string | null,
+  adminUrl: string,
+): Promise<void> {
+  const dateFormatter = new Intl.DateTimeFormat('de-CH', { dateStyle: 'medium' })
+  const fmt = (d: string) => dateFormatter.format(new Date(d))
+  const chf = chfFormatter.format(totalPrice)
+
+  const refundLine = refundHandlingRequired
+    ? '<strong style="color:#C8102E;">Achtung: Rückerstattung erforderlich.</strong>'
+    : 'Keine Rückerstattung erforderlich.'
+
+  const html = buildEmailHtml({
+    locale: 'de',
+    greeting: 'Ein Kunde hat seine Buchung storniert.',
+    paragraphs: [
+      `<strong>Name:</strong> ${customerName}`,
+      `<strong>E-Mail:</strong> ${customerEmail}`,
+      refundLine,
+    ],
+    details: { startDate: fmt(startDate), endDate: fmt(endDate), price: chf },
+    reasonBlock: cancellationNote ?? undefined,
+    ctaButton: { label: 'Buchung ansehen', url: adminUrl },
+  })
+
+  const refundText = refundHandlingRequired ? '\nACHTUNG: Rückerstattung erforderlich.' : ''
+  await sendEmail({
+    to: 'info@thewhitemustang.ch',
+    subject: `Stornierung durch Kunde — ${customerName}`,
+    text: `${customerName} (${customerEmail}) hat die Buchung vom ${fmt(startDate)} bis ${fmt(endDate)} (${chf}) storniert.${refundText}${cancellationNote ? `\nGrund: ${cancellationNote}` : ''}\n\n${adminUrl}`,
+    html,
+  })
+}
+
 export async function sendBookingRequestReceived(
   to: string,
   name: string,

@@ -44,6 +44,24 @@ export default defineEventHandler(async (event) => {
     if (commentError) throw createError({ statusCode: 500, message: commentError.message })
   }
 
+  try {
+    const customer = booking.customers as { name: string; email: string } | null
+    const adminUrl = `${getRequestURL(event).origin}/admin/bookings/${booking.id}`
+    await sendAdminCancellationNotification(
+      booking.id,
+      customer?.name ?? 'Unbekannt',
+      customer?.email ?? '',
+      booking.start_date,
+      booking.end_date,
+      booking.total_price,
+      refundHandlingRequired,
+      note,
+      adminUrl,
+    )
+  } catch (error) {
+    console.error('Failed to send admin cancellation notification', { bookingId: booking.id, error })
+  }
+
   return {
     booking: {
       id: updated.id,
