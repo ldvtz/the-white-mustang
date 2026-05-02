@@ -176,13 +176,11 @@ function buildEmailHtml(opts: {
         <table width="600" cellpadding="0" cellspacing="0" border="0"
                style="max-width:600px;width:100%;background-color:#FFFFFF;">
           <tr>
-            <td height="3" style="background-color:#C8102E;font-size:0;line-height:0;">&nbsp;</td>
-          </tr>
-          <tr>
-            <td align="center" style="background-color:#FFFFFF;padding:32px 40px 28px 40px;">
-              <img src="https://thewhitemustang.ch/logos/the-white-mustang.svg"
-                   alt="THE WHITE MUSTANG" width="240"
-                   style="display:block;width:240px;max-width:100%;height:auto;border:0;" />
+            <td align="center" style="background-color:#C8102E;padding:28px 40px;">
+              <p style="margin:0;font-size:13px;font-weight:700;letter-spacing:3px;
+                        text-transform:uppercase;color:#FFFFFF;">
+                THE WHITE MUSTANG
+              </p>
             </td>
           </tr>
           <tr>
