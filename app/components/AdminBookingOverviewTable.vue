@@ -52,7 +52,77 @@ function formatDatetime(value: string) {
 
 <template>
   <div class="overflow-hidden rounded-md border border-steel-grey/20 bg-alpine-white">
-    <div class="overflow-x-auto">
+
+    <!-- Mobile: card list (hidden on sm+) -->
+    <div class="sm:hidden divide-y divide-steel-grey/10">
+      <div
+        v-for="booking in bookings"
+        :key="booking.id"
+        class="p-4 cursor-pointer hover:bg-pearl-white transition-colors"
+        @click="navigateTo(`/admin/bookings/${booking.id}`)"
+      >
+        <div class="flex items-start justify-between gap-2 mb-2">
+          <div class="min-w-0">
+            <span class="block font-medium text-sm text-deep-charcoal truncate">{{ booking.customers.name }}</span>
+            <a
+              :href="`mailto:${booking.customers.email}`"
+              class="block text-xs text-steel-grey hover:text-taillight-ruby transition-colors truncate"
+              @click.stop
+            >
+              {{ booking.customers.email }}
+            </a>
+          </div>
+          <span
+            class="inline-block shrink-0 rounded px-2 py-1 text-xs font-medium"
+            :class="statusClasses[booking.status]"
+          >
+            {{ t(`admin.dashboard.status.${booking.status}`) }}
+          </span>
+        </div>
+
+        <div class="flex items-center justify-between text-xs mb-2">
+          <span class="text-steel-grey">{{ formatDate(booking.start_date) }} – {{ formatDate(booking.end_date) }}</span>
+          <span class="font-semibold tabular-nums text-deep-charcoal">{{ currencyFormatter.format(booking.total_price) }}</span>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5 mb-2" @click.stop>
+          <span
+            v-if="hasCustomerMessage(booking)"
+            class="rounded bg-taillight-ruby/10 px-2 py-0.5 text-xs font-semibold text-taillight-ruby"
+          >
+            {{ t('admin.dashboard.table.customerMessage') }}
+          </span>
+          <span
+            v-if="booking.refund_handling_required"
+            class="rounded bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800"
+          >
+            {{ t('admin.dashboard.table.refundRequired') }}
+          </span>
+        </div>
+
+        <div v-if="canDecideReservation(booking)" class="flex gap-2 mt-3" @click.stop>
+          <button
+            type="button"
+            :disabled="inflightIds.has(booking.id)"
+            class="flex-1 min-h-[44px] rounded bg-deep-charcoal px-3 py-1.5 text-xs font-semibold text-alpine-white transition-opacity disabled:opacity-50"
+            @click="emit('confirmReservation', booking)"
+          >
+            {{ t('admin.dashboard.actions.confirmReservation') }}
+          </button>
+          <button
+            type="button"
+            :disabled="inflightIds.has(booking.id)"
+            class="flex-1 min-h-[44px] rounded border border-steel-grey/30 px-3 py-1.5 text-xs font-semibold text-deep-charcoal transition-colors hover:border-taillight-ruby hover:text-taillight-ruby disabled:opacity-50"
+            @click="emit('declineReservation', booking)"
+          >
+            {{ t('admin.dashboard.actions.declineReservation') }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop: table (hidden on mobile) -->
+    <div class="hidden sm:block overflow-x-auto">
       <table class="w-full min-w-[960px] text-sm text-deep-charcoal">
         <thead class="border-b border-steel-grey/20 bg-pearl-white">
           <tr>

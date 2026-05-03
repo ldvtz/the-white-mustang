@@ -154,7 +154,7 @@ function subtractDay(dateStr: string): string {
 </script>
 
 <template>
-  <div class="p-8">
+  <div class="p-4 sm:p-8">
     <header class="mb-8">
       <h1 class="text-2xl font-bold uppercase tracking-wide text-deep-charcoal">
         {{ t('admin.calendar.title') }}
@@ -177,7 +177,7 @@ function subtractDay(dateStr: string): string {
 
     <!-- Legend + hint -->
     <div class="mt-4">
-      <div class="flex items-center gap-6 text-xs text-steel-grey">
+      <div class="flex flex-wrap items-center gap-4 text-xs text-steel-grey">
         <span class="flex items-center gap-1.5">
           <span class="inline-block w-3 h-3 rounded-sm bg-[#C8102E]" />
           {{ t('admin.calendar.legend.booked') }}
@@ -239,8 +239,54 @@ function subtractDay(dateStr: string): string {
     <!-- Booking popover -->
     <template v-if="activeBooking">
       <div class="fixed inset-0 z-40" @click="closePopover" />
+
+      <!-- Mobile: centered modal (hidden on sm+) -->
+      <div class="sm:hidden fixed inset-x-4 top-1/2 -translate-y-1/2 z-50 rounded-md border border-steel-grey/20 bg-alpine-white shadow-xl">
+        <div class="flex items-start justify-between gap-2 border-b border-steel-grey/10 px-4 py-3">
+          <div>
+            <p class="font-semibold text-sm text-deep-charcoal leading-tight">{{ activeBooking.customers.name }}</p>
+            <p class="text-xs text-steel-grey mt-0.5">{{ activeBooking.customers.email }}</p>
+          </div>
+          <button
+            type="button"
+            class="text-steel-grey hover:text-deep-charcoal transition-colors mt-0.5 leading-none shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
+            @click="closePopover"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="px-4 py-3 grid gap-2 text-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-steel-grey text-xs uppercase tracking-wide">{{ t('admin.dashboard.detailModal.period') }}</span>
+            <span class="text-deep-charcoal font-medium text-xs">
+              {{ formatDate(activeBooking.start_date) }} – {{ formatDate(activeBooking.end_date) }}
+            </span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-steel-grey text-xs uppercase tracking-wide">{{ t('admin.dashboard.detailModal.status') }}</span>
+            <span class="inline-block rounded px-2 py-0.5 text-xs font-semibold" :class="statusClasses[activeBooking.status]">
+              {{ t(`admin.dashboard.status.${activeBooking.status}`) }}
+            </span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-steel-grey text-xs uppercase tracking-wide">{{ t('admin.dashboard.detailModal.total') }}</span>
+            <span class="text-deep-charcoal font-semibold text-xs tabular-nums">{{ currencyFormatter.format(activeBooking.total_price) }}</span>
+          </div>
+        </div>
+        <div class="border-t border-steel-grey/10 px-4 py-3">
+          <NuxtLink
+            :to="`/admin/bookings/${activeBooking.id}`"
+            class="block w-full text-center rounded bg-deep-charcoal px-3 py-2 text-xs font-semibold uppercase tracking-wide text-alpine-white transition-opacity hover:opacity-80"
+            @click="closePopover"
+          >
+            {{ t('admin.dashboard.actions.viewDetails') }}
+          </NuxtLink>
+        </div>
+      </div>
+
+      <!-- Desktop: JS-positioned tooltip (hidden on mobile) -->
       <div
-        class="fixed z-50 w-72 rounded-md border border-steel-grey/20 bg-alpine-white shadow-xl"
+        class="hidden sm:block fixed z-50 w-72 rounded-md border border-steel-grey/20 bg-alpine-white shadow-xl"
         :style="{ top: popoverPos.y + 'px', left: popoverPos.x + 'px' }"
       >
         <div class="flex items-start justify-between gap-2 border-b border-steel-grey/10 px-4 py-3">

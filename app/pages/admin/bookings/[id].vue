@@ -145,7 +145,7 @@ async function submitComment() {
 </script>
 
 <template>
-  <div class="p-8 max-w-3xl">
+  <div class="p-4 sm:p-8 max-w-3xl">
     <!-- Back link -->
     <NuxtLink
       to="/admin"
@@ -190,7 +190,7 @@ async function submitComment() {
       </div>
 
       <!-- Booking info grid -->
-      <section class="grid grid-cols-2 gap-x-8 gap-y-4 mb-8 text-sm">
+      <section class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 mb-8 text-sm">
         <div>
           <p class="text-steel-grey text-xs uppercase tracking-wide">{{ t('admin.dashboard.detailModal.status') }}</p>
           <span class="inline-block mt-1 px-2 py-0.5 rounded text-xs font-semibold" :class="statusClasses[booking.status]">
@@ -277,7 +277,7 @@ async function submitComment() {
         <h2 class="text-deep-charcoal font-bold uppercase tracking-wide text-xs mb-4">
           {{ t('admin.dashboard.detailModal.customerSection') }}
         </h2>
-        <div class="grid grid-cols-2 gap-x-8 gap-y-4 text-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
           <div>
             <p class="text-steel-grey text-xs uppercase tracking-wide">{{ t('admin.dashboard.table.customer') }}</p>
             <p class="text-deep-charcoal font-medium mt-1">{{ booking.customers.name }}</p>
