@@ -5,6 +5,11 @@ definePageMeta({ layout: 'default' })
 
 const { t } = useI18n()
 const route = useRoute()
+
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+  history.replaceState(null, '', `#${id}`)
+}
 const siteUrl = 'https://thewhitemustang.ch'
 const heroImage = '/images/mustang-frontleft.webp'
 const absoluteHeroImage = `${siteUrl}${heroImage}`
@@ -152,6 +157,7 @@ useHead(() => ({
               href="#calendar"
               data-testid="hero-cta-primary"
               class="bg-taillight-ruby text-white font-bold uppercase tracking-wider px-8 py-4 rounded-md hover:bg-red-700 transition-colors text-center min-h-[44px] flex items-center justify-center"
+              @click.prevent="scrollTo('calendar')"
             >
               {{ t('storefront.hero.ctaPrimary') }}
             </a>
@@ -159,6 +165,7 @@ useHead(() => ({
               href="#gallery"
               data-testid="hero-cta-secondary"
               class="border border-white/40 text-white font-bold uppercase tracking-wider px-8 py-4 rounded-md hover:border-white hover:bg-white/10 transition-colors text-center min-h-[44px] flex items-center justify-center"
+              @click.prevent="scrollTo('gallery')"
             >
               {{ t('storefront.hero.ctaSecondary') }}
             </a>

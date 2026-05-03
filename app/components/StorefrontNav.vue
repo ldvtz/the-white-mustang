@@ -8,6 +8,11 @@ onMounted(() => {
   window.addEventListener('scroll', handler, { passive: true })
   onUnmounted(() => window.removeEventListener('scroll', handler))
 })
+
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+  history.replaceState(null, '', `#${id}`)
+}
 </script>
 
 <template>
@@ -22,7 +27,7 @@ onMounted(() => {
   >
     <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
       <!-- Logo -->
-      <a href="#hero" class="flex items-center" :aria-label="t('storefront.nav.logoLabel')">
+      <a href="#hero" class="flex items-center" :aria-label="t('storefront.nav.logoLabel')" @click.prevent="scrollTo('hero')">
         <img
           :src="isScrolled ? '/logos/the-white-mustang.svg' : '/logos/the-white-mustang-white.svg'"
           alt="The White Mustang"
@@ -70,6 +75,7 @@ onMounted(() => {
           href="#calendar"
           data-testid="nav-cta"
           class="bg-taillight-ruby text-white text-sm font-bold uppercase tracking-wider px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors min-h-[44px] flex items-center"
+          @click.prevent="scrollTo('calendar')"
         >
           {{ t('storefront.nav.book') }}
         </a>
