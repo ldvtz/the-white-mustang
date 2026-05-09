@@ -36,8 +36,18 @@ async function withEmailDeliveryTimeout<T>(operation: Promise<T>, timeoutMs: num
 
 const chfFormatter = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' })
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 function emailGreeting(name: string, locale: string): string {
-  return locale === 'en' ? `Dear ${name},` : `Guten Tag ${name},`
+  const safe = escapeHtml(name)
+  return locale === 'en' ? `Dear ${safe},` : `Guten Tag ${safe},`
 }
 
 async function sendEmail(opts: EmailOptions): Promise<void> {
@@ -328,7 +338,7 @@ export async function sendReservationDeclined(
           'Wir stehen Ihnen gerne zur Verfügung, um einen alternativen Zeitraum zu besprechen.',
         ],
     details: { startDate: fmt(startDate), endDate: fmt(endDate) },
-    reasonBlock: reason ?? undefined,
+    reasonBlock: reason ? escapeHtml(reason) : undefined,
   })
 
   await sendEmail({ to, subject, text, html })
@@ -352,9 +362,9 @@ export async function sendAdminNewBookingNotification(
     locale: 'de',
     greeting: 'Neue Buchungsanfrage eingegangen.',
     paragraphs: [
-      `<strong>Name:</strong> ${customerName}`,
-      `<strong>E-Mail:</strong> ${customerEmail}`,
-      `<strong>Telefon:</strong> ${customerPhone}`,
+      `<strong>Name:</strong> ${escapeHtml(customerName)}`,
+      `<strong>E-Mail:</strong> ${escapeHtml(customerEmail)}`,
+      `<strong>Telefon:</strong> ${escapeHtml(customerPhone)}`,
     ],
     details: { startDate: fmt(startDate), endDate: fmt(endDate), price: chf },
     ctaButton: { label: 'Buchung ansehen', url: adminUrl },
@@ -391,12 +401,12 @@ export async function sendAdminCancellationNotification(
     locale: 'de',
     greeting: 'Ein Kunde hat seine Buchung storniert.',
     paragraphs: [
-      `<strong>Name:</strong> ${customerName}`,
-      `<strong>E-Mail:</strong> ${customerEmail}`,
+      `<strong>Name:</strong> ${escapeHtml(customerName)}`,
+      `<strong>E-Mail:</strong> ${escapeHtml(customerEmail)}`,
       refundLine,
     ],
     details: { startDate: fmt(startDate), endDate: fmt(endDate), price: chf },
-    reasonBlock: cancellationNote ?? undefined,
+    reasonBlock: cancellationNote ? escapeHtml(cancellationNote) : undefined,
     ctaButton: { label: 'Buchung ansehen', url: adminUrl },
   })
 

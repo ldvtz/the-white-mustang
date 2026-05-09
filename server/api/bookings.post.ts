@@ -16,18 +16,19 @@ type PublicBookingResponse = {
 export default defineEventHandler(async (event): Promise<PublicBookingResponse> => {
   const body = await readBody<PublicBookingBody>(event)
   const parsed = parseBookingBody(body)
+  const fullName = `${parsed.firstName} ${parsed.name}`
   const supabase = serverSupabaseServiceRole<Database>(event)
 
   await assertDatesAvailable(supabase, parsed.startDate, parsed.endDate)
-  const price = calculateBookingPrice(parsed.startDate, parsed.endDate, parsed.useCase)
 
+  const price = calculateBookingPrice(parsed.startDate, parsed.endDate, parsed.useCase)
   if (!price) throw createError({ statusCode: 400, message: 'Invalid booking dates' })
 
   const { data: customer, error: customerError } = await supabase
     .from('customers')
     .upsert({
       email: parsed.email,
-      name: parsed.name,
+      name: fullName,
       phone: parsed.phone,
       nationality: parsed.nationality,
       age: parsed.age,
@@ -82,7 +83,7 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
   try {
     await sendBookingRequestReceived(
       parsed.email,
-      parsed.name,
+      fullName,
       booking.start_date,
       booking.end_date,
       booking.total_price,
@@ -97,7 +98,7 @@ export default defineEventHandler(async (event): Promise<PublicBookingResponse> 
     const adminUrl = `${getRequestURL(event).origin}/admin/bookings/${booking.id}`
     await sendAdminNewBookingNotification(
       booking.id,
-      parsed.name,
+      fullName,
       parsed.email,
       parsed.phone,
       booking.start_date,

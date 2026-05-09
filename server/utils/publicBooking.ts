@@ -1,7 +1,9 @@
 import { serverSupabaseServiceRole } from '#supabase/server'
 import type { Database } from '@@/types/supabase'
 import {
+  EMAIL_RE,
   isValidBookingUseCase,
+  isValidPhone,
   listIsoDateRange,
   validateBookingDates,
 } from '@@/shared/booking'
@@ -10,6 +12,7 @@ export type PublicBookingBody = {
   useCase?: unknown
   startDate?: unknown
   endDate?: unknown
+  firstName?: unknown
   name?: unknown
   email?: unknown
   phone?: unknown
@@ -19,13 +22,13 @@ export type PublicBookingBody = {
   locale?: unknown
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const MAX_TEXT_LENGTH = 160
 
 export function parseBookingBody(body: PublicBookingBody) {
   const useCase = body.useCase
   const startDate = requireText(body.startDate, 'Missing start date')
   const endDate = requireText(body.endDate, 'Missing end date')
+  const firstName = requireText(body.firstName, 'Missing first name')
   const name = requireText(body.name, 'Missing name')
   const email = requireText(body.email, 'Missing email').toLowerCase()
   const phone = requireText(body.phone, 'Missing phone')
@@ -39,9 +42,9 @@ export function parseBookingBody(body: PublicBookingBody) {
   }
 
   if (!EMAIL_RE.test(email)) throw createError({ statusCode: 400, message: 'Invalid email' })
-  if (phone.length < 7) throw createError({ statusCode: 400, message: 'Invalid phone' })
+  if (!isValidPhone(phone)) throw createError({ statusCode: 400, message: 'Invalid phone' })
 
-  return { useCase, startDate, endDate, name, email, phone, nationality, age, comment, locale }
+  return { useCase, startDate, endDate, firstName, name, email, phone, nationality, age, comment, locale }
 }
 
 export async function assertDatesAvailable(
@@ -82,7 +85,7 @@ function optionalLongText(value: unknown): string | null {
 
 function optionalAge(value: unknown): number | null {
   if (value === undefined || value === null || value === '') return null
-  if (typeof value !== 'number' || !Number.isInteger(value) || value < 18 || value > 120) {
+  if (typeof value !== 'number' || !Number.isInteger(value) || value < 18 || value > 99) {
     throw createError({ statusCode: 400, message: 'Invalid age' })
   }
   return value

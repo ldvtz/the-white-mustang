@@ -13,28 +13,43 @@ const { t } = useI18n()
   <div class="grid gap-5">
     <div class="grid gap-4 sm:grid-cols-2">
       <label class="block">
+        <span class="text-xs font-bold uppercase tracking-wider text-steel-grey">{{ t('storefront.booking.fields.firstName') }}</span>
+        <input
+          v-model="form.firstName"
+          data-testid="booking-first-name"
+          type="text"
+          autocomplete="given-name"
+          maxlength="80"
+          class="mt-2 min-h-[44px] w-full rounded-md border border-steel-grey/30 bg-alpine-white px-3 text-sm text-deep-charcoal focus:border-deep-charcoal focus:outline-none"
+        />
+        <span v-if="errors.firstName" data-testid="booking-first-name-error" class="mt-1 block text-xs text-taillight-ruby">{{ t(errors.firstName) }}</span>
+      </label>
+      <label class="block">
         <span class="text-xs font-bold uppercase tracking-wider text-steel-grey">{{ t('storefront.booking.fields.name') }}</span>
         <input
           v-model="form.name"
           data-testid="booking-name"
           type="text"
-          autocomplete="name"
+          autocomplete="family-name"
+          maxlength="80"
           class="mt-2 min-h-[44px] w-full rounded-md border border-steel-grey/30 bg-alpine-white px-3 text-sm text-deep-charcoal focus:border-deep-charcoal focus:outline-none"
         />
         <span v-if="errors.name" data-testid="booking-name-error" class="mt-1 block text-xs text-taillight-ruby">{{ t(errors.name) }}</span>
       </label>
-      <label class="block">
-        <span class="text-xs font-bold uppercase tracking-wider text-steel-grey">{{ t('storefront.booking.fields.email') }}</span>
-        <input
-          v-model="form.email"
-          data-testid="booking-email"
-          type="email"
-          autocomplete="email"
-          class="mt-2 min-h-[44px] w-full rounded-md border border-steel-grey/30 bg-alpine-white px-3 text-sm text-deep-charcoal focus:border-deep-charcoal focus:outline-none"
-        />
-        <span v-if="errors.email" data-testid="booking-email-error" class="mt-1 block text-xs text-taillight-ruby">{{ t(errors.email) }}</span>
-      </label>
     </div>
+
+    <label class="block">
+      <span class="text-xs font-bold uppercase tracking-wider text-steel-grey">{{ t('storefront.booking.fields.email') }}</span>
+      <input
+        v-model="form.email"
+        data-testid="booking-email"
+        type="email"
+        autocomplete="email"
+        maxlength="160"
+        class="mt-2 min-h-[44px] w-full rounded-md border border-steel-grey/30 bg-alpine-white px-3 text-sm text-deep-charcoal focus:border-deep-charcoal focus:outline-none"
+      />
+      <span v-if="errors.email" data-testid="booking-email-error" class="mt-1 block text-xs text-taillight-ruby">{{ t(errors.email) }}</span>
+    </label>
 
     <div class="grid gap-4 sm:grid-cols-3">
       <label class="block sm:col-span-2">
@@ -44,6 +59,8 @@ const { t } = useI18n()
           data-testid="booking-phone"
           type="tel"
           autocomplete="tel"
+          maxlength="20"
+          placeholder="+41 12 345 76 89"
           class="mt-2 min-h-[44px] w-full rounded-md border border-steel-grey/30 bg-alpine-white px-3 text-sm text-deep-charcoal focus:border-deep-charcoal focus:outline-none"
         />
         <span v-if="errors.phone" data-testid="booking-phone-error" class="mt-1 block text-xs text-taillight-ruby">{{ t(errors.phone) }}</span>
@@ -53,9 +70,11 @@ const { t } = useI18n()
         <input
           v-model="form.age"
           data-testid="booking-age"
-          type="number"
-          min="18"
-          max="120"
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="2"
+          placeholder="25"
           class="mt-2 min-h-[44px] w-full rounded-md border border-steel-grey/30 bg-alpine-white px-3 text-sm text-deep-charcoal focus:border-deep-charcoal focus:outline-none"
         />
         <span v-if="errors.age" data-testid="booking-age-error" class="mt-1 block text-xs text-taillight-ruby">{{ t(errors.age) }}</span>

@@ -70,7 +70,8 @@
       "fields": {
         "startDate": "Pick-up Date",
         "endDate": "Return Date",
-        "name": "Name",
+        "firstName": "First Name",
+        "name": "Last Name",
         "email": "Email",
         "phone": "Phone",
         "age": "Age",
@@ -96,7 +97,8 @@
       "success": "Your reservation request has been received. We will be in touch shortly. Reference: {id}",
       "manageLink": "Manage reservation",
       "errors": {
-        "nameRequired": "Name is required.",
+        "firstNameRequired": "First name is required.",
+        "nameRequired": "Last name is required.",
         "emailInvalid": "Please enter a valid email address.",
         "phoneInvalid": "Please enter a valid phone number.",
         "useCaseRequired": "Please choose the occasion.",
@@ -107,7 +109,7 @@
         "unavailable": "This period is not available.",
         "privacyRequired": "Please confirm the privacy notice.",
         "submitFailed": "The request could not be sent right now. Please try again.",
-        "ageInvalid": "Please enter a valid age between 18 and 120."
+        "ageInvalid": "Please enter a valid age between 18 and 99."
       }
     },
     "manage": {

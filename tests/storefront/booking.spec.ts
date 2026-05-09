@@ -26,7 +26,8 @@ async function createBooking(request: APIRequestContext, workerIndex: number, pr
     data: {
       useCase: 'joyride',
       ...range,
-      name: 'E2E Reservation',
+      firstName: 'E2E',
+      name: 'Reservation',
       email: `e2e-${projectName}-${workerIndex}-${offset}-${Date.now()}@example.com`,
       phone: '+41790000000',
       age: 35,
@@ -77,6 +78,7 @@ test.describe('Booking request', () => {
     await page.getByTestId('booking-submit').click()
 
     await expect(page.getByTestId('booking-date-error')).toBeVisible()
+    await expect(page.getByTestId('booking-first-name-error')).toBeVisible()
     await expect(page.getByTestId('booking-name-error')).toBeVisible()
   })
 
@@ -93,7 +95,8 @@ test.describe('Booking request', () => {
         useCase: 'joyride',
         startDate,
         endDate: startDate,
-        name: 'E2E same-day',
+        firstName: 'E2E',
+        name: 'same-day',
         email: `e2e-same-day-${testInfo.project.name}-${testInfo.workerIndex}-${Date.now()}@example.com`,
         phone: '+41790000000',
         age: 35,

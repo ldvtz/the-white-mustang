@@ -1,7 +1,9 @@
 import { computed, reactive, ref, type Ref } from 'vue'
 import {
   calculateBookingPrice,
+  EMAIL_RE,
   isValidBookingUseCase,
+  isValidPhone,
   validateBookingDates,
   type BookingPrice,
   type BookingUseCase,
@@ -11,6 +13,7 @@ export type BookingFormState = {
   useCase: BookingUseCase
   startDate: string
   endDate: string
+  firstName: string
   name: string
   email: string
   phone: string
@@ -29,13 +32,12 @@ export type BookingSubmissionResponse = {
   managementUrl: string
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
 function initialForm(): BookingFormState {
   return {
     useCase: 'joyride',
     startDate: '',
     endDate: '',
+    firstName: '',
     name: '',
     email: '',
     phone: '',
@@ -64,15 +66,16 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
     const errors: Record<string, string> = {}
     const dateValidation = validateBookingDates(form.startDate, form.endDate, unavailableDates.value)
 
+    if (!form.firstName.trim()) errors.firstName = 'storefront.booking.errors.firstNameRequired'
     if (!form.name.trim()) errors.name = 'storefront.booking.errors.nameRequired'
     if (!EMAIL_RE.test(form.email.trim())) errors.email = 'storefront.booking.errors.emailInvalid'
-    if (form.phone.trim().length < 7) errors.phone = 'storefront.booking.errors.phoneInvalid'
+    if (!isValidPhone(form.phone)) errors.phone = 'storefront.booking.errors.phoneInvalid'
     if (!isValidBookingUseCase(form.useCase)) errors.useCase = 'storefront.booking.errors.useCaseRequired'
     if (!dateValidation.ok) errors.dates = dateValidation.errorKey
     if (!form.privacyAccepted) errors.privacyAccepted = 'storefront.booking.errors.privacyRequired'
     if (form.age) {
       const ageNum = Number(form.age)
-      if (!Number.isInteger(ageNum) || ageNum < 18 || ageNum > 120) {
+      if (!Number.isInteger(ageNum) || ageNum < 18 || ageNum > 99) {
         errors.age = 'storefront.booking.errors.ageInvalid'
       }
     }
@@ -97,8 +100,9 @@ export function useBookingRequest(unavailableDates: Ref<Set<string>>) {
           useCase: form.useCase,
           startDate: form.startDate,
           endDate: form.endDate,
+          firstName: form.firstName.trim(),
           name: form.name.trim(),
-          email: form.email.trim(),
+          email: form.email.trim().toLowerCase(),
           phone: form.phone.trim(),
           nationality: form.nationality.trim() || undefined,
           age: form.age ? Number(form.age) : undefined,

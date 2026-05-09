@@ -141,6 +141,17 @@ export function validateBookingDates(
   return { ok: true }
 }
 
+export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const PHONE_CHARS_RE = /^[+\d\s()-]+$/
+
+export function isValidPhone(raw: string): boolean {
+  const trimmed = raw.trim()
+  if (!PHONE_CHARS_RE.test(trimmed)) return false
+  const digits = trimmed.replace(/\D/g, '')
+  return digits.length >= 7 && digits.length <= 15
+}
+
 export function isValidBookingUseCase(value: unknown): value is BookingUseCase {
   return value === 'joyride' || value === 'wedding'
 }

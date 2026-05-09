@@ -70,7 +70,8 @@
       "fields": {
         "startDate": "Abholdatum",
         "endDate": "Rückgabedatum",
-        "name": "Name",
+        "firstName": "Vorname",
+        "name": "Nachname",
         "email": "E-Mail",
         "phone": "Telefon",
         "age": "Alter",
@@ -96,7 +97,8 @@
       "success": "Ihre Reservierungsanfrage ist eingegangen. Wir melden uns in Kürze bei Ihnen. Referenz: {id}",
       "manageLink": "Reservierung verwalten",
       "errors": {
-        "nameRequired": "Name ist erforderlich.",
+        "firstNameRequired": "Vorname ist erforderlich.",
+        "nameRequired": "Nachname ist erforderlich.",
         "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
         "phoneInvalid": "Bitte geben Sie eine gültige Telefonnummer ein.",
         "useCaseRequired": "Bitte wählen Sie den Anlass.",
@@ -107,7 +109,7 @@
         "unavailable": "Dieser Zeitraum ist nicht verfügbar.",
         "privacyRequired": "Bitte bestätigen Sie die Datenschutzhinweise.",
         "submitFailed": "Die Anfrage konnte gerade nicht gesendet werden. Bitte versuchen Sie es erneut.",
-        "ageInvalid": "Bitte geben Sie ein gültiges Alter zwischen 18 und 120 ein."
+        "ageInvalid": "Bitte geben Sie ein gültiges Alter zwischen 18 und 99 ein."
       }
     },
     "manage": {
