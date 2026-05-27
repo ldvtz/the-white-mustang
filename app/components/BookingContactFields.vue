@@ -61,6 +61,7 @@ const { t } = useI18n()
           autocomplete="tel"
           maxlength="20"
           placeholder="+41 12 345 76 89"
+          @input="form.phone = form.phone.replace(/\D/g, '')"
           class="mt-2 min-h-[44px] w-full rounded-md border border-steel-grey/30 bg-alpine-white px-3 text-sm text-deep-charcoal focus:border-deep-charcoal focus:outline-none"
         />
         <span v-if="errors.phone" data-testid="booking-phone-error" class="mt-1 block text-xs text-taillight-ruby">{{ t(errors.phone) }}</span>
@@ -75,6 +76,7 @@ const { t } = useI18n()
           pattern="[0-9]*"
           maxlength="2"
           placeholder="25"
+          @input="form.age = form.age.replace(/\D/g, '')"
           class="mt-2 min-h-[44px] w-full rounded-md border border-steel-grey/30 bg-alpine-white px-3 text-sm text-deep-charcoal focus:border-deep-charcoal focus:outline-none"
         />
         <span v-if="errors.age" data-testid="booking-age-error" class="mt-1 block text-xs text-taillight-ruby">{{ t(errors.age) }}</span>
