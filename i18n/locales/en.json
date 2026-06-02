@@ -85,7 +85,56 @@
           "cash": "Cash"
         }
       },
-      "privacy": "I agree that The White Mustang may use my details to process this booking request.",
+      "privacy": "I agree that The White Mustang may use my details to process this booking request and I have read and agree to the {link}.",
+      "privacyLink": "Privacy Policy",
+      "privacyModal": {
+        "title": "Privacy Policy",
+        "intro": "Protecting your personal data is a central concern for us. Below, we transparently explain which data we collect in the course of your booking request, the purposes for which we process it, and the rights to which you are entitled. Processing is carried out in accordance with the revised Swiss Federal Act on Data Protection (revFADP).",
+        "sections": [
+          {
+            "heading": "Data Controller",
+            "body": "The party responsible for processing your data is The White Mustang, [Company / Owner], [Street No.], [Postal Code City], Switzerland. For questions regarding data protection, you can reach us at [info{'@'}thewhitemustang.ch]."
+          },
+          {
+            "heading": "What Data We Collect",
+            "body": "As part of your non-binding booking request, we collect only the data you provide: first and last name, email address, phone number, age, and the desired rental dates (pick-up and return date). Any further details are optional."
+          },
+          {
+            "heading": "Purpose of Processing",
+            "body": "We use your details exclusively to process, respond to, and fulfill your booking request, as well as to contact you in connection with your reservation. Use for marketing purposes only takes place with your explicit consent."
+          },
+          {
+            "heading": "Legal Basis",
+            "body": "Your data is processed for the initiation and performance of the rental contract, as well as on the basis of your consent. You may withdraw this consent at any time with effect for the future."
+          },
+          {
+            "heading": "Disclosure to Third Parties",
+            "body": "Your data is treated confidentially and is not sold or passed on to unauthorized third parties. Transmission only takes place to carefully selected service providers (for example, for hosting and email delivery), insofar as this is necessary to process your request, and where we are legally obliged to do so."
+          },
+          {
+            "heading": "Transfer Abroad",
+            "body": "Some of our service providers (for example, for hosting, database, and email delivery) may process your data abroad, in particular in the European Union and the United States. Such transfers only take place to countries with an adequate level of data protection or on the basis of appropriate safeguards such as standard contractual clauses, which ensure a level of protection equivalent to Swiss law."
+          },
+          {
+            "heading": "Retention",
+            "body": "We retain your data only for as long as is necessary for the stated purposes or to comply with statutory retention periods. Afterwards, your data is deleted or anonymized."
+          },
+          {
+            "heading": "Data Security",
+            "body": "We take appropriate technical and organizational measures to protect your data against unauthorized access, loss, or misuse. Data transmission is encrypted."
+          },
+          {
+            "heading": "Your Rights",
+            "body": "You have the right at any time to information about the data processed about you, as well as its correction, deletion, or restriction of processing. To exercise your rights, an informal message to the contact address below is sufficient. You also have the right to lodge a complaint with the Swiss Federal Data Protection and Information Commissioner (FDPIC)."
+          },
+          {
+            "heading": "Contact",
+            "body": "For questions about data protection or to exercise your rights, you can reach us at [info{'@'}thewhitemustang.ch] or in writing at the address stated above."
+          }
+        ],
+        "lastUpdated": "Last updated: June 2026",
+        "close": "Close"
+      },
       "summary": {
         "label": "Price Indication",
         "pending": "Select dates",

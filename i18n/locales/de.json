@@ -85,7 +85,56 @@
           "cash": "Barzahlung"
         }
       },
-      "privacy": "Ich bin einverstanden, dass The White Mustang meine Angaben zur Bearbeitung der Buchungsanfrage verwendet.",
+      "privacy": "Ich bin einverstanden, dass The White Mustang meine Angaben zur Bearbeitung der Buchungsanfrage verwendet und habe die {link} gelesen und stimme diesen zu.",
+      "privacyLink": "Datenschutzbestimmungen",
+      "privacyModal": {
+        "title": "Datenschutzbestimmungen",
+        "intro": "Der Schutz Ihrer persönlichen Daten ist uns ein zentrales Anliegen. Nachfolgend informieren wir Sie transparent darüber, welche Daten wir im Rahmen Ihrer Buchungsanfrage erheben, zu welchem Zweck wir diese bearbeiten und welche Rechte Ihnen zustehen. Die Bearbeitung erfolgt im Einklang mit dem revidierten Schweizer Datenschutzgesetz (revDSG).",
+        "sections": [
+          {
+            "heading": "Verantwortliche Stelle",
+            "body": "Verantwortlich für die Bearbeitung Ihrer Daten ist The White Mustang, [Firmenname / Inhaber], [Strasse Nr.], [PLZ Ort], Schweiz. Bei Fragen zum Datenschutz erreichen Sie uns unter [info{'@'}thewhitemustang.ch]."
+          },
+          {
+            "heading": "Welche Daten wir erheben",
+            "body": "Im Rahmen Ihrer unverbindlichen Buchungsanfrage erheben wir ausschliesslich die von Ihnen angegebenen Daten: Vor- und Nachname, E-Mail-Adresse, Telefonnummer, Alter sowie die gewünschten Mietdaten (Abhol- und Rückgabedatum). Weitere Angaben sind freiwillig."
+          },
+          {
+            "heading": "Zweck der Datenbearbeitung",
+            "body": "Wir verwenden Ihre Angaben ausschliesslich zur Bearbeitung, Beantwortung und Durchführung Ihrer Buchungsanfrage sowie zur Kontaktaufnahme im Zusammenhang mit Ihrer Reservierung. Eine Verwendung zu Werbezwecken erfolgt nur mit Ihrer ausdrücklichen Einwilligung."
+          },
+          {
+            "heading": "Rechtsgrundlage",
+            "body": "Die Bearbeitung Ihrer Daten erfolgt zur Anbahnung beziehungsweise Erfüllung des Mietvertrags sowie gestützt auf Ihre Einwilligung. Diese Einwilligung können Sie jederzeit mit Wirkung für die Zukunft widerrufen."
+          },
+          {
+            "heading": "Weitergabe an Dritte",
+            "body": "Ihre Daten werden vertraulich behandelt und nicht an unbefugte Dritte verkauft oder weitergegeben. Eine Übermittlung erfolgt nur an sorgfältig ausgewählte Dienstleister (zum Beispiel für Hosting und E-Mail-Versand), soweit dies zur Bearbeitung Ihrer Anfrage erforderlich ist, sowie wenn wir gesetzlich dazu verpflichtet sind."
+          },
+          {
+            "heading": "Bekanntgabe ins Ausland",
+            "body": "Einzelne unserer Dienstleister (zum Beispiel für Hosting, Datenbank und E-Mail-Versand) können Ihre Daten im Ausland bearbeiten, namentlich in der Europäischen Union und in den USA. Eine Bekanntgabe erfolgt nur in Länder mit einem angemessenen Datenschutzniveau oder gestützt auf geeignete Garantien wie die Standardvertragsklauseln, die ein dem Schweizer Recht gleichwertiges Schutzniveau gewährleisten."
+          },
+          {
+            "heading": "Aufbewahrung",
+            "body": "Wir bewahren Ihre Daten nur so lange auf, wie dies für die genannten Zwecke oder zur Einhaltung gesetzlicher Aufbewahrungsfristen erforderlich ist. Danach werden Ihre Daten gelöscht oder anonymisiert."
+          },
+          {
+            "heading": "Datensicherheit",
+            "body": "Wir treffen angemessene technische und organisatorische Massnahmen, um Ihre Daten vor unbefugtem Zugriff, Verlust oder Missbrauch zu schützen. Die Datenübertragung erfolgt verschlüsselt."
+          },
+          {
+            "heading": "Ihre Rechte",
+            "body": "Sie haben jederzeit das Recht auf Auskunft über die zu Ihrer Person bearbeiteten Daten sowie auf deren Berichtigung, Löschung oder Einschränkung der Bearbeitung. Zur Ausübung Ihrer Rechte genügt eine formlose Mitteilung an die unten genannte Kontaktadresse. Zudem steht Ihnen das Recht zu, sich beim Eidgenössischen Datenschutz- und Öffentlichkeitsbeauftragten (EDÖB) zu beschweren."
+          },
+          {
+            "heading": "Kontakt",
+            "body": "Für Fragen zum Datenschutz oder zur Ausübung Ihrer Rechte erreichen Sie uns unter [info{'@'}thewhitemustang.ch] oder schriftlich an die oben genannte Adresse."
+          }
+        ],
+        "lastUpdated": "Stand: Juni 2026",
+        "close": "Schliessen"
+      },
       "summary": {
         "label": "Preisindikation",
         "pending": "Datum wählen",

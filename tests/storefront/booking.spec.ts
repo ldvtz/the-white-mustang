@@ -138,4 +138,15 @@ test.describe('Booking request', () => {
     expect(canCancelBooking('confirmed', isoDaysFromNow(3), 3)).toBe(true)
     expect(canCancelBooking('declined', isoDaysFromNow(10), 3)).toBe(false)
   })
+
+  test('privacy policy modal opens and closes', async ({ page }) => {
+    await page.getByTestId('privacy-link').scrollIntoViewIfNeeded()
+    await expect(page.getByTestId('privacy-modal-close')).not.toBeVisible()
+
+    await page.getByTestId('privacy-link').click()
+    await expect(page.getByTestId('privacy-modal-close')).toBeVisible()
+
+    await page.getByTestId('privacy-modal-close').click()
+    await expect(page.getByTestId('privacy-modal-close')).not.toBeVisible()
+  })
 })
