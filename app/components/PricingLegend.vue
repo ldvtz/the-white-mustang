@@ -33,7 +33,5 @@ const { t } = useI18n()
         <p class="mt-0.5 text-xs text-white/70">{{ t('storefront.pricing.legend.weddingDesc') }}</p>
       </div>
     </div>
-
-    <p class="mt-4 text-center text-xs text-steel-grey">{{ t('storefront.pricing.calendarNote') }}</p>
   </div>
 </template>

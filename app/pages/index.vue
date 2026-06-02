@@ -6,6 +6,9 @@ definePageMeta({ layout: 'default' })
 const { t } = useI18n()
 const route = useRoute()
 
+const year = new Date().getFullYear()
+const showPrivacy = ref(false)
+
 function scrollTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   history.replaceState(null, '', `#${id}`)
@@ -186,7 +189,6 @@ useHead(() => ({
           <h2 class="text-deep-charcoal font-bold uppercase text-3xl md:text-4xl mb-4 tracking-tight">
             {{ t('storefront.pricing.heading') }}
           </h2>
-          <p class="text-steel-grey mb-12">{{ t('storefront.pricing.subheading') }}</p>
           <LazyPricingCalendar
             :selected-start-date="bookingSelection.startDate"
             :selected-end-date="bookingSelection.endDate"
@@ -218,28 +220,106 @@ useHead(() => ({
     <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
     <footer
       data-testid="storefront-footer"
-      class="bg-deep-charcoal text-white py-16"
+      class="bg-deep-charcoal text-white"
     >
-      <div class="max-w-7xl mx-auto px-6 flex flex-col items-center text-center gap-6">
-        <img
-          src="/logos/the-white-mustang-white.svg"
-          alt="The White Mustang"
-          class="h-8 w-auto opacity-90"
-        />
-        <p class="text-taillight-ruby font-bold uppercase tracking-[0.2em] text-sm">
-          {{ t('storefront.footer.motif') }}
-        </p>
-        <p class="text-white/60 text-sm tracking-wider uppercase">
-          {{ t('storefront.footer.tagline') }}
-        </p>
-        <p class="text-white/60 text-sm">
-          {{ t('storefront.footer.contact') }}
-          <a href="mailto:info@thewhitemustang.ch" class="text-taillight-ruby underline">info@thewhitemustang.ch</a>
-        </p>
-        <p class="text-white/30 text-xs mt-4 border-t border-white/10 pt-6 w-full">
-          {{ t('storefront.footer.legal') }}
-        </p>
+      <div class="max-w-7xl mx-auto px-6 py-16">
+        <div class="grid grid-cols-1 gap-12 text-center md:grid-cols-3 md:gap-8 md:text-left">
+          <!-- Brand -->
+          <div class="flex flex-col items-center gap-4 md:items-start">
+            <img
+              src="/logos/the-white-mustang-white.svg"
+              alt="The White Mustang"
+              class="h-8 w-auto opacity-90"
+            />
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-taillight-ruby">///</p>
+            <p class="max-w-xs text-sm leading-relaxed text-white/60">
+              {{ t('storefront.footer.brandLine') }}
+            </p>
+          </div>
+
+          <!-- Navigation -->
+          <nav class="flex flex-col items-center gap-4 md:items-start" :aria-label="t('storefront.footer.navTitle')">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-white/40">
+              {{ t('storefront.footer.navTitle') }}
+            </h2>
+            <ul class="flex flex-col items-center gap-1 md:items-start">
+              <li>
+                <a
+                  href="#gallery"
+                  data-testid="footer-nav-mustang"
+                  class="flex min-h-[44px] items-center text-sm text-white/70 transition-colors hover:text-white"
+                  @click.prevent="scrollTo('gallery')"
+                >
+                  {{ t('storefront.footer.nav.mustang') }}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#calendar"
+                  data-testid="footer-nav-pricing"
+                  class="flex min-h-[44px] items-center text-sm text-white/70 transition-colors hover:text-white"
+                  @click.prevent="scrollTo('calendar')"
+                >
+                  {{ t('storefront.footer.nav.pricing') }}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#calendar"
+                  data-testid="footer-nav-book"
+                  class="flex min-h-[44px] items-center text-sm font-semibold text-taillight-ruby transition-colors hover:text-red-400"
+                  @click.prevent="scrollTo('calendar')"
+                >
+                  {{ t('storefront.footer.nav.book') }}
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <!-- Contact -->
+          <div class="flex flex-col items-center gap-4 md:items-start">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-white/40">
+              {{ t('storefront.footer.contactTitle') }}
+            </h2>
+            <ul class="flex flex-col items-center gap-1 md:items-start">
+              <li>
+                <a
+                  href="mailto:info@thewhitemustang.ch"
+                  class="flex min-h-[44px] items-center text-sm text-white/70 transition-colors hover:text-white"
+                >
+                  info@thewhitemustang.ch
+                </a>
+              </li>
+              <li>
+                <a
+                  href="tel:+41000000000"
+                  class="flex min-h-[44px] items-center text-sm text-white/70 transition-colors hover:text-white"
+                >
+                  {{ t('storefront.footer.phone') }}
+                </a>
+              </li>
+              <li class="flex min-h-[44px] items-center text-sm text-white/40">
+                {{ t('storefront.footer.location') }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/30 sm:flex-row">
+          <p>© {{ year }} The White Mustang · {{ t('storefront.footer.rights') }}</p>
+          <button
+            type="button"
+            data-testid="footer-privacy-link"
+            class="underline underline-offset-2 transition-colors hover:text-white/70"
+            @click="showPrivacy = true"
+          >
+            {{ t('storefront.footer.privacy') }}
+          </button>
+        </div>
       </div>
     </footer>
+
+    <PrivacyPolicyModal :open="showPrivacy" @close="showPrivacy = false" />
   </div>
 </template>

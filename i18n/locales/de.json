@@ -39,7 +39,6 @@
     },
     "pricing": {
       "heading": "Preise & Verfügbarkeit",
-      "subheading": "Transparente Preise, keine versteckten Kosten.",
       "legend": {
         "standard": "Standard",
         "standardPrice": "CHF 490 / Tag",
@@ -54,8 +53,7 @@
         "weddingPrice": "CHF 890",
         "weddingDesc": "Halbtag, jederzeit"
       },
-      "unavailable": "Nicht verfügbar",
-      "calendarNote": "Klicken Sie auf ein Datum, um eine Anfrage zu stellen. Preise können variieren."
+      "unavailable": "Nicht verfügbar"
     },
     "booking": {
       "formLabel": "Buchungsanfrage",
@@ -189,9 +187,18 @@
     },
     "footer": {
       "tagline": "American Emotion. Swiss Perfection.",
-      "motif": "///",
-      "contact": "Fragen oder besondere Wünsche? Kontaktieren Sie uns:",
-      "legal": "© 2025 The White Mustang · thewhitemustang.ch · Alle Rechte vorbehalten"
+      "brandLine": "Der weisse Ford Mustang GT 5.0 V8 Cabriolet — für unvergessliche Hochzeiten und Ausfahrten in den Schweizer Alpen.",
+      "navTitle": "Navigation",
+      "nav": {
+        "mustang": "Der Mustang",
+        "pricing": "Preise & Verfügbarkeit",
+        "book": "Jetzt buchen"
+      },
+      "contactTitle": "Kontakt",
+      "phone": "+41 00 000 00 00",
+      "location": "Schweiz",
+      "privacy": "Datenschutz",
+      "rights": "Alle Rechte vorbehalten"
     }
   },
   "common": {

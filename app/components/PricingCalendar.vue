@@ -158,9 +158,6 @@ function toDateString(date: Date): string {
           <h3 id="availability-summary" class="sr-only">
             {{ t('storefront.pricing.heading') }}
           </h3>
-          <p class="text-sm">
-            {{ t('storefront.pricing.calendarNote') }}
-          </p>
         </section>
       </template>
     </ClientOnly>

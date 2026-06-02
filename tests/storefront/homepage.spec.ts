@@ -61,6 +61,24 @@ test.describe('Homepage — page structure', () => {
     await expect(page.getByTestId('legend-wedding')).toBeVisible()
   })
 
+  test('footer exposes navigation and contact links', async ({ page }) => {
+    await page.getByTestId('storefront-footer').scrollIntoViewIfNeeded()
+    await expect(page.getByTestId('footer-nav-mustang')).toBeVisible()
+    await expect(page.getByTestId('footer-nav-pricing')).toBeVisible()
+    await expect(page.getByTestId('footer-nav-book')).toBeVisible()
+  })
+
+  test('footer privacy link opens the privacy policy modal', async ({ page }) => {
+    await page.getByTestId('storefront-footer').scrollIntoViewIfNeeded()
+    await expect(page.getByTestId('privacy-modal-close')).not.toBeVisible()
+
+    await page.getByTestId('footer-privacy-link').click()
+    await expect(page.getByTestId('privacy-modal-close')).toBeVisible()
+
+    await page.getByTestId('privacy-modal-close').click()
+    await expect(page.getByTestId('privacy-modal-close')).not.toBeVisible()
+  })
+
   test('renders crawlable locale and structured-data SEO tags', async ({ page }) => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'de-CH')
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://thewhitemustang.ch')
