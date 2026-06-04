@@ -52,6 +52,18 @@ NUXT_MAIL_FROM=info@thewhitemustang.ch
 NUXT_SMTP_HOST=127.0.0.1
 NUXT_SMTP_PORT=54325
 NUXT_EMAIL_DELIVERY_TIMEOUT_MS=5000
+# Rental agreement PDF (attached to the reservation confirmation email)
+NUXT_RENTAL_AGREEMENT_COMPANY_NAME="The White Mustang"
+NUXT_RENTAL_AGREEMENT_COMPANY_ADDRESS="[Firmenname / Inhaber], [Strasse Nr.], [PLZ Ort], Schweiz"
+NUXT_RENTAL_AGREEMENT_JURISDICTION="[Ort]"
+NUXT_RENTAL_AGREEMENT_VEHICLE_PLATE="[Kontrollschild]"
+NUXT_RENTAL_AGREEMENT_VEHICLE_VIN="[FIN]"
+NUXT_RENTAL_AGREEMENT_DEPOSIT_CHF=2000
+NUXT_RENTAL_AGREEMENT_SELF_RETENTION_CHF=2000
+NUXT_RENTAL_AGREEMENT_INCLUDED_KM_PER_DAY=200
+NUXT_RENTAL_AGREEMENT_EXTRA_KM_CHF=1.5
+NUXT_RENTAL_AGREEMENT_MIN_AGE=25
+NUXT_RENTAL_AGREEMENT_MIN_LICENSE_YEARS=3
 ```
 
 The `NUXT_SUPABASE_SECRET_KEY` service role key is used only inside protected server routes. Never expose it to the browser. In production, configure these Supabase values in Vercel as runtime environment variables and redeploy after changing them:
@@ -141,6 +153,8 @@ Public booking endpoints:
 | `POST /api/bookings/manage/:token/cancel` | Cancels an eligible booking before the configured cutoff |
 
 Reservation emails are delivered through the configured mail transport and are bounded by `NUXT_EMAIL_DELIVERY_TIMEOUT_MS` so a slow provider never leaves the customer-facing request form waiting indefinitely. Email delivery errors are logged server-side after the reservation has been saved.
+
+When an admin confirms a reservation, the confirmation email includes the **rental agreement as a PDF attachment** (`server/utils/rentalAgreementPdf.ts`, built with `pdf-lib`). The PDF is generated in the customer's locale (DE/EN), pre-filled with the booking data, and contains interactive form fields plus a signature field so the customer can read, complete and sign it. Vehicle, deposit, kilometre and jurisdiction values come from the `NUXT_RENTAL_AGREEMENT_*` variables. PDF generation failures are logged and never block the confirmation itself. The plain-text source of the agreement lives in `docs/mietvertrag-de.md`.
 
 Admin reservation endpoints:
 

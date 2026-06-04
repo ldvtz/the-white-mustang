@@ -1,11 +1,17 @@
 import { Resend } from 'resend'
 import nodemailer from 'nodemailer'
 
+export type EmailAttachment = {
+  filename: string
+  content: Buffer
+}
+
 type EmailOptions = {
   to: string
   subject: string
   text: string
   html: string
+  attachments?: EmailAttachment[]
 }
 
 const DEFAULT_EMAIL_DELIVERY_TIMEOUT_MS = 5000
@@ -272,35 +278,53 @@ export async function sendReservationConfirmation(
   endDate: string,
   totalPrice: number,
   locale: string,
+  agreementPdf?: EmailAttachment,
 ): Promise<void> {
   const dateFormatter = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'de-CH', { dateStyle: 'medium' })
   const fmt = (d: string) => dateFormatter.format(new Date(d))
   const chf = chfFormatter.format(totalPrice)
+  const en = locale === 'en'
 
-  const subject = locale === 'en'
+  const subject = en
     ? 'Your reservation is confirmed — The White Mustang'
     : 'Ihre Reservierung ist bestätigt — The White Mustang'
 
-  const text = locale === 'en'
-    ? `Dear ${name},\n\nYour reservation from ${fmt(startDate)} to ${fmt(endDate)} (${chf}) has been confirmed. We will contact you separately with the next steps for payment and handover.\n\nThe White Mustang Team`
-    : `Guten Tag ${name},\n\nIhre Reservierung vom ${fmt(startDate)} bis ${fmt(endDate)} (${chf}) wurde bestätigt. Wir melden uns separat mit den nächsten Schritten zu Zahlung und Übergabe.\n\nIhr White Mustang Team`
+  const agreementLineText = agreementPdf
+    ? (en
+        ? '\n\nAttached you will find your rental agreement. Please read it carefully, fill in the open fields, and sign it — you can return the signed copy by email or bring it to the handover.'
+        : '\n\nIm Anhang finden Sie Ihre Mietvereinbarung. Bitte lesen Sie diese aufmerksam, füllen Sie die offenen Felder aus und unterschreiben Sie sie — die unterzeichnete Fassung können Sie uns per E-Mail zurücksenden oder zur Übergabe mitbringen.')
+    : ''
+
+  const text = en
+    ? `Dear ${name},\n\nYour reservation from ${fmt(startDate)} to ${fmt(endDate)} (${chf}) has been confirmed. We will contact you separately with the next steps for payment and handover.${agreementLineText}\n\nThe White Mustang Team`
+    : `Guten Tag ${name},\n\nIhre Reservierung vom ${fmt(startDate)} bis ${fmt(endDate)} (${chf}) wurde bestätigt. Wir melden uns separat mit den nächsten Schritten zu Zahlung und Übergabe.${agreementLineText}\n\nIhr White Mustang Team`
+
+  const paragraphs = en
+    ? [
+        'Your reservation is confirmed. We look forward to welcoming you.',
+        'We will contact you separately with the next steps for payment and handover.',
+      ]
+    : [
+        'Ihre Reservierung ist bestätigt. Wir freuen uns, Sie bald begrüssen zu dürfen.',
+        'Wir melden uns separat mit den nächsten Schritten zu Zahlung und Übergabe.',
+      ]
+
+  if (agreementPdf) {
+    paragraphs.push(
+      en
+        ? 'Attached you will find your <strong>rental agreement</strong>. Please read it carefully, complete the open fields and sign it — return the signed copy by email or bring it to the handover.'
+        : 'Im Anhang finden Sie Ihre <strong>Mietvereinbarung</strong>. Bitte lesen Sie diese aufmerksam, füllen Sie die offenen Felder aus und unterschreiben Sie sie — senden Sie uns die unterzeichnete Fassung per E-Mail zurück oder bringen Sie sie zur Übergabe mit.',
+    )
+  }
 
   const html = buildEmailHtml({
     locale,
     greeting: emailGreeting(name, locale),
-    paragraphs: locale === 'en'
-      ? [
-          'Your reservation is confirmed. We look forward to welcoming you.',
-          'We will contact you separately with the next steps for payment and handover.',
-        ]
-      : [
-          'Ihre Reservierung ist bestätigt. Wir freuen uns, Sie bald begrüssen zu dürfen.',
-          'Wir melden uns separat mit den nächsten Schritten zu Zahlung und Übergabe.',
-        ],
+    paragraphs,
     details: { startDate: fmt(startDate), endDate: fmt(endDate), price: chf },
   })
 
-  await sendEmail({ to, subject, text, html })
+  await sendEmail({ to, subject, text, html, attachments: agreementPdf ? [agreementPdf] : undefined })
 }
 
 export async function sendReservationDeclined(

@@ -48,6 +48,14 @@ export default defineEventHandler(async (event) => {
     if (commentError) throw createError({ statusCode: 500, message: commentError.message })
   }
 
+  let agreementPdf: EmailAttachment | undefined
+  try {
+    const pdfBytes = await generateRentalAgreementPdf(buildRentalAgreementData(event, booking))
+    agreementPdf = { filename: rentalAgreementFilename(booking), content: Buffer.from(pdfBytes) }
+  } catch (error) {
+    console.error('Failed to generate rental agreement PDF', { bookingId: id, error })
+  }
+
   try {
     await sendReservationConfirmation(
       booking.customers.email,
@@ -56,6 +64,7 @@ export default defineEventHandler(async (event) => {
       booking.end_date,
       booking.total_price,
       booking.locale,
+      agreementPdf,
     )
   } catch (error) {
     console.error('Failed to send reservation confirmation email', { bookingId: id, error })
